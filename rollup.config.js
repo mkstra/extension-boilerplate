@@ -5,8 +5,35 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
 const production = !process.env.ROLLUP_WATCH;
+const plugins =  [
+	svelte({
+		// enable run-time checks when not in production
+		dev: !production,
+		// we'll extract any component CSS out into
+		// a separate file — better for performance
+		css: css => {
+			css.write('public/css/bundle.css');
+		},
+	}),
 
-export default {
+	// If you have external dependencies installed from
+	// npm, you'll most likely need these plugins. In
+	// some cases you'll need additional configuration —
+	// consult the documentation for details:
+	// https://github.com/rollup/rollup-plugin-commonjs
+	resolve(),
+	commonjs(),
+
+	// Watch the `public` directory and refresh the
+	// browser on changes when not in production
+	!production && livereload('public'),
+
+	// If we're building for production (npm run build
+	// instead of npm run dev), minify
+	production && terser(),
+]
+
+export default [{
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
@@ -14,31 +41,13 @@ export default {
 		name: 'app',
 		file: 'public/js/bundle.js',
 	},
-	plugins: [
-		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file — better for performance
-			css: css => {
-				css.write('public/css/bundle.css');
-			},
-		}),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration —
-		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
-		resolve(),
-		commonjs(),
-
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
-		!production && livereload('public'),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser(),
-	],
-};
+	plugins
+}, {
+	plugins,
+	input: 'src/Authentication.svelte',
+output: {
+	sourcemap: true,
+	format: 'iife',
+	name: 'app2',
+	file: 'public/popup_bundle.js',
+},}]
