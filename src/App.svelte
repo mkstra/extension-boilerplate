@@ -1,6 +1,6 @@
 <script>
-// import Authentication from "./Authentication.svelte"
+import Authenticate from "./Authenticate.svelte"
  
 </script>
-  <!-- <Authentication /> -->
+  <Authenticate />
   <h1>tooo</h1>

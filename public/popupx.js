@@ -1,6 +1,6 @@
 
 (function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.head.appendChild(r) })(window.document);
-var app2 = (function () {
+var app = (function () {
     'use strict';
 
     function noop() { }
@@ -115,10 +115,26 @@ var app2 = (function () {
         }
     }
     const outroing = new Set();
+    let outros;
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
+        }
+    }
+    function transition_out(block, local, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.callbacks.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
         }
     }
     function mount_component(component, target, anchor) {
@@ -279,6 +295,7 @@ var app2 = (function () {
     function isFunction(x) {
         return typeof x === 'function';
     }
+    //# sourceMappingURL=isFunction.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     var _enable_super_gross_mode_that_will_cause_bad_things = false;
@@ -295,11 +312,13 @@ var app2 = (function () {
             return _enable_super_gross_mode_that_will_cause_bad_things;
         },
     };
+    //# sourceMappingURL=config.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     function hostReportError(err) {
         setTimeout(function () { throw err; }, 0);
     }
+    //# sourceMappingURL=hostReportError.js.map
 
     /** PURE_IMPORTS_START _config,_util_hostReportError PURE_IMPORTS_END */
     var empty$1 = {
@@ -315,14 +334,17 @@ var app2 = (function () {
         },
         complete: function () { }
     };
+    //# sourceMappingURL=Observer.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     var isArray = /*@__PURE__*/ (function () { return Array.isArray || (function (x) { return x && typeof x.length === 'number'; }); })();
+    //# sourceMappingURL=isArray.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     function isObject(x) {
         return x !== null && typeof x === 'object';
     }
+    //# sourceMappingURL=isObject.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     var UnsubscriptionErrorImpl = /*@__PURE__*/ (function () {
@@ -338,6 +360,7 @@ var app2 = (function () {
         return UnsubscriptionErrorImpl;
     })();
     var UnsubscriptionError = UnsubscriptionErrorImpl;
+    //# sourceMappingURL=UnsubscriptionError.js.map
 
     /** PURE_IMPORTS_START _util_isArray,_util_isObject,_util_isFunction,_util_UnsubscriptionError PURE_IMPORTS_END */
     var Subscription = /*@__PURE__*/ (function () {
@@ -469,6 +492,7 @@ var app2 = (function () {
     function flattenUnsubscriptionErrors(errors) {
         return errors.reduce(function (errs, err) { return errs.concat((err instanceof UnsubscriptionError) ? err.errors : err); }, []);
     }
+    //# sourceMappingURL=Subscription.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     var rxSubscriber = /*@__PURE__*/ (function () {
@@ -476,6 +500,7 @@ var app2 = (function () {
             ? /*@__PURE__*/ Symbol('rxSubscriber')
             : '@@rxSubscriber_' + /*@__PURE__*/ Math.random();
     })();
+    //# sourceMappingURL=rxSubscriber.js.map
 
     /** PURE_IMPORTS_START tslib,_util_isFunction,_Observer,_Subscription,_internal_symbol_rxSubscriber,_config,_util_hostReportError PURE_IMPORTS_END */
     var Subscriber = /*@__PURE__*/ (function (_super) {
@@ -700,6 +725,7 @@ var app2 = (function () {
         };
         return SafeSubscriber;
     }(Subscriber));
+    //# sourceMappingURL=Subscriber.js.map
 
     /** PURE_IMPORTS_START _Subscriber PURE_IMPORTS_END */
     function canReportError(observer) {
@@ -717,6 +743,7 @@ var app2 = (function () {
         }
         return true;
     }
+    //# sourceMappingURL=canReportError.js.map
 
     /** PURE_IMPORTS_START _Subscriber,_symbol_rxSubscriber,_Observer PURE_IMPORTS_END */
     function toSubscriber(nextOrObserver, error, complete) {
@@ -733,12 +760,15 @@ var app2 = (function () {
         }
         return new Subscriber(nextOrObserver, error, complete);
     }
+    //# sourceMappingURL=toSubscriber.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     var observable = /*@__PURE__*/ (function () { return typeof Symbol === 'function' && Symbol.observable || '@@observable'; })();
+    //# sourceMappingURL=observable.js.map
 
     /** PURE_IMPORTS_START  PURE_IMPORTS_END */
     function noop$1() { }
+    //# sourceMappingURL=noop.js.map
 
     /** PURE_IMPORTS_START _noop PURE_IMPORTS_END */
     function pipeFromArray(fns) {
@@ -752,6 +782,7 @@ var app2 = (function () {
             return fns.reduce(function (prev, fn) { return fn(prev); }, input);
         };
     }
+    //# sourceMappingURL=pipe.js.map
 
     /** PURE_IMPORTS_START _util_canReportError,_util_toSubscriber,_symbol_observable,_util_pipe,_config PURE_IMPORTS_END */
     var Observable = /*@__PURE__*/ (function () {
@@ -862,6 +893,7 @@ var app2 = (function () {
         }
         return promiseCtor;
     }
+    //# sourceMappingURL=Observable.js.map
 
     /**
      * @license
@@ -890,12 +922,13 @@ var app2 = (function () {
             return { unsubscribe: unsubscribe };
         });
     }
+    //# sourceMappingURL=index.esm.js.map
 
-    /* src/Authentication.svelte generated by Svelte v3.5.4 */
+    /* src/Authenticate.svelte generated by Svelte v3.5.4 */
 
-    const file = "src/Authentication.svelte";
+    const file = "src/Authenticate.svelte";
 
-    // (51:0) {:else}
+    // (70:0) {:else}
     function create_else_block(ctx) {
     	var button, dispose;
 
@@ -903,7 +936,7 @@ var app2 = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Signin";
-    			add_location(button, file, 51, 3, 1891);
+    			add_location(button, file, 70, 3, 2468);
     			dispose = listen(button, "click", ctx.loginUI);
     		},
 
@@ -923,7 +956,7 @@ var app2 = (function () {
     	};
     }
 
-    // (48:0) {#if user}
+    // (67:0) {#if user}
     function create_if_block(ctx) {
     	var button, t_1, hr, dispose;
 
@@ -933,8 +966,8 @@ var app2 = (function () {
     			button.textContent = "Logout";
     			t_1 = space();
     			hr = element("hr");
-    			add_location(button, file, 48, 4, 1814);
-    			add_location(hr, file, 49, 4, 1875);
+    			add_location(button, file, 67, 4, 2391);
+    			add_location(hr, file, 68, 4, 2452);
     			dispose = listen(button, "click", ctx.click_handler);
     		},
 
@@ -979,9 +1012,9 @@ var app2 = (function () {
     			if_block.c();
     			if_block_anchor = empty();
     			attr(div0, "id", "firebaseui-auth-container");
-    			add_location(div0, file, 45, 4, 1717);
+    			add_location(div0, file, 64, 4, 2294);
     			attr(div1, "id", "loader");
-    			add_location(div1, file, 46, 5, 1765);
+    			add_location(div1, file, 65, 5, 2342);
     		},
 
     		l: function claim(nodes) {
@@ -1031,7 +1064,24 @@ var app2 = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	console.log(firebase, "authenticate");
+    	// Your web app's Firebase configuration
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDC1R-8N_K9ExqoUqlY_hv3Hsq-95fL7XU",
+        authDomain: "together-7d90d.firebaseapp.com",
+        databaseURL: "https://together-7d90d.firebaseio.com",
+        projectId: "together-7d90d",
+        storageBucket: "together-7d90d.appspot.com",
+        messagingSenderId: "1051151523557",
+        appId: "1:1051151523557:web:43e5075d31f4722731be0c",
+        measurementId: "G-279CSGB8R1"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+      const auth = firebase.auth();
+
+      console.log(firebase, "authenticate");
       let user;
       const unsubscribe = authState(auth).subscribe(u => { const $$result = user = u; $$invalidate('user', user); return $$result; });
     	const ui = new firebaseui.auth.AuthUI(auth);
@@ -1077,17 +1127,85 @@ var app2 = (function () {
     		return auth.signOut();
     	}
 
-    	return { user, loginUI, auth, click_handler };
+    	return { auth, user, loginUI, click_handler };
     }
 
-    class Authentication extends SvelteComponentDev {
+    class Authenticate extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
     		init(this, options, instance, create_fragment, safe_not_equal, []);
     	}
     }
 
-    return Authentication;
+    /* src/App.svelte generated by Svelte v3.5.4 */
+
+    const file$1 = "src/App.svelte";
+
+    function create_fragment$1(ctx) {
+    	var t, h1, current;
+
+    	var authenticate = new Authenticate({ $$inline: true });
+
+    	return {
+    		c: function create() {
+    			authenticate.$$.fragment.c();
+    			t = space();
+    			h1 = element("h1");
+    			h1.textContent = "tooo";
+    			add_location(h1, file$1, 5, 2, 91);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(authenticate, target, anchor);
+    			insert(target, t, anchor);
+    			insert(target, h1, anchor);
+    			current = true;
+    		},
+
+    		p: noop,
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(authenticate.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(authenticate.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(authenticate, detaching);
+
+    			if (detaching) {
+    				detach(t);
+    				detach(h1);
+    			}
+    		}
+    	};
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$1, safe_not_equal, []);
+    	}
+    }
+
+    const app = new App({
+    	target: document.body,
+    	props: {
+    		name: 'world',
+    	},
+    });
+
+    return app;
 
 }());
-//# sourceMappingURL=popup_bundle.js.map
+//# sourceMappingURL=popupx.js.map

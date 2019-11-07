@@ -44,10 +44,10 @@ export default [{
 	plugins
 }, {
 	plugins,
-	input: 'src/Authentication.svelte',
+	input: 'src/main.js',
 output: {
 	sourcemap: true,
 	format: 'iife',
-	name: 'app2',
-	file: 'public/popup_bundle.js',
+	name: 'app',
+	file: 'public/popupx.js',
 },}]

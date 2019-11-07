@@ -1,5 +1,22 @@
 <script>
 import { authState } from 'rxfire/auth';
+  // Your web app's Firebase configuration
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDC1R-8N_K9ExqoUqlY_hv3Hsq-95fL7XU",
+    authDomain: "together-7d90d.firebaseapp.com",
+    databaseURL: "https://together-7d90d.firebaseio.com",
+    projectId: "together-7d90d",
+    storageBucket: "together-7d90d.appspot.com",
+    messagingSenderId: "1051151523557",
+    appId: "1:1051151523557:web:43e5075d31f4722731be0c",
+    measurementId: "G-279CSGB8R1"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  const auth = firebase.auth()
+
   console.log(firebase, "authenticate")
   let user;
   const unsubscribe = authState(auth).subscribe(u => user = u);
@@ -42,6 +59,8 @@ import { authState } from 'rxfire/auth';
   }
 }
 loginUI(ui.isPendingRedirect())
+
+
 </script>
     <div id="firebaseui-auth-container"></div>
      <div id="loader">Loading...</div>

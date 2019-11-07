@@ -18,9 +18,14 @@
 	"permissions": [
 		"storage",
 		"tabs",
-		"identity",
 		"activeTab",
-		"contextMenus"
+		"bookmarks",
+		"https://www.googletagmanager.com",
+		"https://firebaseinstallations.googleapis.com",
+		"https://www.gstatic.com/",
+		"https://cdn.firebase.com",
+		"https://*.firebaseio.com",
+		"http://*.google.com/"
 	],
 	"options_ui": {
 		"page": "options.html",
