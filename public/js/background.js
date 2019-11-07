@@ -12,6 +12,5 @@ browser.runtime.onInstalled.addListener(details => {
 const appURL = browser.extension.getURL('index.html');
 // Open new tab with our index.html when click on the extension button
 browser.browserAction.onClicked.addListener(function() {
-     alert("hello")
- });
-
+	alert('hello');
+});

@@ -57,10 +57,7 @@ import Profile from './Profile.svelte';
 }
 }
 loginUI()
-
 </script>
-
-
 <style>
 	h1 {
 		color: purple;
