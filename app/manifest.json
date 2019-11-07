@@ -19,7 +19,6 @@
 		"storage",
 		"tabs",
 		"identity",
-		"activeTab",
 		"contextMenus"
 	],
 	"options_ui": {
@@ -29,16 +28,20 @@
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
-	"content_security_policy": "script-src 'self' https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
+	"content_security_policy": "script-src 'self' https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;"
+
 	"content_scripts": [
 		{
 		  "matches": [
-			"<all_urls>",
 			"http://*/*",
-			"https://*/*"
+			"https://*/*",
+			"<all_urls>"
+		  ],
+		  "css": [
+			"/static/css/content.css"
 		  ],
 		  "js": [
-			"js/content.js"
+			"/static/js/content.js"
 		  ]
 		}
 	  ],

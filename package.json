@@ -55,7 +55,7 @@
 		"svelte": "3.5.4"
 	},
 	"dependencies": {
-		"lockr": "^0.8.4"
+		"firebase": "^7.2.3"
 	},
 	"browserslist": [
 		"> 1%",

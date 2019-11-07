@@ -9,12 +9,48 @@
 		<!-- generated CSS: -->
 		<link rel='stylesheet' href='css/bundle.css'>
 		<title>^_^</title>
+
+		<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+<!-- Add additional services that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-auth.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/ui/4.2.0/firebase-ui-auth.js"></script>
+<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.2.0/firebase-ui-auth.css" />
+
 	</head>
 	<body>
 		<noscript>
 			<strong>This doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 		</noscript>
 		<!-- generated JS: -->
+
+
+
+		<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDC1R-8N_K9ExqoUqlY_hv3Hsq-95fL7XU",
+    authDomain: "together-7d90d.firebaseapp.com",
+    databaseURL: "https://together-7d90d.firebaseio.com",
+    projectId: "together-7d90d",
+    storageBucket: "together-7d90d.appspot.com",
+    messagingSenderId: "1051151523557",
+    appId: "1:1051151523557:web:43e5075d31f4722731be0c",
+    measurementId: "G-279CSGB8R1"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  window.firebase = firebase
+  
+</script>
 		<script src='js/bundle.js'></script>
-	</body>
+
+</body>
 </html>

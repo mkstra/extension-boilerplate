@@ -14,3 +14,4 @@ const appURL = browser.extension.getURL('index.html');
 browser.browserAction.onClicked.addListener(function() {
      alert("hello")
  });
+
