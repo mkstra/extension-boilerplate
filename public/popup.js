@@ -6,9 +6,9 @@ window.browser = window.chrome ||  window.msBrowser || window.browser ;
 window.onload = function () {
     const newDiv = document.createElement("div");
 
-    newDiv.setAttribute("id", "markusExtend");
-    newDiv.innerHTML = "yolo content"
+    newDiv.setAttribute("id", "popupyeh");
+    newDiv.innerHTML = "popup yeah"
     document.body.appendChild(newDiv);
 }
 
-console.log("hello aaa")
+console.log("hello popup")
