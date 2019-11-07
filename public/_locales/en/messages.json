@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "nau-tab",
-    "description": "The name of the application"
+    "message": "together",
+    "description": "together is here!"
   },
   "appDescription": {
-    "message": "Nau Newtab extension",
-    "description": "The description of the application"
+    "message": "a hyperlocal interest matcher",
+    "description": "description tba"
   }
 }

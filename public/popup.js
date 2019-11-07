@@ -1,7 +1,7 @@
 'use strict';
 
 // universal Web Extension
-window.browser = window.chrome ||  window.msBrowser || window.browser ;
+// window.browser = window.chrome ||  window.msBrowser || window.browser ;
 
 window.onload = function () {
     const newDiv = document.createElement("div");
