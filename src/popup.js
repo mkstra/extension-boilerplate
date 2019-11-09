@@ -1,6 +1,6 @@
-import Authenticate from './Authenticate.svelte';
+import Popup from './Popup.svelte';
 
-const app = new Authenticate({
+const app = new Popup({
 	target: document.body,
 });
 
