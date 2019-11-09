@@ -1,5 +1,6 @@
 <script>
 import { authState } from 'rxfire/auth';
+import BookBadge from "./BookBadge.svelte"
 
 export let app
 console.log("APPP", app)
@@ -7,6 +8,7 @@ console.log("APPP", app)
 const {firebase_ : firebase} = app
 
 const auth = firebase.auth()
+const db = firebase.firestore()
 const isExistingUser = (currentUser) => (currentUser.metadata.lastSignInTime - currentUser.metadata.creationTime) > 1000
 const ui = new firebaseui.auth.AuthUI(auth);
 const uiConfig = {
@@ -57,11 +59,12 @@ const unsubscribe = authState(auth).subscribe(u => {
 
 </script>
     <div id="firebaseui-auth-container"></div>
-     <div id="loader">Loading...</div>
 {#if user}
     <button on:click={() => auth.signOut() }>Logout</button>
     <hr>
+    <BookBadge uid={user.uid} db={db} />
 {:else}
+    <div id="loader">Loading...</div>
    <button on:click={loginUI}>
 		Signin 
 	</button>

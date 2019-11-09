@@ -1,6 +1,5 @@
 <script>
 import LoginForm from './LoginForm.svelte'
-
 const chromestoreID = "bedmbgkddhhnajfafgpbpbcjmdnnngll"
 //...bf is localhost
 const localDevID = "ldhfcelpkklpbfafamncdmgenaphmibf"
@@ -24,13 +23,15 @@ const firebaseConfig = {
 //FIXME: waiting for firebase to load into it....
 const app = firebase.initializeApp(firebaseConfig);
 
+
+
 console.log("app fiba", app)
 </script>
-
 <h1>App here</h1>
 
 {#if app}
   <LoginForm app={app} />
+  <!-- <BookBadge uid={uid} /> -->
 {/if}
 
 
