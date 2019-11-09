@@ -1,8 +1,25 @@
 <script>
+/*global chrome*/
+
 import { authState } from 'rxfire/auth';
   // Your web app's Firebase configuration
+const chromestoreID = "bedmbgkddhhnajfafgpbpbcjmdnnngll"
+//...bf is localhost
+const localDevID = "ldhfcelpkklpbfafamncdmgenaphmibf"
+const EXTENSION_ID = localDevID
+  //TODO: Attention - chrome id on localhost isn't same as chrome store
+//To send messages to content scripts, use tabs.sendMessage.
 
-  const firebaseConfig = {
+  let user;
+
+
+window.c = chrome.runtime.sendMessage
+chrome.runtime.sendMessage(EXTENSION_ID, {greeting: "svelte"}, async function(response) {
+  console.log("response: bg -> auth", response.farewell);
+  return true
+});
+
+const firebaseConfig = {
     apiKey: "AIzaSyDC1R-8N_K9ExqoUqlY_hv3Hsq-95fL7XU",
     authDomain: "together-7d90d.firebaseapp.com",
     databaseURL: "https://together-7d90d.firebaseio.com",
@@ -12,14 +29,20 @@ import { authState } from 'rxfire/auth';
     appId: "1:1051151523557:web:43e5075d31f4722731be0c",
     measurementId: "G-279CSGB8R1"
   };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-  const auth = firebase.auth()
 
-  console.log(firebase, "authenticate")
-  let user;
-  const unsubscribe = authState(auth).subscribe(u => user = u);
+// Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth()
+  console.log("below")
+  const unsubscribe = authState(auth).subscribe(u => {
+    console.log("user here", u); 
+    //TODO: is there a better way than mutating user?
+    user = u
+   
+
+
+  }
+  );
   const isExistingUser = (currentUser) => (currentUser.metadata.lastSignInTime - currentUser.metadata.creationTime) > 1000
 	const ui = new firebaseui.auth.AuthUI(auth);
 	const uiConfig = {

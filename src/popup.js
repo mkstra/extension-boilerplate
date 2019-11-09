@@ -1,6 +1,6 @@
 import Popup from './Popup.svelte';
 
-console.log("popup app here 22")
+console.log("popup app here")
 const pop = new Popup({
 	target: document.getElementById("popup"),
 });

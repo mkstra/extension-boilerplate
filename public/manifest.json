@@ -11,20 +11,15 @@
 	},
 	"default_locale": "en",
 	"background": {
-		"scripts": [
-			"js/background.js"
-		]
+		"page": "background.html"
 	},
 	"permissions": [
 		"storage",
 		"tabs",
 		"activeTab",
 		"bookmarks",
-		"https://www.googletagmanager.com",
-		"https://firebaseinstallations.googleapis.com",
+		"https://www.googleapis.com/*",
 		"https://www.gstatic.com/",
-		"https://cdn.firebase.com",
-		"https://*.firebaseio.com",
 		"http://*.google.com/"
 	],
 	"options_ui": {
@@ -34,7 +29,7 @@
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
-	"content_security_policy": "script-src 'self' https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
+	"content_security_policy": "script-src 'self' https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
 	"content_scripts": [
 		{
 		  "matches": [
@@ -43,7 +38,8 @@
 			"https://*/*"
 		  ],
 		  "js": [
-			"js/content.js"
+			"js/content.js",
+			"js/bundle.js"
 		  ]
 		}
 	  ],
