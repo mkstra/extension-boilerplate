@@ -1,4 +1,3 @@
-
 <script>
     import Profile from './Profile.svelte';
     

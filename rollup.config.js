@@ -44,10 +44,10 @@ export default [{
 	plugins
 }, {
 	plugins,
-	input: 'src/main.js',
+	input: 'src/popup.js',
 output: {
 	sourcemap: true,
 	format: 'iife',
-	name: 'app',
+	name: 'pop',
 	file: 'public/popupx.js',
 },}]

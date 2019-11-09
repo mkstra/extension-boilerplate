@@ -8,7 +8,9 @@
 		"build": "rollup --no-sourcemap -c",
 		"autobuild": "rollup -c -w",
 		"prestart": "run-p clean",
+
 		"superstart": "run-p serve:dev autobuild build",
+		
 		"start": "run-p serve:dev autobuild",
 		"serve:dev": "sirv public --dev",
 		"serve:prod": "sirv public",

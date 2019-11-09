@@ -1,7 +1,8 @@
 import Popup from './Popup.svelte';
 
-const app = new Popup({
-	target: document.body,
+console.log("popup app here 22")
+const pop = new Popup({
+	target: document.getElementById("popup"),
 });
 
-export default app;
+export default pop;
