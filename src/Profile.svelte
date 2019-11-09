@@ -4,4 +4,4 @@
 
 <h3>Hi  jude!</h3>
 
-<p>Your userID is { uid }</p>
+<p>Your userID is { uid || "nope" }</p>
