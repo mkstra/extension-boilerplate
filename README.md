@@ -5,6 +5,8 @@ yarn
 ```
 
 ...then start [Rollup](https://rollupjs.org):
+
+```bash
 yarn start
 ```
 
@@ -15,7 +17,7 @@ Navigate to [localhost:5000](http://localhost:5000).
 
 Update `public/manifest.json` version and then run:
 
-```
+```bash
 yarn build
 ```
 
@@ -23,11 +25,12 @@ Command will generate a build to `public/`, remove source map files and it's rea
 
 ### Lint and fix files
 
-```
+```bash
 yarn eslint
 ```
 
 ### Unit test with Jest
 
-```js
+```bash
 yarn test
+```
