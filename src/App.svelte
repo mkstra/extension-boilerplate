@@ -12,10 +12,8 @@ TODO:
 import BookBadge from "./BookBadge.svelte"
 import { authState } from 'rxfire/auth';
 import LoginForm from "./LoginForm.svelte"
-import {firebase_} from "./firebaseSetup"
+import {db, auth} from "./firebaseSetup"
 //firebase is in globals in <script> of public/index.html
-const db = firebase_.firestore()
-const auth = firebase_.auth()
 let user;
 const unsubscribe = authState(auth).subscribe(u => {
     console.log("user here", u); 
@@ -24,14 +22,15 @@ const unsubscribe = authState(auth).subscribe(u => {
 });
 
 </script>
-  {#if user}
+  {#if !user}
+    <LoginForm />
+
+  {:else}
+
     <hr>
     <BookBadge uid={user.uid} db={db} />
     <hr>
-
     <button on:click={() => auth.signOut() }>Logout</button>
-  {:else}
-    <LoginForm firebase_={firebase_} />
+
 
   {/if}
-  <h1>tooo</h1>
