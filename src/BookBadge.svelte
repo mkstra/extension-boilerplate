@@ -1,7 +1,7 @@
 <script>
 import { collectionData } from 'rxfire/firestore';
 import { startWith, map} from 'rxjs/operators';
-
+import {db} from "./firebaseSetup.js"
 // User ID passed from parent
 
 // Form Text

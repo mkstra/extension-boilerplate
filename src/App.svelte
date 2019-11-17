@@ -28,7 +28,7 @@ const unsubscribe = authState(auth).subscribe(u => {
   {:else}
 
     <hr>
-    <BookBadge uid={user.uid} db={db} />
+    <BookBadge uid={user.uid} />
     <hr>
     <button on:click={() => auth.signOut() }>Logout</button>
 
