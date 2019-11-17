@@ -42,12 +42,15 @@ export default [{
 		file: 'public/js/bundle.js',
 	},
 	plugins
-}, {
-	plugins,
-	input: 'src/popup.js',
-output: {
-	sourcemap: true,
-	format: 'iife',
-	name: 'pop',
-	file: 'public/popupx.js',
-},}]
+}, 
+// {
+// 	plugins,
+// 	input: 'src/popup.js',
+// output: {
+// 	sourcemap: true,
+// 	format: 'iife',
+// 	name: 'pop',
+// 	file: 'public/popupx.js',
+// }
+// }
+]
