@@ -5,7 +5,6 @@ import {db} from "./firebaseSetup.js"
 // User ID passed from parent
 
 // Form Text
-export let db
 export let uid
 // Query requires an index, see screenshot below
 

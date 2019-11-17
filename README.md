@@ -1,3 +1,6 @@
+## To try out
+*webextension-polyfill package
+
 Install the dependencies...
 
 ```bash
