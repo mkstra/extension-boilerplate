@@ -3,16 +3,13 @@ import { collectionData } from 'rxfire/firestore';
 import { startWith, map} from 'rxjs/operators';
 import {db} from "./firebaseSetup.js"
 // User ID passed from parent
-
 // Form Text
 export let uid
 // Query requires an index, see screenshot below
-
 const sepp = "q8ksupF9ZO4tmUdvXizY"
 const users = db.collection('users') 
 const query = users.where('name', '==', "markus")
 const books = collectionData(query, 'id').pipe(startWith([{name: "yo"}]));
-
 /*
 const query = users.orderBy('name', 'desc')
 const books = collectionData(query, 'books_wanted')
