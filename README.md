@@ -1,6 +1,10 @@
 ## To try out
 *webextension-polyfill package
 
+API source
+https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples
+
+
 Install the dependencies...
 
 ```bash

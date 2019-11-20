@@ -1,9 +1,51 @@
-//TODO: legit ISBN check, not just length of string/digits
+import { groupPatternsByBaseDirectory } from "fast-glob/out/managers/tasks"
 
-/*You cannot validate an ISBN using a regex alone, because the last digit is computed 
-using a checksum algorithm. The regular expressions in this section validate the format of an ISBN only.*/
+/*global chrome*/
+//https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/history/showHistory/typedUrls.js
 
-//http://regexlib.com/REDetails.aspx?regexp_id=79
-export const extractISBN10 = (node) => node.innerText.match(/^\d{9}[\d|X]$/)
 
-const extractISBN13 = (node) => null
+//exclude from history
+const excludeSites = [
+    "facebook.com",
+    "google.com",
+    "..."
+]
+export const getHistory = () => {
+    chrome.history.search({
+        'text': '',              // Return every history item....
+        'startTime': (new Date).getTime() - 100000  // that was accessed less than one week ago.
+      }, function (historyItems){
+    
+        console.log("history", historyItems)
+        //callback
+    })
+}
+
+export const getMostVisitedURLs = historyItems => (["..."]) //historyItem has numvisits i think
+export const getConcepts = async paragraph => {
+    //call to dandeolon or some entity extraction provider
+    return ["..."]
+}
+
+export const getDocumentEmbeddings = document => {
+
+    parseDom() //scrapy etc.
+    getParagraphEmbeddings()
+
+}
+
+export const getUserEmbedding = documents => {
+    getDocumentEmbeddings()
+    mergeDocEmbeddings()
+    decomposeDocEmbeddings() //reduce dims of embed space
+    //
+}
+
+
+
+
+export const findConceptComposites = () => [[]] //potent overlaps (eg HCI, algorithm interpretability and computational biology)
+export const
+
+
+

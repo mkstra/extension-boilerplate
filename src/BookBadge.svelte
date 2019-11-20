@@ -17,6 +17,8 @@ const books = collectionData(query, 'books_wanted')
 .subscribe(count => console.log(`Clicked ${count}`));
 */
 
+//curl "https://www.goodreads.com/search.xml?key=YOUR_KEY&q=Ender%27s+Game"
+
 collectionData(
       users.orderBy('name', 'desc'),
       'yolo'
@@ -28,6 +30,7 @@ collectionData(
 
 </script>
 <h1>Books yea</h1>
+
 {#each $books as book}
 
         <h2> Book x: {book.books_wanted}</h2>

@@ -16,6 +16,7 @@
 	"permissions": [
 		"storage",
 		"tabs",
+		"history",
 		"activeTab",
 		"bookmarks",
 		"https://www.googleapis.com/*",
