@@ -45,7 +45,5 @@ export const getUserEmbedding = documents => {
 
 
 export const findConceptComposites = () => [[]] //potent overlaps (eg HCI, algorithm interpretability and computational biology)
-export const
-
 
 

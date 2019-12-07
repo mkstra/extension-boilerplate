@@ -21,6 +21,24 @@ const unsubscribe = authState(auth).subscribe(u => {
     user = u 
 });
 
+export const getBookmarks = () => {
+  chrome.bookmarks.search({}, function (bookmarks){
+    
+        console.log("bookmarks", bookmarks)
+        //callback
+  })
+}
+
+export const getHistory = () => {
+    chrome.history.search({
+        'text': '',              // Return every history item....
+        'startTime': (new Date).getTime() - 100000000000000000000000  // that was accessed less than one week ago.
+      }, function (historyItems){
+    
+        console.log("history", historyItems)
+        //callback
+    })
+}
 </script>
   {#if !user}
     <LoginForm />
@@ -32,5 +50,8 @@ const unsubscribe = authState(auth).subscribe(u => {
     <hr>
     <button on:click={() => auth.signOut() }>Logout</button>
 
-
   {/if}
+      <button on:click={getHistory}>getHistory</button>
+            <button on:click={getBookmarks}>getBookmarks</button>
+
+
