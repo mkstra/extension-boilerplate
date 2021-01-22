@@ -3,6 +3,7 @@
 //FIXME:onMessage events, only the first to call sendResponse() 
 //for a particular event will succeed in sending the response. All other responses to that event will be ignored.
 'use strict';
+
 // universal Web Extension
 window.browser = window.msBrowser || window.browser || window.chrome;
 const appURL = browser.extension.getURL('index.html');
@@ -10,6 +11,7 @@ const appURL = browser.extension.getURL('index.html');
 // })
 
 function updateActiveTabState() {
+    // updateLocal("www.dacapi.io", 0)
     // If idle, ignore
     chrome.idle.queryState(2000, state => {
         // User is active
@@ -49,37 +51,39 @@ function updateLocal(domain, tabId) {
     console.log(localStorage, "store")
     // const apps = JSON.parse(localStorage["apps"]);
 
-    let readings;
+
+    // let readings;
     chrome.storage.sync.get(['visitDurations'], function(result) {
         //{"u1": time1, "u2": time2}
-        urls = result['visitDurations']
-        duration = urls[domain]
-        if (duration) {
-            if (duration > 3000){
+        const urls = result['visitDurations'] || {"visitDuration": {[domain]: 0}}
+       
 
-                console.log(domain, "qualifies!")
-                return
+        //once per installation ? browser setup?
+
+        console.log(urls, "urls")
+        const duration = urls[domain] || 0
+    
+        if (duration > 3000){
+
+            // chrome.tabs.create({url:"popup.html"});
+
+            console.log(domain, "qualifies!")
+            return 
 
                 //TODO: popup menu
-            }
-            else {
+        }
+        else {
                 //send message to popup
                 urls[domain] = duration + 1000; //timeinterval
                 chrome.storage.sync.set({visitDurations: urls}, function(result) {
-                    console.log('set domain value 1', domain);
+                    console.log('set domain value', urls[domain], domain);
                   });
-            }
-        }
-        else {
-            urls[domain] = 0
-            chrome.storage.sync.set({visitDurations: urls}, function(result) {
-                console.log('Value currently is ' + JSON.stringify(result));
-              });
-        }
-    })
+                }
+        })
 }
 
 setInterval(function () {
     updateActiveTabState();
+    console.log('runs interval')
 },  3000);
 

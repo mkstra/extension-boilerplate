@@ -9,11 +9,25 @@
 // universal Web Extension
 window.browser = window.chrome ||  window.msBrowser || window.browser ;
 
+
+const bottomBarStyle = `
+    margin-top: 0;
+    position: fixed;
+    z-index: 1000000;
+    /* left: 50%; */
+    bottom: 1rem;
+    background: white;
+    border: 1px black solid;
+    padding: 0.3rem;
+    border-radius: 5px;"`
+
+
 window.onload = function () {
     const newDiv = document.createElement("div");
 
     newDiv.setAttribute("id", "markusExtend");
     newDiv.innerHTML = "yolo content"
+    newDiv.style = bottomBarStyle;
     document.body.appendChild(newDiv);
 
     /*
@@ -29,5 +43,7 @@ window.onload = function () {
 
     
      console.log("hello content end")
+
+     
 
     }
