@@ -1,13 +1,11 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyDC1R-8N_K9ExqoUqlY_hv3Hsq-95fL7XU",
-    authDomain: "together-7d90d.firebaseapp.com",
-    databaseURL: "https://together-7d90d.firebaseio.com",
-    projectId: "together-7d90d",
-    storageBucket: "together-7d90d.appspot.com",
-    messagingSenderId: "1051151523557",
-    appId: "1:1051151523557:web:43e5075d31f4722731be0c",
-    measurementId: "G-279CSGB8R1"
-  };
+  apiKey: "AIzaSyCrISdZPlEkPhQ6aeaQRdx-a67qZ0DMXpE",
+  authDomain: "prose-ext.firebaseapp.com",
+  projectId: "prose-ext",
+  storageBucket: "prose-ext.appspot.com",
+  messagingSenderId: "348264776983",
+  appId: "1:348264776983:web:e32e7869a82d51a2d42352"
+};;
 // Initialize Firebas
 
 const chromestoreID = "bedmbgkddhhnajfafgpbpbcjmdnnngll"

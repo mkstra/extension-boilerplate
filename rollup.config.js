@@ -39,7 +39,7 @@ export default [{
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/js/bundle.js',
+		file: 'public/js/content.js',
 	},
 	plugins
 }, 
