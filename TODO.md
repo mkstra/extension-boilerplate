@@ -2,7 +2,10 @@
 
 - [x] Keypresses like Shift+R
 - [ ] add to "marks" 
-- [ ] autoadd and display message
+- [ ] autoadd and display message (change css)
+- [ ] 
+- [ ] run client side classifier (isPost)
+- [ ] always-on lists and blocklists
 
 ## Features
 - [ ] we can watch extension from

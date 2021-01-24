@@ -55,5 +55,16 @@ export default [
 		file: 'public/js/content.js',
 	},
 	plugins,
+},
+{
+	
+	input: 'src/bg.js',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: 'public/js/background.js',
+	},
+	plugins,
 }
 ]

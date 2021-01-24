@@ -24,6 +24,10 @@ var app = (function () {
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
     }
+
+    function append(target, node) {
+        target.appendChild(node);
+    }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
     }
@@ -33,6 +37,9 @@ var app = (function () {
     function element(name) {
         return document.createElement(name);
     }
+    function text(data) {
+        return document.createTextNode(data);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -41,6 +48,9 @@ var app = (function () {
     }
     function children(element) {
         return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value) {
+        node.style.setProperty(key, value);
     }
 
     let current_component;
@@ -238,14 +248,15 @@ var app = (function () {
     const file = "src/Content.svelte";
 
     function create_fragment(ctx) {
-    	var div;
+    	var button, t;
 
     	return {
     		c: function create() {
-    			div = element("div");
-    			div.textContent = "Shift + RFFF taaaaaaawwwo mark";
-    			attr(div, "id", "prosebar");
-    			add_location(div, file, 23, 0, 508);
+    			button = element("button");
+    			t = text("Shift + RFFF qqqqs mark");
+    			attr(button, "class", "prosebar");
+    			set_style(button, "background-color", (ctx.voted ? 'blue' : 'white'));
+    			add_location(button, file, 20, 0, 480);
     		},
 
     		l: function claim(nodes) {
@@ -253,41 +264,45 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
+    			insert(target, button, anchor);
+    			append(button, t);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.voted) {
+    				set_style(button, "background-color", (ctx.voted ? 'blue' : 'white'));
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(button);
     			}
     		}
     	};
     }
 
-    function instance($$self) {
+    function instance($$self, $$props, $$invalidate) {
 
-    // universal Web Extension
-    window.browser = window.chrome ||  window.msBrowser || window.browser ;
+    	// universal Web Extension
+    	window.browser = window.chrome || window.msBrowser || window.browser;
 
-    chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            console.log("request here content");
-          console.log(sender ?
-                      "from a background script:" + sender:
-                      "from the extension tt");
+    	let voted = false;
 
-            sendResponse({content: "goodbye"});
-        }
-      );
+    	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    		console.log('request here content');
+    		console.log(sender ? 'from a background script:' + sender : 'from the extension tt');
 
+    		sendResponse({ content: 'goodbye' });
+    		$$invalidate('voted', voted = true);
+    	});
 
-    // console.log(M, 'materialize')
+    	// console.log(M, 'materialize')
 
-    	return {};
+    	return { voted };
     }
 
     class Content extends SvelteComponentDev {
