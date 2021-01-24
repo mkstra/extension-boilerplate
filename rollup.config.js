@@ -33,24 +33,27 @@ const plugins =  [
 	production && terser(),
 ]
 
-export default [{
+export default [
+// 	{
+// 	input: 'src/main.js',
+// 	output: {
+// 		sourcemap: true,
+// 		format: 'iife',
+// 		name: 'app',
+// 		file: 'public/js/bundle.js',
+// 	},
+// 	plugins,
+
+// }, 
+{
+	
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/js/bundle.js',
+		file: 'public/js/content.js',
 	},
-	plugins
-}, 
-// {
-// 	plugins,
-// 	input: 'src/popup.js',
-// output: {
-// 	sourcemap: true,
-// 	format: 'iife',
-// 	name: 'pop',
-// 	file: 'public/popupx.js',
-// }
-// }
+	plugins,
+}
 ]

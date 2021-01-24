@@ -1,3 +1,20 @@
+## Technical /now
+
+- [x] Keypresses like Shift+R
+- [ ] add to "marks" 
+- [ ] autoadd and display message
+
+## Features
+- [ ] we can watch extension from
+- [ ] pass messages from dashboard (get chrome.history or chrome.storage) https://developer.chrome.com/docs/extensions/mv2/messaging/
+
+Making Data Entry more Expressive
+- [ ] write some adaptors (Twitter, Youtube Vid, TikTok, Instagram)
+- [ ] validate how this is better than annotation apps??? Memex or Hypothesis?
+- Making Data Entry ceasier
+- [ ] whitelist domains --> auto post
+- [ ] no tags, no annotations, no lists, no upvotes, just vote with your attention
+
 ## CD / CI
 - [ ] rollup --watch rebuild
 - [ ] rollup restart daemon on crash

@@ -13,7 +13,7 @@ const appURL = browser.extension.getURL('index.html');
 function updateActiveTabState() {
     // updateLocal("www.dacapi.io", 0)
     // If idle, ignore
-    chrome.idle.queryState(2000, state => {
+    chrome.idle.queryState(20, state => { //this is in seconds for some reason
         // User is active
         console.log(state, "state")
         if (state === "active") {
@@ -30,7 +30,8 @@ function updateActiveTabState() {
 
                     if (
                         tab &&
-                        tabURL && ["loading", "complete"].indexOf(tab.status) > -1
+                        tabURL && 
+                        ["loading", "complete"].indexOf(tab.status) > -1
                     ) {
 
 
@@ -51,11 +52,11 @@ function updateLocal(domain, tabId) {
     console.log(localStorage, "store")
     // const apps = JSON.parse(localStorage["apps"]);
 
-
     // let readings;
     chrome.storage.sync.get(['visitDurations'], function(result) {
         //{"u1": time1, "u2": time2}
-        const urls = result['visitDurations'] || {"visitDuration": {[domain]: 0}}
+        const urls = result['visitDurations'] 
+        || {"visitDuration": {[domain]: 0}} //if the database is set up afresh
        
 
         //once per installation ? browser setup?
@@ -68,6 +69,15 @@ function updateLocal(domain, tabId) {
             // chrome.tabs.create({url:"popup.html"});
 
             console.log(domain, "qualifies!")
+
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                chrome.tabs.sendMessage(tabs[0].id, {action: "fat yolo"}, function(response) {
+                    console.log(response.content, "response in background");
+
+
+                });  
+            });
+        
             return 
 
                 //TODO: popup menu

@@ -11,7 +11,7 @@
 	},
 	"default_locale": "en",
 	"background": {
-		"scripts": ["js/background.js"]
+		"scripts": ["js/background.js", "js/hot-reload.js"]
 	},
 	"permissions": [
 		"storage",
@@ -39,8 +39,10 @@
 			"http://*/*",
 			"https://*/*"
 		  ],
-		  "js": [
-			"js/content.js"
+
+		  "js": ["js/content.js"],
+		  "css": [
+			  "styles.css"
 		  ]
 		}
 	  ],
