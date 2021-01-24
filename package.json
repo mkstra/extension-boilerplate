@@ -56,9 +56,11 @@
 		"svelte": "3.5.4"
 	},
 	"dependencies": {
+		"chrome-promise": "^3.0.5",
 		"firebase": "^7.2.3",
 		"firebase-tools": "^9.2.2",
 		"firebaseui": "^4.7.1",
+		"ramda": "^0.27.1",
 		"rxfire": "^3.8.8",
 		"rxjs": "^6.5.3"
 	},
