@@ -19,7 +19,23 @@
             }, {.....} ]
         */
 
- 
+
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        
+        if (request.action == "toggle-marked") {
+            console.log("yeahh")
+            update(0, true).
+                then(e=> {
+                    console.log("fatjew")
+                    sendResponse({ content: 'background to major tom' })
+                }).catch(e => console.log('error 111', e))
+        }
+        
+        return true
+		// marked = true;
+    });
+  
+
     const upsertNode = (state, predicate, updateFn) => {
         //TODO (accept multiples)
         const node = state.find(predicate) ||{
@@ -49,7 +65,7 @@
 
     
     
-    const update = async (interval) => {
+    const update = async (interval, userAction=false) => {
         //TODO add temp property that get's cleaned after each session
                 //and youDB that stays
         
@@ -57,13 +73,12 @@
         const {url, id} = tab
         if (!url) return
 
-
+        console.log("aaa")
         const dbKey="prose-log-entries"
         let entries = await chromep.storage.sync.get(dbKey) 
         entries = entries[dbKey] || []
 
         // entries = upsertNode(entries, n => n["url"] == url, increaseActiveTime) 
-
 
         //! all this is mutative if node exists
         let node = entries.find(n => n["url"] == url) ||{
@@ -77,23 +92,33 @@
         }
         node["activeTime"] += interval
 
+        if (userAction) {
+            node["marked"] = !node["marked"]
+            node["blocked"] = true
+        }
         if (node["activeTime"] > 6000 && !node["marked"] && !node["blocked"]) {
             node["marked"] = true       
         }
 
-        console.log(node);
         entries = uniqBy(
                 n => n["url"], 
                 entries.concat(node) //adds updated node instead of rewriting collection [a, b, c , a]
             )
-        console.log(entries, "entries")
-        const res = await chromep.storage.sync.set({[dbKey]: entries})
-        console.log('res', res)
+        console.log(node, "node")
 
-        if (node["marked"]){
-           const response= await chromep.tabs.sendMessage(id, {action: "toast:marked"})
-           console.log("response", response)
+        let res;
+        console.log(entries)
+        try {
+            res = await chromep.storage.sync.set({[dbKey]: entries})
+
         }
+        catch (err) {
+                chrome.storage.sync.set({[dbKey]: entries}, e => console.log(entries, "entries set"))
+                console.log(err, "error in setting DB")
+        }
+        console.log(res, "updaete res")
+
+        return res
     }
 
     //TODO storage.onChange()

@@ -2,7 +2,8 @@
 	"manifest_version": 2,
 	"name": "proseflow",
 	"key": "pifjboialgijbmficjlmmbnajlegobeo",
-	"author": "Markus",
+	"author": "Markus Strasser (@mkstra)",
+	"incognito": "not_allowed",
 	"version": "0.0.2",
 	"description": "start here",
 	"icons": {
@@ -19,6 +20,7 @@
 		"tabs",
 		"idle",
 		"history",
+		"notifications",
 		"activeTab",
 		"bookmarks",
 		"https://www.googleapis.com/*",
@@ -43,7 +45,8 @@
 
 		  "js": ["js/content.js"],
 		  "css": [
-			  "styles.css"
+			  "styles.css",
+			  "toastr.min.css"
 		  ]
 		}
 	  ],
