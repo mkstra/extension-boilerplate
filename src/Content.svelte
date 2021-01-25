@@ -3,59 +3,39 @@
   'use strict';
   import toastr from "toastr"
   import hotkeys from 'hotkeys-js'
-
+  import {path} from "ramda"
   
-
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
 
-
-
   hotkeys('shift+r', function(event, handler){
   // Prevent the default refresh event under WINDOWS system
-    chrome.runtime.sendMessage({action: "toggle-marked"}, res => console.log(res, "resssaa"));
-
+    chrome.runtime.sendMessage({action: "toggle-marked"}, _ => _);
     event.preventDefault() 
   });
 
-  
   let marked = false;
 
-  //check if this page is marked
-
-  const isMarked = (location, storage) => {
-    const node = storage.find(n => n.url == location)
-    if (!node) return false
-    return node.marked  
-  }
-
-  chrome.storage.sync.get("prose-log-entries", storage => {
-    marked = isMarked(window.location.href, storage["prose-log-entries"])
+  //get initial value on page startup
+  chrome.storage.sync.get(window.location.href, storage => {
+    marked = !!path([window.location.href, "marked"], storage)
     console.log("heey", marked)
-
-  } )
+  })
 
   chrome.storage.onChanged.addListener(function(changes, namespace) {
-    for (const key in changes) {
-      const storageChange = changes[key];
-      const storage = storageChange.newValue
+    /*changes = {
+      url: {oldValue: {...}, newValue: {....}}, url2: {...}
+    }*/
+    const m = !!path([window.location.href, "newValue", "marked"], changes)
+    if (m == marked) return //nothing changed (except timestamps)
+    
+    marked = m
+    marked 
+      ? toastr.info("ADDED: Press Shift + R to undo")
+      : toastr.info("REMOVED: Press Shift + R to add again")
 
-      const m = isMarked(window.location.href, storage)
-      console.log("m", m)
-      if (m == marked) return //nothing changed (except timestamps)
-      
-      marked = m
-      
-      if (marked) {
-        toastr.info("Press Shift + R to undo", "Content added to your Store")
-      } else {
-        toastr.info("Press Shift + R to add again", "REMOVED")
-
-      }
-    }
     return true //needed for async?!
-});
-
+  });
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log(request, "requ")
