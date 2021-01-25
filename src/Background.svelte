@@ -2,32 +2,10 @@
 	/*global chrome*/
     'use strict';
     import chromep from 'chrome-promise'
-    import {identity, union, head, isEmpty} from 'ramda'
-    
+    import {uniqBy, union, head, isEmpty} from 'ramda'
+    import { writable } from 'svelte/store';
 
-
-    const addNode = (url) => {
-        //TODO simple add node 
-    }
-
-    const update = async () => {
-       const tabs = await chromep.tabs.query({
-                    active: true,
-                    lastFocusedWindow: true
-                })
-
-        const activeTab = head(tabs)
-        
-        if (!activeTab) return
-
-        const {id, url, status} = activeTab
-        
-
-    
-        /* ?? probably not needed
-        const currentWindow = await chromep.windows.get(windowId)
-        */
-         /* content = [{
+        /* youDB = [{
                 url: "wadad",
                    
                 activeTime: 1000,
@@ -39,35 +17,87 @@
                 doi: "adsad" 
         
             }, {.....} ]
-            */
-        //{content: []}
+        */
 
-        //a function that takes state and 
+ 
+    const upsertNode = (state, predicate, updateFn) => {
+        //TODO (accept multiples)
+        const node = state.find(predicate) ||{
+            url, 
+            activeTime: 0, 
+            dateCreated: Date.now(),
+
+            marked: false,
+            blocked: false,
+        
+        }
+        return uniqBy(
+            n => n["url"], 
+            state + [updateFn(node)] //adds updated node instead of rewriting collection [a, b, c , a]
+            )
+    }
+    const getActiveTab = async () => {
+        const idleState = await chromep.idle.queryState(20)
+        if (idleState != "active") return
+
+       const tabs = await chromep.tabs.query({
+                    active: true,
+                    lastFocusedWindow: true
+                })
+        return head(tabs)
+    }
+
+    
+    
+    const update = async (interval) => {
+        //TODO add temp property that get's cleaned after each session
+                //and youDB that stays
+        
+        const tab = await getActiveTab() || {}
+        const {url, id} = tab
         if (!url) return
 
 
-        //TODO add temp property that get's cleaned after each session
-                //and youDB that stays
-        let entries = await chromep.storage.sync.get("youDB") 
-        entries = entries["youDB"] || []
-        
-        console.log(entries, "entries")
-        const node = entries.find(n => n["url"] == url) ||{
+        const dbKey="prose-log-entries"
+        let entries = await chromep.storage.sync.get(dbKey) 
+        entries = entries[dbKey] || []
+
+        // entries = upsertNode(entries, n => n["url"] == url, increaseActiveTime) 
+
+
+        //! all this is mutative if node exists
+        let node = entries.find(n => n["url"] == url) ||{
             url, 
             activeTime: 0, 
-            marked: false
-        }
-        node["activeTime"] += 3000
+            dateCreated: Date.now(),
 
-        if (node["activeTime"] > 6000 && !node["deny"]) {
-            node["marked"] = true
-        }
-        
-        await chromep.storage.sync.set({youDB: union(entries, [node])})
-        console.log("set node", node)
-
+            marked: false,
+            blocked: false,
         
         }
+        node["activeTime"] += interval
+
+        if (node["activeTime"] > 6000 && !node["marked"] && !node["blocked"]) {
+            node["marked"] = true       
+        }
+
+        console.log(node);
+        entries = uniqBy(
+                n => n["url"], 
+                entries.concat(node) //adds updated node instead of rewriting collection [a, b, c , a]
+            )
+        console.log(entries, "entries")
+        const res = await chromep.storage.sync.set({[dbKey]: entries})
+        console.log('res', res)
+
+        if (node["marked"]){
+           const response= await chromep.tabs.sendMessage(id, {action: "toast:marked"})
+           console.log("response", response)
+        }
+    }
+
+    //TODO storage.onChange()
+
     
 
 
@@ -82,8 +112,12 @@
     //no updates
 
 
+const interval = 3000
 setInterval(function () {
-        update();
+        update(interval);
+        //moveNode(temp-key)
+        //onChange-->messag
+
         console.log('runs update')
-},  3000);
+},  interval);
 </script>

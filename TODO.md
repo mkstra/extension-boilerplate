@@ -1,9 +1,12 @@
 ## Technical /now
 
 - [x] Keypresses like Shift+R
-- [ ] add to "marks" 
-- [ ] autoadd and display message (change css)
-- [ ] 
+- [x] add to "marks" 
+- [ ] separate YOUDB storage from TEMP-session
+- [ ] todo and display message (change css)
+- [ ] black and white list storage
+- [ ] implement reframe in Svelte ..... lol
+- [ ] slowly think about testing (look at https://github.com/Lamden/wallet/)
 - [ ] run client side classifier (isPost)
 - [ ] always-on lists and blocklists
 

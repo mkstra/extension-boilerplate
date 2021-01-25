@@ -1,9 +1,24 @@
 <script>
 	/*global chrome*/
-	'use strict';
+  'use strict';
+  
+  var map = {}; // You could also use an array
+  onkeydown = onkeyup = function(e){
+    map[e.key] = e.type == 'keydown'; //genius
+    console.log(map, "map")
+    /* insert conditional here */
+    if(map["Shift"] && map["R"])
+    {// CTRL+SHIFT+A
+      console.log('Shift R');
+      //send to background -- background handles state???? send back action?
+    }
+  }
+
+  window.addEventListener('keydown', onkeydown)
+  window.addEventListener('keyup', onkeyup)
 
 	// universal Web Extension
-	window.browser = window.chrome || window.msBrowser || window.browser;
+	// window.browser = window.chrome || window.msBrowser || window.browser;
 
 	let voted = false;
 
@@ -13,7 +28,9 @@
 
 		sendResponse({ content: 'goodbye' });
 		voted = true;
-	});
+  });
+  
+
 
 	// console.log(M, 'materialize')
 </script>

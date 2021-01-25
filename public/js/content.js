@@ -256,7 +256,7 @@ var app = (function () {
     			t = text("Shift + RFFF qqqqs mark");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.voted ? 'blue' : 'white'));
-    			add_location(button, file, 20, 0, 480);
+    			add_location(button, file, 37, 0, 949);
     		},
 
     		l: function claim(nodes) {
@@ -286,9 +286,23 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
+      
+      var map = {}; // You could also use an array
+      onkeydown = onkeyup = function(e){
+        map[e.key] = e.type == 'keydown';    console.log(map, "map");
+        /* insert conditional here */
+        if(map["Shift"] && map["R"])
+        {// CTRL+SHIFT+A
+          console.log('Shift R');
+          //send to background -- background handles state???? send back action?
+        }
+      };
+
+      window.addEventListener('keydown', onkeydown);
+      window.addEventListener('keyup', onkeyup);
 
     	// universal Web Extension
-    	window.browser = window.chrome || window.msBrowser || window.browser;
+    	// window.browser = window.chrome || window.msBrowser || window.browser;
 
     	let voted = false;
 
@@ -298,7 +312,9 @@ var app = (function () {
 
     		sendResponse({ content: 'goodbye' });
     		$$invalidate('voted', voted = true);
-    	});
+      });
+      
+
 
     	// console.log(M, 'materialize')
 
