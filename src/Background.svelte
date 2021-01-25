@@ -5,33 +5,15 @@
 	import { uniqBy, union, head, isEmpty } from 'ramda';
 	import { writable } from 'svelte/store';
 
-	/* youDB = [{
-                url: "wadad",
-                   
-                activeTime: 1000,
-                marked: true,
-                dateCreated: now()
-                dateUpdated: now()
-                --optional---
-                xpath: "#obj -- highlight or whatever"
-                doi: "adsad" 
-        
-            }, {.....} ]
-        */
-
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if (request.action == 'toggle-marked') {
-			console.log('yeahh');
-			update(0, true)
+			update(0, true) //user initiated
 				.then(e => {
-					console.log('fatjew');
 					sendResponse({ content: 'background to major tom' });
 				})
-				.catch(e => console.log('error 111', e));
+				.catch(e => console.log('error in update', e));
 		}
-
-		return true;
-		// marked = true;
+		return true; //async message passing
 	});
 
 	const getActiveTab = async () => {
@@ -47,7 +29,7 @@
 
 	const update = async (interval, userAction = false) => {
 		const tab = (await getActiveTab()) || {};
-		const { url, id } = tab;
+		const { url } = tab;
 		if (!url) return;
 		let node = await chromep.storage.sync.get(url);
 		node = node[url] || {
@@ -65,17 +47,12 @@
 		if (node['activeTime'] > 6000 && !node['marked'] && !node['blocked']) {
 			node['marked'] = true;
 		}
-		let res;
 		console.log(node, 'node');
 		try {
-			res = await chromep.storage.sync.set({ [url]: node });
+			await chromep.storage.sync.set({ [url]: node });
 		} catch (err) {
-			// chrome.storage.sync.set({[url]: node}, e => console.log(node, "node set"))
 			console.log(err, 'error in setting DB');
 		}
-		console.log(res, 'updaete res');
-
-		return res;
 	};
 
 	const interval = 3000;

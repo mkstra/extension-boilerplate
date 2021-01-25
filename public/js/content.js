@@ -12310,7 +12310,7 @@ var app = (function () {
     			t = text("Shift + R to mark content");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 69, 0, 1806);
+    			add_location(button, file, 60, 0, 1600);
     		},
 
     		l: function claim(nodes) {
@@ -12372,15 +12372,6 @@ var app = (function () {
 
         return true //needed for async?!
       });
-
-    	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        console.log(request, "requ");
-    		sendResponse({ content: 'goodbye' });
-        // marked = true;
-        
-        return true
-      });
-      
 
       toastr.options = {
       "closeButton": false,

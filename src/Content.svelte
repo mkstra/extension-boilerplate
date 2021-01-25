@@ -37,15 +37,6 @@
     return true //needed for async?!
   });
 
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log(request, "requ")
-		sendResponse({ content: 'goodbye' });
-    // marked = true;
-    
-    return true
-  });
-  
-
   toastr.options = {
   "closeButton": false,
   "debug": false,
