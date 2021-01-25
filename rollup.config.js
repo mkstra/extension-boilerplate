@@ -58,12 +58,23 @@ export default [
 },
 {
 	
-	input: 'src/bg.js',
+	input: 'src/background.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
 		file: 'public/js/background.js',
+	},
+	plugins,
+},
+{
+	
+	input: 'src/popup.js',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: 'public/js/popup.js',
 	},
 	plugins,
 }
