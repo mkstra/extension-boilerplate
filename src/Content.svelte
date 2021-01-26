@@ -4,22 +4,24 @@
 	import toastr from 'toastr';
 	import hotkeys from 'hotkeys-js';
 	import { path, isEmpty } from 'ramda';
-	import normalizeUrl from "normalize-url"
+	import normalizeUrl from 'normalize-url';
 
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
 
 	let activeTime = 0;
 	const interval = 15000;
+	let marked = false;
+
 	let reminderShown = false;
-	const currentUrl = normalizeUrl(window.location.href)
+	const currentUrl = normalizeUrl(window.location.href);
 	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
 	// 	.then(res => res.json())
 	// 	.then(res => console.log("aaa", res))
 	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
 	let startTimer = () =>
-	//for the .info toast()
+		//for the .info toast()
 		setInterval(() => {
 			activeTime += interval;
 
@@ -29,9 +31,7 @@
 				//! kinda nasty hack
 				window.clearInterval(trackActiveTime);
 			}
-			{
-				console.log(activeTime);
-			}
+			console.log(activeTime);
 		}, interval);
 
 	let trackActiveTime = startTimer();
@@ -40,7 +40,7 @@
 		'visibilitychange',
 		() => {
 			/*only count when TAB is active tab*/
-			document.hidden && clearInterval(trackActiveTime);
+			document.hidden && window.clearInterval(trackActiveTime);
 
 			if (!document.hidden && !reminderShown) {
 				trackActiveTime = startTimer();
@@ -50,19 +50,20 @@
 	);
 
 	const toggleContent = () => {
-		chrome.runtime.sendMessage({
-			action: 'toggle-marked', 
-			title: document.title,
-			url: currentUrl
-		}, _ => _);
+		chrome.runtime.sendMessage(
+			{
+				action: 'toggle-marked',
+				title: document.title,
+				url: currentUrl,
+			},
+			_ => _
+		);
 	};
 	hotkeys('shift+r', function(event, handler) {
 		// Prevent the default refresh event under WINDOWS system
 		toggleContent();
 		event.preventDefault();
 	});
-
-	let marked = false;
 
 	//get initial value on page startup
 	chrome.storage.sync.get(currentUrl, storage => {
@@ -74,8 +75,9 @@
 		/*changes = {
       url: {oldValue: {...}, newValue: {....}}, url2: {...}
 	}*/
+		window.clearInterval(trackActiveTime);
 		const m = !!path([currentUrl, 'newValue'], changes);
-		
+
 		if (m == marked) return; //nothing changed (except timestamps)
 
 		marked = m;
@@ -102,8 +104,6 @@
 		showMethod: 'fadeIn',
 		hideMethod: 'fadeOut',
 	};
-
-	// console.log(M, 'materialize')
 </script>
 
 <button
@@ -112,4 +112,3 @@
 	on:click={toggleContent}>
 	{marked ? '[X] Remove Mark (Shift+R)' : '[+] Mark Content (Shift+R)'}
 </button>
-<!-- <div id="prosebar" class:marked={true}> Shift + RFFF qq mark</div> -->

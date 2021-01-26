@@ -12981,7 +12981,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
-    			add_location(button, file, 108, 0, 2640);
+    			add_location(button, file, 108, 0, 2657);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -13025,6 +13025,8 @@ var app = (function () {
     	window.browser = window.chrome || window.msBrowser || window.browser;
 
     	let activeTime = 0;
+    	let marked = false;
+
     	let reminderShown = false;
     	const currentUrl = normalizeUrl_1(window.location.href);
     	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
@@ -13033,7 +13035,7 @@ var app = (function () {
     	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
     	let startTimer = () =>
-    	//for the .info toast()
+    		//for the .info toast()
     		setInterval(() => {
     			activeTime += interval;
 
@@ -13043,9 +13045,7 @@ var app = (function () {
     				//! kinda nasty hack
     				window.clearInterval(trackActiveTime);
     			}
-    			{
-    				console.log(activeTime);
-    			}
+    			console.log(activeTime);
     		}, interval);
 
     	let trackActiveTime = startTimer();
@@ -13054,7 +13054,7 @@ var app = (function () {
     		'visibilitychange',
     		() => {
     			/*only count when TAB is active tab*/
-    			document.hidden && clearInterval(trackActiveTime);
+    			document.hidden && window.clearInterval(trackActiveTime);
 
     			if (!document.hidden && !reminderShown) {
     				trackActiveTime = startTimer();
@@ -13064,19 +13064,20 @@ var app = (function () {
     	);
 
     	const toggleContent = () => {
-    		chrome.runtime.sendMessage({
-    			action: 'toggle-marked', 
-    			title: document.title,
-    			url: currentUrl
-    		}, _ => _);
+    		chrome.runtime.sendMessage(
+    			{
+    				action: 'toggle-marked',
+    				title: document.title,
+    				url: currentUrl,
+    			},
+    			_ => _
+    		);
     	};
     	hotkeys('shift+r', function(event, handler) {
     		// Prevent the default refresh event under WINDOWS system
     		toggleContent();
     		event.preventDefault();
     	});
-
-    	let marked = false;
 
     	//get initial value on page startup
     	chrome.storage.sync.get(currentUrl, storage => {
@@ -13088,8 +13089,9 @@ var app = (function () {
     		/*changes = {
           url: {oldValue: {...}, newValue: {....}}, url2: {...}
     	}*/
+    		window.clearInterval(trackActiveTime);
     		const m = !!path([currentUrl, 'newValue'], changes);
-    		
+
     		if (m == marked) return; //nothing changed (except timestamps)
 
     		$$invalidate('marked', marked = m);
@@ -13117,9 +13119,7 @@ var app = (function () {
     		hideMethod: 'fadeOut',
     	};
 
-    	// console.log(M, 'materialize')
-
-    	return { toggleContent, marked };
+    	return { marked, toggleContent };
     }
 
     class Content extends SvelteComponentDev {
