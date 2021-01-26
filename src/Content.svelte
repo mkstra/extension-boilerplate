@@ -44,11 +44,12 @@
 
 	const toggleContent = () => {
 		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
-		event.preventDefault();
 	};
 	hotkeys('shift+r', function(event, handler) {
 		// Prevent the default refresh event under WINDOWS system
-		toggleContent();
+    toggleContent();
+    event.preventDefault();
+
 	});
 
 	let marked = false;

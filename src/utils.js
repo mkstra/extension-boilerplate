@@ -19,16 +19,17 @@ export const getActiveTab = async (detectionIntervalSeconds=20) => {
     });
     return head(tabs);
 };
-//TODO split into pipe components
-export const storageToColl = store => {
-        const nodes = pickBy((val, key) => val['marked'], store);
-        //flatten // ["url", "{}"]
-        return Object.entries(nodes)
-            .map(([url, node]) => assoc('url', url, node))
-            .map(({ url, title, dateCreated }) => ({
-                title: title || '',
-                created: new Date(dateCreated).toDateString(),
-                url,
 
-            }));
-    };
+//TODO split into pipe components
+// export const storageToColl = store => {
+//         const nodes = pickBy((val, key) => val['marked'], store);
+//         //flatten // ["url", "{}"]
+//         return Object.entries(nodes)
+//             .map(([url, node]) => assoc('url', url, node))
+//             .map(({ url, title, dateCreated }) => ({
+//                 title: title || '',
+//                 created: new Date(dateCreated).toDateString(),
+//                 url,
+
+//             }));
+//     };

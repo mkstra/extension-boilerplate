@@ -12314,7 +12314,7 @@ var app = (function () {
     			t = text("Shift + R to mark content");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 96, 0, 2266);
+    			add_location(button, file, 97, 0, 2271);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -12388,11 +12388,12 @@ var app = (function () {
 
     	const toggleContent = () => {
     		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
-    		event.preventDefault();
     	};
     	hotkeys('shift+r', function(event, handler) {
     		// Prevent the default refresh event under WINDOWS system
-    		toggleContent();
+        toggleContent();
+        event.preventDefault();
+
     	});
 
     	let marked = false;
