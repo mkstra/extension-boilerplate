@@ -47,7 +47,7 @@ export default [
 // }, 
 {
 	
-	input: 'src/main.js',
+	input: 'src/content.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',

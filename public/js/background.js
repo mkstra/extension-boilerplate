@@ -509,7 +509,7 @@ var app = (function () {
 
     	const update = async (interval, userAction = false) => {
     		const tab = (await getActiveTab()) || {};
-    		const { url } = tab;
+    		const { url , title } = tab;
     		if (!url) return;
     		let node = await chromePromise$1.storage.sync.get(url);
     		node = node[url] || {
