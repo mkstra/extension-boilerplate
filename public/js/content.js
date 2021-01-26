@@ -12981,7 +12981,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
-    			add_location(button, file, 108, 0, 2657);
+    			add_location(button, file, 108, 0, 2658);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -13066,7 +13066,7 @@ var app = (function () {
     	const toggleContent = () => {
     		chrome.runtime.sendMessage(
     			{
-    				action: 'toggle-marked',
+    				action: 'toggle:content',
     				title: document.title,
     				url: currentUrl,
     			},

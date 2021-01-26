@@ -366,11 +366,11 @@ var app = (function () {
 
     function instance($$self) {
 
-    	chrome.runtime.onMessage.addListener(function({action, title, url}, sender, sendResponse) {
-    		if (action == 'toggle-marked') {
+    	chrome.runtime.onMessage.addListener(function({ action, title, url }, sender, sendResponse) {
+    		if (action == 'toggle:content') {
     			update(url, title) //user initiated
-    				.then(e => {
-    					sendResponse({ content: 'added content' });
+    				.then(() => {
+    					sendResponse({ action: 'added content' });
     				})
     				.catch(e => console.log('error in update', e));
     		}
@@ -388,22 +388,32 @@ var app = (function () {
     	const update = async (url, title) => {
     		let entry = await chromePromise$1.storage.sync.get(url);
     		const node = Node(url, title);
-    		console.log(node, "node here");
-    		if (entry[url]) {
-    			try {
-    				await chromePromise$1.storage.sync.remove(url);
-    			} catch (err) {
-    				console.log(err, 'error in removing from DB');
-    			}
-    		} else {
-    			try {
-    				await chromePromise$1.storage.sync.set({ [url]: node });
-    			} catch (err) {
-    				console.log(err, 'error in setting node in DB');
-    			}
+    		console.log(node, 'node here');
+
+    		try {
+    			entry[url]
+    				? await chromePromise$1.storage.sync.remove(url)
+    				: await chromePromise$1.storage.sync.set({ [url]: node });
+    		} catch (err) {
+    			console.log(err, `error in ${entry[url] ? "REMOVE" : "SETTING"}`);
     		}
-    		return true
+    		return true;
     	};
+
+    	// if (entry[url]) {
+    	// 	try {
+    	// 		await chromep.storage.sync.remove(url);
+    	// 	} catch (err) {
+    	// 		console.log(err, 'error in removing from DB');
+    	// 	}
+    	// } else {
+    	// 	try {
+    	// 		await chromep.storage.sync.set({ [url]: node });
+    	// 	} catch (err) {
+    	// 		console.log(err, 'error in SETTING');
+    	// 	}
+    	// }
+    	// return true
 
     	return {};
     }

@@ -52,7 +52,7 @@
 	const toggleContent = () => {
 		chrome.runtime.sendMessage(
 			{
-				action: 'toggle-marked',
+				action: 'toggle:content',
 				title: document.title,
 				url: currentUrl,
 			},
