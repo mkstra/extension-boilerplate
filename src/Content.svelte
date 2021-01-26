@@ -42,10 +42,13 @@
 		false
 	);
 
-	hotkeys('shift+r', function(event, handler) {
-		// Prevent the default refresh event under WINDOWS system
+	const toggleContent = () => {
 		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
 		event.preventDefault();
+	};
+	hotkeys('shift+r', function(event, handler) {
+		// Prevent the default refresh event under WINDOWS system
+		toggleContent();
 	});
 
 	let marked = false;
@@ -91,7 +94,10 @@
 	// console.log(M, 'materialize')
 </script>
 
-<button class="prosebar" style="background-color: {marked ? 'blue' : 'white'}">
+<button
+	class="prosebar"
+	style="background-color: {marked ? 'blue' : 'white'}"
+	on:click={toggleContent}>
 	Shift + R to mark content
 </button>
 <!-- <div id="prosebar" class:marked={true}> Shift + RFFF qq mark</div> -->

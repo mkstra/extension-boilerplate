@@ -40,6 +40,10 @@ var app = (function () {
     function text(data) {
         return document.createTextNode(data);
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -12302,7 +12306,7 @@ var app = (function () {
     const file = "src/Content.svelte";
 
     function create_fragment(ctx) {
-    	var button, t;
+    	var button, t, dispose;
 
     	return {
     		c: function create() {
@@ -12310,7 +12314,8 @@ var app = (function () {
     			t = text("Shift + R to mark content");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 93, 0, 2212);
+    			add_location(button, file, 96, 0, 2266);
+    			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
     		l: function claim(nodes) {
@@ -12335,6 +12340,8 @@ var app = (function () {
     			if (detaching) {
     				detach(button);
     			}
+
+    			dispose();
     		}
     	};
     }
@@ -12379,10 +12386,13 @@ var app = (function () {
     		false
     	);
 
-    	hotkeys('shift+r', function(event, handler) {
-    		// Prevent the default refresh event under WINDOWS system
+    	const toggleContent = () => {
     		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
     		event.preventDefault();
+    	};
+    	hotkeys('shift+r', function(event, handler) {
+    		// Prevent the default refresh event under WINDOWS system
+    		toggleContent();
     	});
 
     	let marked = false;
@@ -12427,7 +12437,7 @@ var app = (function () {
 
     	// console.log(M, 'materialize')
 
-    	return { marked };
+    	return { toggleContent, marked };
     }
 
     class Content extends SvelteComponentDev {
