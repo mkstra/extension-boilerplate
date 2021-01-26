@@ -517,6 +517,7 @@ var app = (function () {
     			dateCreated: Date.now(),
     			marked: false,
     			blocked: false,
+    			title,
     		};
     		node['activeTime'] += interval;
 
