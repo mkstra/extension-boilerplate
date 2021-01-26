@@ -570,95 +570,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (61:4) {#if !big}
-    function create_if_block(ctx) {
-    	var button, dispose;
-
-    	return {
-    		c: function create() {
-    			button = element("button");
-    			button.textContent = "View Dashboard";
-    			add_location(button, file, 61, 8, 1515);
-    			dispose = listen(button, "click", ctx.openTab);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, button, anchor);
-    		},
-
-    		p: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(button);
-    			}
-
-    			dispose();
-    		}
-    	};
-    }
-
-    // (77:2) {#each collection as row}
-    function create_each_block(ctx) {
-    	var tr, td0, t0_value = ctx.row.title, t0, t1, td1, t2_value = ctx.row.url, t2, t3, td2, t4_value = ctx.row.created, t4, t5;
-
-    	return {
-    		c: function create() {
-    			tr = element("tr");
-    			td0 = element("td");
-    			t0 = text(t0_value);
-    			t1 = space();
-    			td1 = element("td");
-    			t2 = text(t2_value);
-    			t3 = space();
-    			td2 = element("td");
-    			t4 = text(t4_value);
-    			t5 = space();
-    			add_location(td0, file, 78, 4, 1862);
-    			add_location(td1, file, 79, 16, 1899);
-    			add_location(td2, file, 80, 16, 1934);
-    			add_location(tr, file, 77, 3, 1853);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, tr, anchor);
-    			append(tr, td0);
-    			append(td0, t0);
-    			append(tr, t1);
-    			append(tr, td1);
-    			append(td1, t2);
-    			append(tr, t3);
-    			append(tr, td2);
-    			append(td2, t4);
-    			append(tr, t5);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.collection) && t0_value !== (t0_value = ctx.row.title)) {
-    				set_data(t0, t0_value);
-    			}
-
-    			if ((changed.collection) && t2_value !== (t2_value = ctx.row.url)) {
-    				set_data(t2, t2_value);
-    			}
-
-    			if ((changed.collection) && t4_value !== (t4_value = ctx.row.created)) {
-    				set_data(t4, t4_value);
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(tr);
-    			}
-    		}
-    	};
-    }
-
-    function create_fragment(ctx) {
-    	var div, t0, a, t1, t2, table, thead, tr, th0, t4, th1, t6, th2, t8, tbody;
-
-    	var if_block = (!ctx.big) && create_if_block(ctx);
+    // (59:1) {:else}
+    function create_else_block(ctx) {
+    	var table, thead, tr, th0, t1, th1, t3, th2, t5, tbody;
 
     	var each_value = ctx.collection;
 
@@ -670,62 +584,42 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div = element("div");
-    			if (if_block) if_block.c();
-    			t0 = space();
-    			a = element("a");
-    			t1 = text("Download my Data");
-    			t2 = space();
     			table = element("table");
     			thead = element("thead");
     			tr = element("tr");
     			th0 = element("th");
     			th0.textContent = "title";
-    			t4 = space();
+    			t1 = space();
     			th1 = element("th");
-    			th1.textContent = "url";
-    			t6 = space();
+    			th1.textContent = "createTime";
+    			t3 = space();
     			th2 = element("th");
-    			th2.textContent = "createTime";
-    			t8 = space();
+    			th2.textContent = "url";
+    			t5 = space();
     			tbody = element("tbody");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(a, "href", ctx.link);
-    			attr(a, "download", "data.json");
-    			add_location(a, file, 63, 4, 1580);
-    			add_location(th0, file, 68, 3, 1665);
-    			add_location(th1, file, 69, 12, 1692);
-    			add_location(th2, file, 70, 12, 1717);
-    			add_location(tr, file, 67, 2, 1657);
-    			add_location(thead, file, 66, 1, 1647);
-    			add_location(tbody, file, 75, 1, 1814);
-    			add_location(table, file, 65, 0, 1638);
-    			add_location(div, file, 59, 0, 1486);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			add_location(th0, file, 62, 20, 1575);
+    			add_location(th1, file, 63, 20, 1610);
+    			add_location(th2, file, 64, 5, 1635);
+    			add_location(tr, file, 61, 4, 1550);
+    			add_location(thead, file, 60, 3, 1538);
+    			add_location(tbody, file, 68, 3, 1723);
+    			add_location(table, file, 59, 2, 1527);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			if (if_block) if_block.m(div, null);
-    			append(div, t0);
-    			append(div, a);
-    			append(a, t1);
-    			append(div, t2);
-    			append(div, table);
+    			insert(target, table, anchor);
     			append(table, thead);
     			append(thead, tr);
     			append(tr, th0);
-    			append(tr, t4);
+    			append(tr, t1);
     			append(tr, th1);
-    			append(tr, t6);
+    			append(tr, t3);
     			append(tr, th2);
-    			append(table, t8);
+    			append(table, t5);
     			append(table, tbody);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -734,23 +628,6 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (!ctx.big) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
-    				} else {
-    					if_block = create_if_block(ctx);
-    					if_block.c();
-    					if_block.m(div, t0);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-
-    			if (changed.link) {
-    				attr(a, "href", ctx.link);
-    			}
-
     			if (changed.collection) {
     				each_value = ctx.collection;
 
@@ -773,6 +650,162 @@ var app = (function () {
     			}
     		},
 
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(table);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    // (57:1) {#if !big}
+    function create_if_block(ctx) {
+    	var button, dispose;
+
+    	return {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "View Dashboard";
+    			add_location(button, file, 57, 2, 1465);
+    			dispose = listen(button, "click", ctx.openTab);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, button, anchor);
+    		},
+
+    		p: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(button);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    // (70:4) {#each collection as row}
+    function create_each_block(ctx) {
+    	var tr, td0, t0_value = ctx.row.title.substring(0,60) + "...", t0, t1, td1, t2_value = ctx.row.created, t2, t3, td2, a, t4_value = ctx.row.url.substring(0,50) + "...", t4, a_href_value, t5;
+
+    	return {
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			td1 = element("td");
+    			t2 = text(t2_value);
+    			t3 = space();
+    			td2 = element("td");
+    			a = element("a");
+    			t4 = text(t4_value);
+    			t5 = space();
+    			add_location(td0, file, 71, 6, 1777);
+    			add_location(td1, file, 72, 24, 1846);
+    			attr(a, "href", a_href_value = ctx.row.url);
+    			add_location(a, file, 73, 28, 1897);
+    			add_location(td2, file, 73, 24, 1893);
+    			add_location(tr, file, 70, 5, 1766);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, tr, anchor);
+    			append(tr, td0);
+    			append(td0, t0);
+    			append(tr, t1);
+    			append(tr, td1);
+    			append(td1, t2);
+    			append(tr, t3);
+    			append(tr, td2);
+    			append(td2, a);
+    			append(a, t4);
+    			append(tr, t5);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.collection) && t0_value !== (t0_value = ctx.row.title.substring(0,60) + "...")) {
+    				set_data(t0, t0_value);
+    			}
+
+    			if ((changed.collection) && t2_value !== (t2_value = ctx.row.created)) {
+    				set_data(t2, t2_value);
+    			}
+
+    			if ((changed.collection) && t4_value !== (t4_value = ctx.row.url.substring(0,50) + "...")) {
+    				set_data(t4, t4_value);
+    			}
+
+    			if ((changed.collection) && a_href_value !== (a_href_value = ctx.row.url)) {
+    				attr(a, "href", a_href_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(tr);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment(ctx) {
+    	var div, a, t0, t1;
+
+    	function select_block_type(ctx) {
+    		if (!ctx.big) return create_if_block;
+    		return create_else_block;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			a = element("a");
+    			t0 = text("Download my Data");
+    			t1 = space();
+    			if_block.c();
+    			attr(a, "href", ctx.link);
+    			attr(a, "download", "data.json");
+    			add_location(a, file, 54, 1, 1393);
+    			add_location(div, file, 52, 0, 1385);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			append(div, a);
+    			append(a, t0);
+    			append(div, t1);
+    			if_block.m(div, null);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.link) {
+    				attr(a, "href", ctx.link);
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(changed, ctx);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -781,66 +814,57 @@ var app = (function () {
     				detach(div);
     			}
 
-    			if (if_block) if_block.d();
-
-    			destroy_each(each_blocks, detaching);
+    			if_block.d();
     		}
     	};
     }
 
     function instance($$self, $$props, $$invalidate) {
 
+    	console.log('logging inside special Popup DOM', chromePromise$1);
 
-        console.log("logging inside special Popup DOM", chromePromise$1);
-        
+    	let collection = [
+    		{ url: 'test.com', title: 'storage not loading.... sry' },
+    	];
 
+    	let link = '';
 
-        let collection = [
-    		{url:"daco.uio", title:"hello"},
-    		{url:"asduwww", title:"world"},
-    		
-        ];
+    	const updateLink = () => {
+    		const data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(collection));
+    		$$invalidate('link', link = `data: ${data}`);
+    		return link;
+    	};
+    	let big = window.location.hash == '#big';
 
-       
-
-        let link = "";
-
-        const updateLink= () => {
-            const data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(collection));
-            $$invalidate('link', link = `data: ${data}`);
-            return link
-        };
-        let big = (window.location.hash == '#big');
-
-
-
-
-        const openTab = () => {
-            /*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
+    	const openTab = () => {
+    		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
                 #window lets popup know what's up
             */
-            chrome.tabs.create({url: chrome.extension.getURL('popup.html#big')});
-        };
+    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
+    	};
 
-        const getStorage = async () => {
-            const storage= await chromePromise$1.storage.sync.get(null);
-            console.log(storage, "storage");
+    	const storageToColl = store => {
+    		const nodes = pickBy((val, key) => val['marked'], store);
+    		//flatten // ["url", "{}"]
+    		return Object.entries(nodes)
+    			.map(([url, node]) => assoc('url', url, node))
+    			.map(({ url, title, dateCreated }) => ({
+    				title: title || '',
+                    created: new Date(dateCreated).toDateString(),
+                    url,
 
-            const nodes = pickBy((val, key) => val["marked"], storage);
-            //flatten 
-            // ["url", "{}"]
-            console.log(nodes);
-            $$invalidate('collection', collection = Object.entries(nodes)
-                .map(([url, node]) => assoc("url", url, node))
-                .map(({url, title, dateCreated}) => ({url, title: title || "", created: new Date(dateCreated).toDateString()}) ));
+    			}));
+    	};
 
-            updateLink();
-        };
-        getStorage();
+    	const getStorage = async () => {
+    		const storage = await chromePromise$1.storage.sync.get(null);
+    		$$invalidate('collection', collection = storageToColl(storage));
+    		updateLink();
+    	};
 
-      
-        
-    // ('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
+    	getStorage();
+
+    	// ('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
 
     	return { collection, link, big, openTab };
     }
