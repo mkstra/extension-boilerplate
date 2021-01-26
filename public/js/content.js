@@ -12981,7 +12981,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
-    			add_location(button, file, 108, 0, 2658);
+    			add_location(button, file, 110, 0, 2678);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -13027,7 +13027,7 @@ var app = (function () {
     	let activeTime = 0;
     	let marked = false;
 
-    	let reminderShown = false;
+    	let showReminder = true;
     	const currentUrl = normalizeUrl_1(window.location.href);
     	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
     	// 	.then(res => res.json())
@@ -13041,7 +13041,7 @@ var app = (function () {
 
     			if (activeTime > 120000) {
     				toastr.info('ADD content to your stream?');
-    				reminderShown = true;
+    				showReminder = false;
     				//! kinda nasty hack
     				window.clearInterval(trackActiveTime);
     			}
@@ -13053,10 +13053,11 @@ var app = (function () {
     	document.addEventListener(
     		'visibilitychange',
     		() => {
+
     			/*only count when TAB is active tab*/
     			document.hidden && window.clearInterval(trackActiveTime);
 
-    			if (!document.hidden && !reminderShown) {
+    			if (!document.hidden && showReminder) {
     				trackActiveTime = startTimer();
     			}
     		},
@@ -13090,6 +13091,7 @@ var app = (function () {
           url: {oldValue: {...}, newValue: {....}}, url2: {...}
     	}*/
     		window.clearInterval(trackActiveTime);
+    		showReminder = false;
     		const m = !!path([currentUrl, 'newValue'], changes);
 
     		if (m == marked) return; //nothing changed (except timestamps)

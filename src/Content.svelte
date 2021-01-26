@@ -13,7 +13,7 @@
 	const interval = 15000;
 	let marked = false;
 
-	let reminderShown = false;
+	let showReminder = true;
 	const currentUrl = normalizeUrl(window.location.href);
 	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
 	// 	.then(res => res.json())
@@ -27,7 +27,7 @@
 
 			if (activeTime > 120000) {
 				toastr.info('ADD content to your stream?');
-				reminderShown = true;
+				showReminder = false;
 				//! kinda nasty hack
 				window.clearInterval(trackActiveTime);
 			}
@@ -39,10 +39,11 @@
 	document.addEventListener(
 		'visibilitychange',
 		() => {
+
 			/*only count when TAB is active tab*/
 			document.hidden && window.clearInterval(trackActiveTime);
 
-			if (!document.hidden && !reminderShown) {
+			if (!document.hidden && showReminder) {
 				trackActiveTime = startTimer();
 			}
 		},
@@ -76,6 +77,7 @@
       url: {oldValue: {...}, newValue: {....}}, url2: {...}
 	}*/
 		window.clearInterval(trackActiveTime);
+		showReminder = false
 		const m = !!path([currentUrl, 'newValue'], changes);
 
 		if (m == marked) return; //nothing changed (except timestamps)
