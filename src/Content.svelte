@@ -3,7 +3,8 @@
 	'use strict';
 	import toastr from 'toastr';
 	import hotkeys from 'hotkeys-js';
-	import { path } from 'ramda';
+	import { path, isEmpty } from 'ramda';
+	import normalizeUrl from "normalize-url"
 
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
@@ -11,15 +12,14 @@
 	let activeTime = 0;
 	const interval = 15000;
 	let reminderShown = false;
-
-
-	fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
-		.then(res => res.json())
-		.then(res => console.log("aaa", res))
-		// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
-
+	const currentUrl = normalizeUrl(window.location.href)
+	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
+	// 	.then(res => res.json())
+	// 	.then(res => console.log("aaa", res))
+	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
 	let startTimer = () =>
+	//for the .info toast()
 		setInterval(() => {
 			activeTime += interval;
 
@@ -50,28 +50,32 @@
 	);
 
 	const toggleContent = () => {
-		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
+		chrome.runtime.sendMessage({
+			action: 'toggle-marked', 
+			title: document.title,
+			url: currentUrl
+		}, _ => _);
 	};
 	hotkeys('shift+r', function(event, handler) {
 		// Prevent the default refresh event under WINDOWS system
-    toggleContent();
-    event.preventDefault();
-
+		toggleContent();
+		event.preventDefault();
 	});
 
 	let marked = false;
 
 	//get initial value on page startup
-	chrome.storage.sync.get(window.location.href, storage => {
-		marked = !!path([window.location.href, 'marked'], storage);
-		console.log('heey', marked);
+	chrome.storage.sync.get(currentUrl, storage => {
+		marked = !isEmpty(storage);
+		// console.log('Page is marked? ', marked);
 	});
 
 	chrome.storage.onChanged.addListener(function(changes, namespace) {
 		/*changes = {
       url: {oldValue: {...}, newValue: {....}}, url2: {...}
-    }*/
-		const m = !!path([window.location.href, 'newValue'], changes);
+	}*/
+		const m = !!path([currentUrl, 'newValue'], changes);
+		
 		if (m == marked) return; //nothing changed (except timestamps)
 
 		marked = m;
@@ -106,6 +110,6 @@
 	class="prosebar"
 	style="background-color: {marked ? '#3aec19a1' : '#569ef7b3'}"
 	on:click={toggleContent}>
-	{marked ? "[X] Remove Mark (Shift+R)" : "[+] Mark Content (Shift+R)"}
+	{marked ? '[X] Remove Mark (Shift+R)' : '[+] Mark Content (Shift+R)'}
 </button>
 <!-- <div id="prosebar" class:marked={true}> Shift + RFFF qq mark</div> -->

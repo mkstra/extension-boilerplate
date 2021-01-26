@@ -2,11 +2,10 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import {getActiveTab} from "./utils"
 
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.action == 'toggle-marked') {
-			update() //user initiated
+	chrome.runtime.onMessage.addListener(function({action, title, url}, sender, sendResponse) {
+		if (action == 'toggle-marked') {
+			update(url, title) //user initiated
 				.then(e => {
 					sendResponse({ content: 'added content' });
 				})
@@ -16,21 +15,17 @@
 	});
 
 	const Node = (url, title) => ({
-		// activeTime: 0,
 		dateCreated: Date.now(),
-		marked: false,
+		// marked: false,
 		// blocked: false,
 		title,
 		url,
 	})
 
-	const update = async () => {
-		const tab = (await getActiveTab()) || {};
-		const { url, title } = tab;
-		if (!url) return;
+	const update = async (url, title) => {
 		let entry = await chromep.storage.sync.get(url);
 		const node = Node(url, title)
-		console.log(node, "node")
+		console.log(node, "node here")
 		if (entry[url]) {
 			try {
 				await chromep.storage.sync.remove(url);
