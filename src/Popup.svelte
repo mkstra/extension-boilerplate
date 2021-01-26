@@ -2,9 +2,8 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { pickBy, assoc } from 'ramda';
+    import {JSONDownloadable, trimString, storageToColl} from './utils'
 
-	console.log('logging inside special Popup DOM', chromep);
 
 	let collection = [
 		{ url: 'test.com', title: 'storage not loading.... sry' },
@@ -12,11 +11,6 @@
 
 	let link = '';
 
-	const updateLink = () => {
-		const data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(collection));
-		link = `data: ${data}`;
-		return link;
-	};
 	let big = window.location.hash == '#big';
 
 	const openTab = () => {
@@ -26,32 +20,14 @@
 		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
 	};
 
-	const storageToColl = store => {
-		const nodes = pickBy((val, key) => val['marked'], store);
-		//flatten // ["url", "{}"]
-		return Object.entries(nodes)
-			.map(([url, node]) => assoc('url', url, node))
-			.map(({ url, title, dateCreated }) => ({
-				title: title || '',
-                created: new Date(dateCreated).toDateString(),
-                url,
-
-			}));
-	};
-
 	const getStorage = async () => {
 		const storage = await chromep.storage.sync.get(null);
 		collection = storageToColl(storage);
-		updateLink();
+		link = JSONDownloadable(collection);
 	};
 
     getStorage();
     
-    const trimString = (s, l=50) => s.length > l 
-            ? s.substring(0, l) + "..."
-            : s
-
-	// ('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
 </script>
 
 <div>
