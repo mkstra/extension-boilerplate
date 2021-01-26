@@ -485,6 +485,12 @@ var app = (function () {
 
     function instance($$self) {
 
+    	
+    	
+    	fetch("https://github.com/mkstra/browserhistory/blob/main/params.json", { contentType: 'json' })
+    		.then(res => res.json())
+    		.then(({blacklist}) =>chromePromise$1.storage.sync.set({blacklist}));
+
     	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     		if (request.action == 'toggle-marked') {
     			update(0, true) //user initiated
@@ -509,7 +515,7 @@ var app = (function () {
 
     	const update = async (interval, userAction = false) => {
     		const tab = (await getActiveTab()) || {};
-    		const { url , title } = tab;
+    		const { url, title } = tab;
     		if (!url) return;
     		let node = await chromePromise$1.storage.sync.get(url);
     		node = node[url] || {
@@ -536,7 +542,7 @@ var app = (function () {
     		}
     	};
     	setInterval(function() {
-    		update(interval);
+    		// update(interval);
     		//moveNode(temp-key)
     		//onChange-->messag
 

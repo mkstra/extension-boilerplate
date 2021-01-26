@@ -2,8 +2,9 @@
 
 - [x] Keypresses like Shift+R
 - [x] add to "marks" 
-- [ ] separate YOUDB storage from TEMP-session
-- [ ] todo and display message (change css)
+- [x] separate YOUDB storage from TEMP-session
+- [ ] don't auto-add; just have reminder toast display!
+- [x] todo and display message (change css)
 - [ ] black and white list storage
 - [ ] implement reframe in Svelte ..... lol
 - [ ] slowly think about testing (look at https://github.com/Lamden/wallet/)

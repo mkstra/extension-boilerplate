@@ -564,7 +564,6 @@ var app = (function () {
                 ? s.substring(0, l) + "..."
                 : s;
 
-
     const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`;

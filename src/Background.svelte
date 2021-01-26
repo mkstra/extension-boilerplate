@@ -5,6 +5,12 @@
 	import { uniqBy, union, head, isEmpty } from 'ramda';
 	import { writable } from 'svelte/store';
 
+	
+	
+	fetch("https://github.com/mkstra/browserhistory/blob/main/params.json", { contentType: 'json' })
+		.then(res => res.json())
+		.then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if (request.action == 'toggle-marked') {
 			update(0, true) //user initiated
@@ -29,7 +35,7 @@
 
 	const update = async (interval, userAction = false) => {
 		const tab = (await getActiveTab()) || {};
-		const { url , title } = tab;
+		const { url, title } = tab;
 		if (!url) return;
 		let node = await chromep.storage.sync.get(url);
 		node = node[url] || {
@@ -58,7 +64,7 @@
 
 	const interval = 3000;
 	setInterval(function() {
-		update(interval);
+		// update(interval);
 		//moveNode(temp-key)
 		//onChange-->messag
 

@@ -8,6 +8,33 @@
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
 
+  let activeTime = 0
+  const interval = 15000
+  let reminderShown = false
+
+  let startTimer = () => setInterval(() => {
+    activeTime += interval;
+   
+    if (activeTime > 120000){
+      toastr.info("ADD content to your stream?")
+      reminderShown = true
+      //! kinda nasty hack
+      window.clearInterval(trackActiveTime)
+    }
+    {console.log(activeTime)}
+  }, interval)
+
+  let trackActiveTime = startTimer()
+
+  document.addEventListener("visibilitychange", () => {
+    /*only count when TAB is active tab*/
+        document.hidden && clearInterval(trackActiveTime)
+        
+        if (!document.hidden && !reminderShown) {
+          trackActiveTime = startTimer()
+        }
+  }, false);
+
   hotkeys('shift+r', function(event, handler){
   // Prevent the default refresh event under WINDOWS system
     chrome.runtime.sendMessage({action: "toggle-marked"}, _ => _);
