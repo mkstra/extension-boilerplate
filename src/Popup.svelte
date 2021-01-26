@@ -45,7 +45,11 @@
 		updateLink();
 	};
 
-	getStorage();
+    getStorage();
+    
+    const trimString = (s, l=50) => s.length > l 
+            ? s.substring(0, l) + "..."
+            : s
 
 	// ('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
 </script>
@@ -69,9 +73,9 @@
 			<tbody>
 				{#each collection as row}
 					<tr>
-						<td>{row.title.substring(0,60) + "..."}</td>
+						<td>{trimString(row.title)}</td>
                         <td>{row.created}</td>
-                        <td><a href={row.url}>{row.url.substring(0,50) + "..."}</a></td>
+                        <td><a href={row.url}>{trimString(row.url)}</a></td>
 
 					</tr>
 				{/each}

@@ -570,7 +570,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (59:1) {:else}
+    // (63:1) {:else}
     function create_else_block(ctx) {
     	var table, thead, tr, th0, t1, th1, t3, th2, t5, tbody;
 
@@ -601,13 +601,13 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(th0, file, 62, 20, 1575);
-    			add_location(th1, file, 63, 20, 1610);
-    			add_location(th2, file, 64, 5, 1635);
-    			add_location(tr, file, 61, 4, 1550);
-    			add_location(thead, file, 60, 3, 1538);
-    			add_location(tbody, file, 68, 3, 1723);
-    			add_location(table, file, 59, 2, 1527);
+    			add_location(th0, file, 66, 20, 1689);
+    			add_location(th1, file, 67, 20, 1724);
+    			add_location(th2, file, 68, 5, 1749);
+    			add_location(tr, file, 65, 4, 1664);
+    			add_location(thead, file, 64, 3, 1652);
+    			add_location(tbody, file, 72, 3, 1837);
+    			add_location(table, file, 63, 2, 1641);
     		},
 
     		m: function mount(target, anchor) {
@@ -628,7 +628,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.collection) {
+    			if (changed.collection || changed.trimString) {
     				each_value = ctx.collection;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -660,7 +660,7 @@ var app = (function () {
     	};
     }
 
-    // (57:1) {#if !big}
+    // (61:1) {#if !big}
     function create_if_block(ctx) {
     	var button, dispose;
 
@@ -668,7 +668,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View Dashboard";
-    			add_location(button, file, 57, 2, 1465);
+    			add_location(button, file, 61, 2, 1579);
     			dispose = listen(button, "click", ctx.openTab);
     		},
 
@@ -688,9 +688,9 @@ var app = (function () {
     	};
     }
 
-    // (70:4) {#each collection as row}
+    // (74:4) {#each collection as row}
     function create_each_block(ctx) {
-    	var tr, td0, t0_value = ctx.row.title.substring(0,60) + "...", t0, t1, td1, t2_value = ctx.row.created, t2, t3, td2, a, t4_value = ctx.row.url.substring(0,50) + "...", t4, a_href_value, t5;
+    	var tr, td0, t0_value = ctx.trimString(ctx.row.title), t0, t1, td1, t2_value = ctx.row.created, t2, t3, td2, a, t4_value = ctx.trimString(ctx.row.url), t4, a_href_value, t5;
 
     	return {
     		c: function create() {
@@ -705,12 +705,12 @@ var app = (function () {
     			a = element("a");
     			t4 = text(t4_value);
     			t5 = space();
-    			add_location(td0, file, 71, 6, 1777);
-    			add_location(td1, file, 72, 24, 1846);
+    			add_location(td0, file, 75, 6, 1891);
+    			add_location(td1, file, 76, 24, 1948);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 73, 28, 1897);
-    			add_location(td2, file, 73, 24, 1893);
-    			add_location(tr, file, 70, 5, 1766);
+    			add_location(a, file, 77, 28, 1999);
+    			add_location(td2, file, 77, 24, 1995);
+    			add_location(tr, file, 74, 5, 1880);
     		},
 
     		m: function mount(target, anchor) {
@@ -728,7 +728,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.collection) && t0_value !== (t0_value = ctx.row.title.substring(0,60) + "...")) {
+    			if ((changed.collection) && t0_value !== (t0_value = ctx.trimString(ctx.row.title))) {
     				set_data(t0, t0_value);
     			}
 
@@ -736,7 +736,7 @@ var app = (function () {
     				set_data(t2, t2_value);
     			}
 
-    			if ((changed.collection) && t4_value !== (t4_value = ctx.row.url.substring(0,50) + "...")) {
+    			if ((changed.collection) && t4_value !== (t4_value = ctx.trimString(ctx.row.url))) {
     				set_data(t4, t4_value);
     			}
 
@@ -773,8 +773,8 @@ var app = (function () {
     			if_block.c();
     			attr(a, "href", ctx.link);
     			attr(a, "download", "data.json");
-    			add_location(a, file, 54, 1, 1393);
-    			add_location(div, file, 52, 0, 1385);
+    			add_location(a, file, 58, 1, 1507);
+    			add_location(div, file, 56, 0, 1499);
     		},
 
     		l: function claim(nodes) {
@@ -862,11 +862,21 @@ var app = (function () {
     		updateLink();
     	};
 
-    	getStorage();
+        getStorage();
+        
+        const trimString = (s, l=50) => s.length > l 
+                ? s.substring(0, l) + "..."
+                : s;
 
     	// ('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#container');
 
-    	return { collection, link, big, openTab };
+    	return {
+    		collection,
+    		link,
+    		big,
+    		openTab,
+    		trimString
+    	};
     }
 
     class Popup extends SvelteComponentDev {
