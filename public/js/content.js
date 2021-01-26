@@ -53,6 +53,11 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
+    function set_data(text, data) {
+        data = '' + data;
+        if (text.data !== data)
+            text.data = data;
+    }
     function set_style(node, key, value) {
         node.style.setProperty(key, value);
     }
@@ -12306,15 +12311,15 @@ var app = (function () {
     const file = "src/Content.svelte";
 
     function create_fragment(ctx) {
-    	var button, t, dispose;
+    	var button, t_value = ctx.marked ? "[X] Remove Mark (Shift+R)" : "[+] Mark Content (Shift+R)", t, dispose;
 
     	return {
     		c: function create() {
     			button = element("button");
-    			t = text("Shift + R to mark content");
+    			t = text(t_value);
     			attr(button, "class", "prosebar");
-    			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 104, 0, 2502);
+    			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
+    			add_location(button, file, 104, 0, 2490);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -12328,8 +12333,12 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
+    			if ((changed.marked) && t_value !== (t_value = ctx.marked ? "[X] Remove Mark (Shift+R)" : "[+] Mark Content (Shift+R)")) {
+    				set_data(t, t_value);
+    			}
+
     			if (changed.marked) {
-    				set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
+    				set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
     			}
     		},
 
@@ -12357,10 +12366,10 @@ var app = (function () {
     	let reminderShown = false;
 
 
-    	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
-    	// 	.then(res => res.json())
-    	// 	.then(res => console.log("aaa", res))
-    	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+    	fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
+    		.then(res => res.json())
+    		.then(res => console.log("aaa", res));
+    		// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
 
     	let startTimer = () =>

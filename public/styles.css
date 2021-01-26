@@ -4,8 +4,8 @@
     z-index: 1000000;
     /* left: 50%; */
     bottom: 1rem;
-    background: white;
-    border: 1px black solid;
-    padding: 0.3rem;
+    border: 0px black solid;
+    padding: 0.5rem;
+    opacity: 0.9;
     border-radius: 5px;
 }

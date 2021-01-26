@@ -13,10 +13,10 @@
 	let reminderShown = false;
 
 
-	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
-	// 	.then(res => res.json())
-	// 	.then(res => console.log("aaa", res))
-	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+	fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
+		.then(res => res.json())
+		.then(res => console.log("aaa", res))
+		// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
 
 	let startTimer = () =>
@@ -104,8 +104,8 @@
 
 <button
 	class="prosebar"
-	style="background-color: {marked ? 'blue' : 'white'}"
+	style="background-color: {marked ? '#3aec19a1' : '#569ef7b3'}"
 	on:click={toggleContent}>
-	Shift + R to mark content
+	{marked ? "[X] Remove Mark (Shift+R)" : "[+] Mark Content (Shift+R)"}
 </button>
 <!-- <div id="prosebar" class:marked={true}> Shift + RFFF qq mark</div> -->

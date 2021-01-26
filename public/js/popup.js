@@ -563,9 +563,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (70:4) {:else}
+    // (73:0) {:else}
     function create_else_block(ctx) {
-    	var input, t0, button, t2, table, thead, tr, th0, t4, th1, t6, th2, t8, th3, t10, tbody, dispose;
+    	var input, t0, button, t2, br0, t3, br1, t4, table, thead, tr, th0, t6, th1, t8, th2, t10, th3, t12, tbody, dispose;
 
     	var each_value = ctx.collection;
 
@@ -582,42 +582,49 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "DELETE ALL";
     			t2 = space();
+    			br0 = element("br");
+    			t3 = space();
+    			br1 = element("br");
+    			t4 = space();
     			table = element("table");
     			thead = element("thead");
     			tr = element("tr");
     			th0 = element("th");
-    			th0.textContent = "Delete ?";
-    			t4 = space();
+    			th0.textContent = "Delete Entry";
+    			t6 = space();
     			th1 = element("th");
     			th1.textContent = "title";
-    			t6 = space();
+    			t8 = space();
     			th2 = element("th");
     			th2.textContent = "createTime";
-    			t8 = space();
+    			t10 = space();
     			th3 = element("th");
     			th3.textContent = "url";
-    			t10 = space();
+    			t12 = space();
     			tbody = element("tbody");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
+    			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file, 70, 8, 1800);
-    			add_location(button, file, 71, 8, 1857);
-    			attr(th0, "class", "svelte-l1xqc1");
-    			add_location(th0, file, 76, 20, 1960);
-    			attr(th1, "class", "svelte-l1xqc1");
-    			add_location(th1, file, 78, 5, 1984);
-    			attr(th2, "class", "svelte-l1xqc1");
-    			add_location(th2, file, 79, 5, 2004);
-    			attr(th3, "class", "svelte-l1xqc1");
-    			add_location(th3, file, 80, 5, 2029);
-    			add_location(tr, file, 75, 4, 1935);
-    			add_location(thead, file, 74, 3, 1923);
-    			add_location(tbody, file, 84, 3, 2117);
-    			attr(table, "class", "svelte-l1xqc1");
-    			add_location(table, file, 73, 2, 1912);
+    			add_location(input, file, 73, 1, 1774);
+    			add_location(button, file, 74, 4, 1851);
+    			add_location(br0, file, 75, 4, 1907);
+    			add_location(br1, file, 76, 8, 1920);
+    			attr(th0, "class", "svelte-o60a6m");
+    			add_location(th0, file, 81, 4, 1957);
+    			attr(th1, "class", "svelte-o60a6m");
+    			add_location(th1, file, 83, 4, 1984);
+    			attr(th2, "class", "svelte-o60a6m");
+    			add_location(th2, file, 84, 4, 2003);
+    			attr(th3, "class", "svelte-o60a6m");
+    			add_location(th3, file, 85, 4, 2027);
+    			add_location(tr, file, 80, 3, 1948);
+    			add_location(thead, file, 79, 2, 1937);
+    			add_location(tbody, file, 89, 2, 2111);
+    			attr(table, "class", "svelte-o60a6m");
+    			add_location(table, file, 78, 1, 1927);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -633,17 +640,21 @@ var app = (function () {
     			insert(target, t0, anchor);
     			insert(target, button, anchor);
     			insert(target, t2, anchor);
+    			insert(target, br0, anchor);
+    			insert(target, t3, anchor);
+    			insert(target, br1, anchor);
+    			insert(target, t4, anchor);
     			insert(target, table, anchor);
     			append(table, thead);
     			append(thead, tr);
     			append(tr, th0);
-    			append(tr, t4);
-    			append(tr, th1);
     			append(tr, t6);
-    			append(tr, th2);
+    			append(tr, th1);
     			append(tr, t8);
+    			append(tr, th2);
+    			append(tr, t10);
     			append(tr, th3);
-    			append(table, t10);
+    			append(table, t12);
     			append(table, tbody);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -682,6 +693,10 @@ var app = (function () {
     				detach(t0);
     				detach(button);
     				detach(t2);
+    				detach(br0);
+    				detach(t3);
+    				detach(br1);
+    				detach(t4);
     				detach(table);
     			}
 
@@ -692,7 +707,7 @@ var app = (function () {
     	};
     }
 
-    // (68:1) {#if !big}
+    // (71:0) {#if !big}
     function create_if_block(ctx) {
     	var button, dispose;
 
@@ -700,7 +715,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View Dashboard";
-    			add_location(button, file, 68, 2, 1729);
+    			add_location(button, file, 71, 1, 1714);
     			dispose = listen(button, "click", ctx.openTab);
     		},
 
@@ -720,9 +735,9 @@ var app = (function () {
     	};
     }
 
-    // (86:16) {#each collection as row}
+    // (91:3) {#each collection as row}
     function create_each_block(ctx) {
-    	var tr, button, t1, td0, t2_value = trimString(ctx.row.title), t2, t3, td1, t4_value = ctx.row.created, t4, t5, td2, a, t6_value = trimString(ctx.row.url), t6, a_href_value, t7, dispose;
+    	var tr, div, button, t1, td0, t2_value = trimString(ctx.row.title) || '/', t2, t3, td1, t4_value = ctx.row.created, t4, t5, td2, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
 
     	function click_handler() {
     		return ctx.click_handler(ctx);
@@ -731,6 +746,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			tr = element("tr");
+    			div = element("div");
     			button = element("button");
     			button.textContent = "X";
     			t1 = space();
@@ -747,23 +763,25 @@ var app = (function () {
     			set_style(button, "background", "red");
     			set_style(button, "color", "white");
     			set_style(button, "font-weight", "bold");
-    			add_location(button, file, 87, 24, 2201);
+    			add_location(button, file, 93, 24, 2207);
+    			add_location(div, file, 92, 20, 2177);
     			set_style(td0, "min-width", "15rem");
-    			attr(td0, "class", "svelte-l1xqc1");
-    			add_location(td0, file, 89, 6, 2322);
-    			attr(td1, "class", "svelte-l1xqc1");
-    			add_location(td1, file, 90, 6, 2386);
+    			attr(td0, "class", "svelte-o60a6m");
+    			add_location(td0, file, 101, 5, 2383);
+    			attr(td1, "class", "svelte-o60a6m");
+    			add_location(td1, file, 102, 5, 2453);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 92, 7, 2427);
-    			attr(td2, "class", "svelte-l1xqc1");
-    			add_location(td2, file, 91, 6, 2415);
-    			add_location(tr, file, 86, 5, 2172);
+    			add_location(a, file, 104, 6, 2492);
+    			attr(td2, "class", "svelte-o60a6m");
+    			add_location(td2, file, 103, 5, 2481);
+    			add_location(tr, file, 91, 4, 2152);
     			dispose = listen(button, "click", click_handler);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, tr, anchor);
-    			append(tr, button);
+    			append(tr, div);
+    			append(div, button);
     			append(tr, t1);
     			append(tr, td0);
     			append(td0, t2);
@@ -779,7 +797,7 @@ var app = (function () {
 
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
-    			if ((changed.collection) && t2_value !== (t2_value = trimString(ctx.row.title))) {
+    			if ((changed.collection) && t2_value !== (t2_value = trimString(ctx.row.title) || '/')) {
     				set_data(t2, t2_value);
     			}
 
@@ -787,7 +805,7 @@ var app = (function () {
     				set_data(t4, t4_value);
     			}
 
-    			if ((changed.collection) && t6_value !== (t6_value = trimString(ctx.row.url))) {
+    			if ((changed.collection) && t6_value !== (t6_value = trimString(ctx.row.url, 70))) {
     				set_data(t6, t6_value);
     			}
 
@@ -807,7 +825,7 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
-    	var a, t0, t1, if_block_anchor;
+    	var a0, t0, t1, hr0, t2, a1, t4, hr1, t5, if_block_anchor;
 
     	function select_block_type(ctx) {
     		if (!ctx.big) return create_if_block;
@@ -819,14 +837,25 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			a = element("a");
+    			a0 = element("a");
     			t0 = text("Download my Data");
     			t1 = space();
+    			hr0 = element("hr");
+    			t2 = space();
+    			a1 = element("a");
+    			a1.textContent = "Publish my Data";
+    			t4 = space();
+    			hr1 = element("hr");
+    			t5 = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			attr(a, "href", ctx.link);
-    			attr(a, "download", "data.json");
-    			add_location(a, file, 65, 1, 1657);
+    			attr(a0, "href", ctx.link);
+    			attr(a0, "download", "data.json");
+    			add_location(a0, file, 66, 0, 1543);
+    			add_location(hr0, file, 67, 0, 1600);
+    			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
+    			add_location(a1, file, 68, 0, 1607);
+    			add_location(hr1, file, 69, 0, 1695);
     		},
 
     		l: function claim(nodes) {
@@ -834,16 +863,22 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, a, anchor);
-    			append(a, t0);
+    			insert(target, a0, anchor);
+    			append(a0, t0);
     			insert(target, t1, anchor);
+    			insert(target, hr0, anchor);
+    			insert(target, t2, anchor);
+    			insert(target, a1, anchor);
+    			insert(target, t4, anchor);
+    			insert(target, hr1, anchor);
+    			insert(target, t5, anchor);
     			if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
     		},
 
     		p: function update(changed, ctx) {
     			if (changed.link) {
-    				attr(a, "href", ctx.link);
+    				attr(a0, "href", ctx.link);
     			}
 
     			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
@@ -863,8 +898,14 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(a);
+    				detach(a0);
     				detach(t1);
+    				detach(hr0);
+    				detach(t2);
+    				detach(a1);
+    				detach(t4);
+    				detach(hr1);
+    				detach(t5);
     			}
 
     			if_block.d(detaching);
@@ -881,7 +922,7 @@ var app = (function () {
     	let collection = [{ url: 'test.com', title: 'storage not loading.... sry' }];
 
     	let link = '';
-        let deleteConfirm = "type: 'DELETE' to confirm"; 
+    	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let big = window.location.hash == '#big';
 
     	const openTab = () => {
@@ -895,30 +936,29 @@ var app = (function () {
     		const storage = await chromePromise$1.storage.sync.get(null);
 
     		$$invalidate('collection', collection = Object.entries(storage)
-                .map(([url, node]) => assoc('url', url, node))
-                .map(({ url, title, dateCreated }) => ({
-                    title: title || '',
-                    created: new Date(dateCreated).toDateString(),
-                    url,
-
-                })));
+    			.map(([url, node]) => assoc('url', url, node))
+    			.map(({ url, title, dateCreated }) => ({
+    				title: title || '',
+    				created: new Date(dateCreated).toDateString(),
+    				url,
+    			})));
     		$$invalidate('link', link = JSONDownloadable(collection));
     	};
 
     	const clearStorage = async () => {
-            if (deleteConfirm == "DELETE") {
-                await chromePromise$1.storage.sync.clear();
-            } else {
-                alert("type in 'DELETE' into the input field");
-            }
+    		if (deleteConfirm == 'IRREVERSIBLE') {
+    			await chromePromise$1.storage.sync.clear();
+    		} else {
+    			alert("type in 'IRREVERSIBLE' into the input field");
+    		}
     		getStorage();
     	};
 
-        getStorage();
-        const removeItem = async itemID => {
-            await chromePromise$1.storage.sync.remove(itemID);
-            getStorage();
-        };
+    	getStorage();
+    	const removeItem = async itemID => {
+    		await chromePromise$1.storage.sync.remove(itemID);
+    		getStorage();
+    	};
 
     	function input_input_handler() {
     		deleteConfirm = this.value;

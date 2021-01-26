@@ -4,6 +4,7 @@
 - [x] add to "marks" 
 - [x] separate YOUDB storage from TEMP-session
 - [ ] don't auto-add; just have reminder toast display!
+- [ ] Regex and rules to trim URL names; remove duplicates
 - [x] todo and display message (change css)
 - [ ] black and white list storage
 - [ ] implement reframe in Svelte ..... lol
