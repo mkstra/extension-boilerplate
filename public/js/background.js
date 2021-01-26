@@ -508,11 +508,6 @@ var app = (function () {
 
     function instance($$self) {
 
-    	
-    	// fetch("https://github.com/mkstra/browserhistory/blob/main/params.json", { contentType: 'json' })
-    	// 	.then(res => res.json())
-    	// 	.then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
-
     	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     		if (request.action == 'toggle-marked') {
     			update() //user initiated

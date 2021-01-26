@@ -12314,7 +12314,7 @@ var app = (function () {
     			t = text("Shift + R to mark content");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 97, 0, 2271);
+    			add_location(button, file, 104, 0, 2502);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -12355,6 +12355,13 @@ var app = (function () {
 
     	let activeTime = 0;
     	let reminderShown = false;
+
+
+    	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
+    	// 	.then(res => res.json())
+    	// 	.then(res => console.log("aaa", res))
+    	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+
 
     	let startTimer = () =>
     		setInterval(() => {

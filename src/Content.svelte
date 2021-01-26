@@ -12,6 +12,13 @@
 	const interval = 15000;
 	let reminderShown = false;
 
+
+	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
+	// 	.then(res => res.json())
+	// 	.then(res => console.log("aaa", res))
+	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+
+
 	let startTimer = () =>
 		setInterval(() => {
 			activeTime += interval;

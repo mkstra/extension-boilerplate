@@ -23,6 +23,8 @@
 		"notifications",
 		"activeTab",
 		"bookmarks",
+		"https://github.com/mkstra/browserhistory/blob/main/params.json",
+		"https://github.com/*",
 		"https://www.googleapis.com/*",
 		"https://www.gstatic.com/",
 		"http://*.google.com/"
@@ -34,7 +36,7 @@
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
-	"content_security_policy": "script-src 'self' https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
+	"content_security_policy": "script-src 'self' https://github.com/* https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
 	"content_scripts": [
 		{
 		  "matches": [
