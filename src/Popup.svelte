@@ -41,10 +41,27 @@
 		getStorage();
 	};
 
-	getStorage();
+    getStorage();
+    const removeItem = async itemID => {
+        await chromep.storage.sync.remove(itemID)
+        getStorage();
+    }
 </script>
 
-<div>
+
+<style>
+    /* ! needs bundle.css inside popup.html */
+	table, th, td {
+		border: 1px solid black;
+        border-collapse: collapse;
+        padding:0.5rem;
+	}
+	table {
+		background: #eee;
+		width: 50%;
+		text-align: center;
+	}
+</style>
 
 	<a href={link} download="data.json">Download my Data</a>
 
@@ -54,11 +71,11 @@
         <input type="text" bind:value={deleteConfirm} />
         <button on:click={clearStorage}>DELETE ALL</button>
 
-
-
 		<table>
 			<thead>
 				<tr>
+                    <th>Delete ?</th>
+
 					<th>title</th>
 					<th>createTime</th>
 					<th>url</th>
@@ -66,9 +83,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each collection as row}
+                {#each collection as row}
 					<tr>
-						<td>{trimString(row.title)}</td>
+                        <button on:click={()=> removeItem(row.url)} style="background: red; color: white; font-weight: bold"> X </button>
+
+						<td style="min-width: 15rem">{trimString(row.title)}</td>
 						<td>{row.created}</td>
 						<td>
 							<a href={row.url}>{trimString(row.url)}</a>
@@ -78,4 +97,3 @@
 			</tbody>
 		</table>
 	{/if}
-</div>

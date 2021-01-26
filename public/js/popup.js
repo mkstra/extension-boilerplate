@@ -49,6 +49,9 @@ var app = (function () {
     function space() {
         return text(' ');
     }
+    function empty() {
+        return text('');
+    }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
@@ -66,6 +69,9 @@ var app = (function () {
         data = '' + data;
         if (text.data !== data)
             text.data = data;
+    }
+    function set_style(node, key, value) {
+        node.style.setProperty(key, value);
     }
 
     let current_component;
@@ -557,9 +563,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (53:4) {:else}
+    // (70:4) {:else}
     function create_else_block(ctx) {
-    	var input, t0, button, t2, table, thead, tr, th0, t4, th1, t6, th2, t8, tbody, dispose;
+    	var input, t0, button, t2, table, thead, tr, th0, t4, th1, t6, th2, t8, th3, t10, tbody, dispose;
 
     	var each_value = ctx.collection;
 
@@ -580,29 +586,38 @@ var app = (function () {
     			thead = element("thead");
     			tr = element("tr");
     			th0 = element("th");
-    			th0.textContent = "title";
+    			th0.textContent = "Delete ?";
     			t4 = space();
     			th1 = element("th");
-    			th1.textContent = "createTime";
+    			th1.textContent = "title";
     			t6 = space();
     			th2 = element("th");
-    			th2.textContent = "url";
+    			th2.textContent = "createTime";
     			t8 = space();
+    			th3 = element("th");
+    			th3.textContent = "url";
+    			t10 = space();
     			tbody = element("tbody");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(input, "type", "text");
-    			add_location(input, file, 53, 8, 1445);
-    			add_location(button, file, 54, 8, 1502);
-    			add_location(th0, file, 61, 5, 1592);
-    			add_location(th1, file, 62, 5, 1612);
-    			add_location(th2, file, 63, 5, 1637);
-    			add_location(tr, file, 60, 4, 1582);
-    			add_location(thead, file, 59, 3, 1570);
-    			add_location(tbody, file, 67, 3, 1725);
-    			add_location(table, file, 58, 2, 1559);
+    			add_location(input, file, 70, 8, 1800);
+    			add_location(button, file, 71, 8, 1857);
+    			attr(th0, "class", "svelte-l1xqc1");
+    			add_location(th0, file, 76, 20, 1960);
+    			attr(th1, "class", "svelte-l1xqc1");
+    			add_location(th1, file, 78, 5, 1984);
+    			attr(th2, "class", "svelte-l1xqc1");
+    			add_location(th2, file, 79, 5, 2004);
+    			attr(th3, "class", "svelte-l1xqc1");
+    			add_location(th3, file, 80, 5, 2029);
+    			add_location(tr, file, 75, 4, 1935);
+    			add_location(thead, file, 74, 3, 1923);
+    			add_location(tbody, file, 84, 3, 2117);
+    			attr(table, "class", "svelte-l1xqc1");
+    			add_location(table, file, 73, 2, 1912);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -626,7 +641,9 @@ var app = (function () {
     			append(tr, th1);
     			append(tr, t6);
     			append(tr, th2);
-    			append(table, t8);
+    			append(tr, t8);
+    			append(tr, th3);
+    			append(table, t10);
     			append(table, tbody);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -675,7 +692,7 @@ var app = (function () {
     	};
     }
 
-    // (51:1) {#if !big}
+    // (68:1) {#if !big}
     function create_if_block(ctx) {
     	var button, dispose;
 
@@ -683,7 +700,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View Dashboard";
-    			add_location(button, file, 51, 2, 1374);
+    			add_location(button, file, 68, 2, 1729);
     			dispose = listen(button, "click", ctx.openTab);
     		},
 
@@ -703,56 +720,75 @@ var app = (function () {
     	};
     }
 
-    // (69:4) {#each collection as row}
+    // (86:16) {#each collection as row}
     function create_each_block(ctx) {
-    	var tr, td0, t0_value = trimString(ctx.row.title), t0, t1, td1, t2_value = ctx.row.created, t2, t3, td2, a, t4_value = trimString(ctx.row.url), t4, a_href_value, t5;
+    	var tr, button, t1, td0, t2_value = trimString(ctx.row.title), t2, t3, td1, t4_value = ctx.row.created, t4, t5, td2, a, t6_value = trimString(ctx.row.url), t6, a_href_value, t7, dispose;
+
+    	function click_handler() {
+    		return ctx.click_handler(ctx);
+    	}
 
     	return {
     		c: function create() {
     			tr = element("tr");
-    			td0 = element("td");
-    			t0 = text(t0_value);
+    			button = element("button");
+    			button.textContent = "X";
     			t1 = space();
-    			td1 = element("td");
+    			td0 = element("td");
     			t2 = text(t2_value);
     			t3 = space();
-    			td2 = element("td");
-    			a = element("a");
+    			td1 = element("td");
     			t4 = text(t4_value);
     			t5 = space();
-    			add_location(td0, file, 70, 6, 1779);
-    			add_location(td1, file, 71, 6, 1818);
+    			td2 = element("td");
+    			a = element("a");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			set_style(button, "background", "red");
+    			set_style(button, "color", "white");
+    			set_style(button, "font-weight", "bold");
+    			add_location(button, file, 87, 24, 2201);
+    			set_style(td0, "min-width", "15rem");
+    			attr(td0, "class", "svelte-l1xqc1");
+    			add_location(td0, file, 89, 6, 2322);
+    			attr(td1, "class", "svelte-l1xqc1");
+    			add_location(td1, file, 90, 6, 2386);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 73, 7, 1859);
-    			add_location(td2, file, 72, 6, 1847);
-    			add_location(tr, file, 69, 5, 1768);
+    			add_location(a, file, 92, 7, 2427);
+    			attr(td2, "class", "svelte-l1xqc1");
+    			add_location(td2, file, 91, 6, 2415);
+    			add_location(tr, file, 86, 5, 2172);
+    			dispose = listen(button, "click", click_handler);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, tr, anchor);
-    			append(tr, td0);
-    			append(td0, t0);
+    			append(tr, button);
     			append(tr, t1);
-    			append(tr, td1);
-    			append(td1, t2);
+    			append(tr, td0);
+    			append(td0, t2);
     			append(tr, t3);
+    			append(tr, td1);
+    			append(td1, t4);
+    			append(tr, t5);
     			append(tr, td2);
     			append(td2, a);
-    			append(a, t4);
-    			append(tr, t5);
+    			append(a, t6);
+    			append(tr, t7);
     		},
 
-    		p: function update(changed, ctx) {
-    			if ((changed.collection) && t0_value !== (t0_value = trimString(ctx.row.title))) {
-    				set_data(t0, t0_value);
-    			}
-
-    			if ((changed.collection) && t2_value !== (t2_value = ctx.row.created)) {
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if ((changed.collection) && t2_value !== (t2_value = trimString(ctx.row.title))) {
     				set_data(t2, t2_value);
     			}
 
-    			if ((changed.collection) && t4_value !== (t4_value = trimString(ctx.row.url))) {
+    			if ((changed.collection) && t4_value !== (t4_value = ctx.row.created)) {
     				set_data(t4, t4_value);
+    			}
+
+    			if ((changed.collection) && t6_value !== (t6_value = trimString(ctx.row.url))) {
+    				set_data(t6, t6_value);
     			}
 
     			if ((changed.collection) && a_href_value !== (a_href_value = ctx.row.url)) {
@@ -764,12 +800,14 @@ var app = (function () {
     			if (detaching) {
     				detach(tr);
     			}
+
+    			dispose();
     		}
     	};
     }
 
     function create_fragment(ctx) {
-    	var div, a, t0, t1;
+    	var a, t0, t1, if_block_anchor;
 
     	function select_block_type(ctx) {
     		if (!ctx.big) return create_if_block;
@@ -781,15 +819,14 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div = element("div");
     			a = element("a");
     			t0 = text("Download my Data");
     			t1 = space();
     			if_block.c();
+    			if_block_anchor = empty();
     			attr(a, "href", ctx.link);
     			attr(a, "download", "data.json");
-    			add_location(a, file, 48, 1, 1302);
-    			add_location(div, file, 46, 0, 1294);
+    			add_location(a, file, 65, 1, 1657);
     		},
 
     		l: function claim(nodes) {
@@ -797,11 +834,11 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			append(div, a);
+    			insert(target, a, anchor);
     			append(a, t0);
-    			append(div, t1);
-    			if_block.m(div, null);
+    			insert(target, t1, anchor);
+    			if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
     		},
 
     		p: function update(changed, ctx) {
@@ -816,7 +853,7 @@ var app = (function () {
     				if_block = current_block_type(ctx);
     				if (if_block) {
     					if_block.c();
-    					if_block.m(div, null);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
     			}
     		},
@@ -826,10 +863,15 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(a);
+    				detach(t1);
     			}
 
-    			if_block.d();
+    			if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
     		}
     	};
     }
@@ -872,11 +914,19 @@ var app = (function () {
     		getStorage();
     	};
 
-    	getStorage();
+        getStorage();
+        const removeItem = async itemID => {
+            await chromePromise$1.storage.sync.remove(itemID);
+            getStorage();
+        };
 
     	function input_input_handler() {
     		deleteConfirm = this.value;
     		$$invalidate('deleteConfirm', deleteConfirm);
+    	}
+
+    	function click_handler({ row }) {
+    		return removeItem(row.url);
     	}
 
     	return {
@@ -886,7 +936,9 @@ var app = (function () {
     		big,
     		openTab,
     		clearStorage,
-    		input_input_handler
+    		removeItem,
+    		input_input_handler,
+    		click_handler
     	};
     }
 
