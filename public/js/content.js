@@ -12310,7 +12310,7 @@ var app = (function () {
     			t = text("Shift + R to mark content");
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? 'blue' : 'white'));
-    			add_location(button, file, 87, 0, 2299);
+    			add_location(button, file, 93, 0, 2212);
     		},
 
     		l: function claim(nodes) {
@@ -12342,82 +12342,88 @@ var app = (function () {
     const interval = 15000;
 
     function instance($$self, $$props, $$invalidate) {
-      
+
     	// universal Web Extension
     	window.browser = window.chrome || window.msBrowser || window.browser;
 
-      let activeTime = 0;
-      let reminderShown = false;
+    	let activeTime = 0;
+    	let reminderShown = false;
 
-      let startTimer = () => setInterval(() => {
-        activeTime += interval;
-       
-        if (activeTime > 120000){
-          toastr.info("ADD content to your stream?");
-          reminderShown = true;
-          //! kinda nasty hack
-          window.clearInterval(trackActiveTime);
-        }
-        {console.log(activeTime);}
-      }, interval);
+    	let startTimer = () =>
+    		setInterval(() => {
+    			activeTime += interval;
 
-      let trackActiveTime = startTimer();
+    			if (activeTime > 120000) {
+    				toastr.info('ADD content to your stream?');
+    				reminderShown = true;
+    				//! kinda nasty hack
+    				window.clearInterval(trackActiveTime);
+    			}
+    			{
+    				console.log(activeTime);
+    			}
+    		}, interval);
 
-      document.addEventListener("visibilitychange", () => {
-        /*only count when TAB is active tab*/
-            document.hidden && clearInterval(trackActiveTime);
-            
-            if (!document.hidden && !reminderShown) {
-              trackActiveTime = startTimer();
-            }
-      }, false);
+    	let trackActiveTime = startTimer();
 
-      hotkeys('shift+r', function(event, handler){
-      // Prevent the default refresh event under WINDOWS system
-        chrome.runtime.sendMessage({action: "toggle-marked"}, _ => _);
-        event.preventDefault(); 
-      });
+    	document.addEventListener(
+    		'visibilitychange',
+    		() => {
+    			/*only count when TAB is active tab*/
+    			document.hidden && clearInterval(trackActiveTime);
 
-      let marked = false;
+    			if (!document.hidden && !reminderShown) {
+    				trackActiveTime = startTimer();
+    			}
+    		},
+    		false
+    	);
 
-      //get initial value on page startup
-      chrome.storage.sync.get(window.location.href, storage => {
-        $$invalidate('marked', marked = !!path([window.location.href, "marked"], storage));
-        console.log("heey", marked);
-      });
+    	hotkeys('shift+r', function(event, handler) {
+    		// Prevent the default refresh event under WINDOWS system
+    		chrome.runtime.sendMessage({ action: 'toggle-marked' }, _ => _);
+    		event.preventDefault();
+    	});
 
-      chrome.storage.onChanged.addListener(function(changes, namespace) {
-        /*changes = {
+    	let marked = false;
+
+    	//get initial value on page startup
+    	chrome.storage.sync.get(window.location.href, storage => {
+    		$$invalidate('marked', marked = !!path([window.location.href, 'marked'], storage));
+    		console.log('heey', marked);
+    	});
+
+    	chrome.storage.onChanged.addListener(function(changes, namespace) {
+    		/*changes = {
           url: {oldValue: {...}, newValue: {....}}, url2: {...}
         }*/
-        const m = !!path([window.location.href, "newValue", "marked"], changes);
-        if (m == marked) return //nothing changed (except timestamps)
-        
-        $$invalidate('marked', marked = m);
-        marked 
-          ? toastr.info("ADDED: Press Shift + R to undo")
-          : toastr.info("REMOVED: Press Shift + R to add again");
+    		const m = !!path([window.location.href, 'newValue'], changes);
+    		if (m == marked) return; //nothing changed (except timestamps)
 
-        return true //needed for async?!
-      });
+    		$$invalidate('marked', marked = m);
+    		marked
+    			? toastr.info('ADDED: Press Shift + R to undo')
+    			: toastr.info('REMOVED: Press Shift + R to add again');
 
-      toastr.options = {
-      "closeButton": false,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": true,
-      "positionClass": "toast-bottom-center",
-      "preventDuplicates": false,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-      };
+    		return true; //needed for async?!
+    	});
 
+    	toastr.options = {
+    		closeButton: false,
+    		debug: false,
+    		newestOnTop: false,
+    		progressBar: true,
+    		positionClass: 'toast-bottom-center',
+    		preventDuplicates: false,
+    		showDuration: '300',
+    		hideDuration: '1000',
+    		timeOut: '5000',
+    		extendedTimeOut: '1000',
+    		showEasing: 'swing',
+    		hideEasing: 'linear',
+    		showMethod: 'fadeIn',
+    		hideMethod: 'fadeOut',
+    	};
 
     	// console.log(M, 'materialize')
 

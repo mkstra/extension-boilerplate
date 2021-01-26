@@ -2,74 +2,55 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { uniqBy, union, head, isEmpty } from 'ramda';
-	import { writable } from 'svelte/store';
+	import {getActiveTab} from "./utils"
 
 	
-	
-	fetch("https://github.com/mkstra/browserhistory/blob/main/params.json", { contentType: 'json' })
-		.then(res => res.json())
-		.then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+	// fetch("https://github.com/mkstra/browserhistory/blob/main/params.json", { contentType: 'json' })
+	// 	.then(res => res.json())
+	// 	.then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if (request.action == 'toggle-marked') {
-			update(0, true) //user initiated
+			update() //user initiated
 				.then(e => {
-					sendResponse({ content: 'background to major tom' });
+					sendResponse({ content: 'added content' });
 				})
 				.catch(e => console.log('error in update', e));
 		}
 		return true; //async message passing
 	});
 
-	const getActiveTab = async () => {
-		const idleState = await chromep.idle.queryState(20);
-		if (idleState != 'active') return;
+	const Node = (url, title) => ({
+		// activeTime: 0,
+		dateCreated: Date.now(),
+		marked: false,
+		// blocked: false,
+		title,
+		url,
+	})
 
-		const tabs = await chromep.tabs.query({
-			active: true,
-			lastFocusedWindow: true,
-		});
-		return head(tabs);
-	};
-
-	const update = async (interval, userAction = false) => {
+	const update = async () => {
 		const tab = (await getActiveTab()) || {};
 		const { url, title } = tab;
 		if (!url) return;
-		let node = await chromep.storage.sync.get(url);
-		node = node[url] || {
-			activeTime: 0,
-			dateCreated: Date.now(),
-			marked: false,
-			blocked: false,
-			title,
-		};
-		node['activeTime'] += interval;
-
-		if (userAction) {
-			node['marked'] = !node['marked'];
-			node['blocked'] = true;
+		let entry = await chromep.storage.sync.get(url);
+		const node = Node(url, title)
+		console.log(node, "node")
+		if (entry[url]) {
+			try {
+				await chromep.storage.sync.remove(url);
+			} catch (err) {
+				console.log(err, 'error in removing from DB');
+			}
+		} else {
+			try {
+				await chromep.storage.sync.set({ [url]: node });
+			} catch (err) {
+				console.log(err, 'error in setting node in DB');
+			}
 		}
-		if (node['activeTime'] > 6000 && !node['marked'] && !node['blocked']) {
-			node['marked'] = true;
-		}
-		console.log(node, 'node');
-		try {
-			await chromep.storage.sync.set({ [url]: node });
-		} catch (err) {
-			console.log(err, 'error in setting DB');
-		}
+		return true
 	};
-
-	const interval = 3000;
-	setInterval(function() {
-		// update(interval);
-		//moveNode(temp-key)
-		//onChange-->messag
-
-		console.log('runs update');
-	}, interval);
 </script>
 
 

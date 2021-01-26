@@ -567,7 +567,6 @@ var app = (function () {
     const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`;
-
     //TODO split into pipe components
     const storageToColl = store => {
             const nodes = pickBy((val, key) => val['marked'], store);
