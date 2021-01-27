@@ -2218,6 +2218,222 @@ var app = (function () {
       return x != null && equals(x, empty$1(x));
     });
 
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+    const DATA_URL_DEFAULT_MIME_TYPE = 'text/plain';
+    const DATA_URL_DEFAULT_CHARSET = 'us-ascii';
+
+    const testParameter = (name, filters) => {
+    	return filters.some(filter => filter instanceof RegExp ? filter.test(name) : filter === name);
+    };
+
+    const normalizeDataURL = (urlString, {stripHash}) => {
+    	const match = /^data:(?<type>.*?),(?<data>.*?)(?:#(?<hash>.*))?$/.exec(urlString);
+
+    	if (!match) {
+    		throw new Error(`Invalid URL: ${urlString}`);
+    	}
+
+    	let {type, data, hash} = match.groups;
+    	const mediaType = type.split(';');
+    	hash = stripHash ? '' : hash;
+
+    	let isBase64 = false;
+    	if (mediaType[mediaType.length - 1] === 'base64') {
+    		mediaType.pop();
+    		isBase64 = true;
+    	}
+
+    	// Lowercase MIME type
+    	const mimeType = (mediaType.shift() || '').toLowerCase();
+    	const attributes = mediaType
+    		.map(attribute => {
+    			let [key, value = ''] = attribute.split('=').map(string => string.trim());
+
+    			// Lowercase `charset`
+    			if (key === 'charset') {
+    				value = value.toLowerCase();
+
+    				if (value === DATA_URL_DEFAULT_CHARSET) {
+    					return '';
+    				}
+    			}
+
+    			return `${key}${value ? `=${value}` : ''}`;
+    		})
+    		.filter(Boolean);
+
+    	const normalizedMediaType = [
+    		...attributes
+    	];
+
+    	if (isBase64) {
+    		normalizedMediaType.push('base64');
+    	}
+
+    	if (normalizedMediaType.length !== 0 || (mimeType && mimeType !== DATA_URL_DEFAULT_MIME_TYPE)) {
+    		normalizedMediaType.unshift(mimeType);
+    	}
+
+    	return `data:${normalizedMediaType.join(';')},${isBase64 ? data.trim() : data}${hash ? `#${hash}` : ''}`;
+    };
+
+    const normalizeUrl = (urlString, options) => {
+    	options = {
+    		defaultProtocol: 'http:',
+    		normalizeProtocol: true,
+    		forceHttp: false,
+    		forceHttps: false,
+    		stripAuthentication: true,
+    		stripHash: false,
+    		stripWWW: true,
+    		removeQueryParameters: [/^utm_\w+/i],
+    		removeTrailingSlash: true,
+    		removeSingleSlash: true,
+    		removeDirectoryIndex: false,
+    		sortQueryParameters: true,
+    		...options
+    	};
+
+    	urlString = urlString.trim();
+
+    	// Data URL
+    	if (/^data:/i.test(urlString)) {
+    		return normalizeDataURL(urlString, options);
+    	}
+
+    	if (/^view-source:/i.test(urlString)) {
+    		throw new Error('`view-source:` is not supported as it is a non-standard protocol');
+    	}
+
+    	const hasRelativeProtocol = urlString.startsWith('//');
+    	const isRelativeUrl = !hasRelativeProtocol && /^\.*\//.test(urlString);
+
+    	// Prepend protocol
+    	if (!isRelativeUrl) {
+    		urlString = urlString.replace(/^(?!(?:\w+:)?\/\/)|^\/\//, options.defaultProtocol);
+    	}
+
+    	const urlObj = new URL(urlString);
+
+    	if (options.forceHttp && options.forceHttps) {
+    		throw new Error('The `forceHttp` and `forceHttps` options cannot be used together');
+    	}
+
+    	if (options.forceHttp && urlObj.protocol === 'https:') {
+    		urlObj.protocol = 'http:';
+    	}
+
+    	if (options.forceHttps && urlObj.protocol === 'http:') {
+    		urlObj.protocol = 'https:';
+    	}
+
+    	// Remove auth
+    	if (options.stripAuthentication) {
+    		urlObj.username = '';
+    		urlObj.password = '';
+    	}
+
+    	// Remove hash
+    	if (options.stripHash) {
+    		urlObj.hash = '';
+    	}
+
+    	// Remove duplicate slashes if not preceded by a protocol
+    	if (urlObj.pathname) {
+    		urlObj.pathname = urlObj.pathname.replace(/(?<!\b(?:[a-z][a-z\d+\-.]{1,50}:))\/{2,}/g, '/');
+    	}
+
+    	// Decode URI octets
+    	if (urlObj.pathname) {
+    		try {
+    			urlObj.pathname = decodeURI(urlObj.pathname);
+    		} catch (_) {}
+    	}
+
+    	// Remove directory index
+    	if (options.removeDirectoryIndex === true) {
+    		options.removeDirectoryIndex = [/^index\.[a-z]+$/];
+    	}
+
+    	if (Array.isArray(options.removeDirectoryIndex) && options.removeDirectoryIndex.length > 0) {
+    		let pathComponents = urlObj.pathname.split('/');
+    		const lastComponent = pathComponents[pathComponents.length - 1];
+
+    		if (testParameter(lastComponent, options.removeDirectoryIndex)) {
+    			pathComponents = pathComponents.slice(0, pathComponents.length - 1);
+    			urlObj.pathname = pathComponents.slice(1).join('/') + '/';
+    		}
+    	}
+
+    	if (urlObj.hostname) {
+    		// Remove trailing dot
+    		urlObj.hostname = urlObj.hostname.replace(/\.$/, '');
+
+    		// Remove `www.`
+    		if (options.stripWWW && /^www\.(?!www\.)(?:[a-z\-\d]{1,63})\.(?:[a-z.\-\d]{2,63})$/.test(urlObj.hostname)) {
+    			// Each label should be max 63 at length (min: 1).
+    			// Source: https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
+    			// Each TLD should be up to 63 characters long (min: 2).
+    			// It is technically possible to have a single character TLD, but none currently exist.
+    			urlObj.hostname = urlObj.hostname.replace(/^www\./, '');
+    		}
+    	}
+
+    	// Remove query unwanted parameters
+    	if (Array.isArray(options.removeQueryParameters)) {
+    		for (const key of [...urlObj.searchParams.keys()]) {
+    			if (testParameter(key, options.removeQueryParameters)) {
+    				urlObj.searchParams.delete(key);
+    			}
+    		}
+    	}
+
+    	// Sort query parameters
+    	if (options.sortQueryParameters) {
+    		urlObj.searchParams.sort();
+    	}
+
+    	if (options.removeTrailingSlash) {
+    		urlObj.pathname = urlObj.pathname.replace(/\/$/, '');
+    	}
+
+    	const oldUrlString = urlString;
+
+    	// Take advantage of many of the Node `url` normalizations
+    	urlString = urlObj.toString();
+
+    	if (!options.removeSingleSlash && urlObj.pathname === '/' && !oldUrlString.endsWith('/') && urlObj.hash === '') {
+    		urlString = urlString.replace(/\/$/, '');
+    	}
+
+    	// Remove ending `/` unless removeSingleSlash is false
+    	if ((options.removeTrailingSlash || urlObj.pathname === '/') && urlObj.hash === '' && options.removeSingleSlash) {
+    		urlString = urlString.replace(/\/$/, '');
+    	}
+
+    	// Restore relative protocol, if applicable
+    	if (hasRelativeProtocol && !options.normalizeProtocol) {
+    		urlString = urlString.replace(/^http:\/\//, '//');
+    	}
+
+    	// Remove http/https
+    	if (options.stripProtocol) {
+    		urlString = urlString.replace(/^(?:https?:)?\/\//, '');
+    	}
+
+    	return urlString;
+    };
+
+    var normalizeUrl_1 = normalizeUrl;
+
+    const historyPipe = blacklist => pipe(
+        filter(item => !blacklist.some(term => item['url'].includes(term))),
+        map(item => ({...item, url: normalizeUrl_1(item.url, {stripHash: true})})),
+        map(e => ({ ...e, dateCreated: e.lastVisitTime })),
+        uniqBy(e => e.url),
+         //no homepages, only if has path aka something.com//superfancy
+    );
+
     const trimString = (s, l = 50) => s.length > l
         ? s.substring(0, l) + "..."
         : s;
@@ -2235,7 +2451,6 @@ var app = (function () {
     });
 
     const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
-
     	
     const idiotSafe = (fn, config={log: false}) => async (...args) => {
         try {
@@ -2542,214 +2757,6 @@ var app = (function () {
     		throw new Error("<Dashboard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
-
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-    const DATA_URL_DEFAULT_MIME_TYPE = 'text/plain';
-    const DATA_URL_DEFAULT_CHARSET = 'us-ascii';
-
-    const testParameter = (name, filters) => {
-    	return filters.some(filter => filter instanceof RegExp ? filter.test(name) : filter === name);
-    };
-
-    const normalizeDataURL = (urlString, {stripHash}) => {
-    	const match = /^data:(?<type>.*?),(?<data>.*?)(?:#(?<hash>.*))?$/.exec(urlString);
-
-    	if (!match) {
-    		throw new Error(`Invalid URL: ${urlString}`);
-    	}
-
-    	let {type, data, hash} = match.groups;
-    	const mediaType = type.split(';');
-    	hash = stripHash ? '' : hash;
-
-    	let isBase64 = false;
-    	if (mediaType[mediaType.length - 1] === 'base64') {
-    		mediaType.pop();
-    		isBase64 = true;
-    	}
-
-    	// Lowercase MIME type
-    	const mimeType = (mediaType.shift() || '').toLowerCase();
-    	const attributes = mediaType
-    		.map(attribute => {
-    			let [key, value = ''] = attribute.split('=').map(string => string.trim());
-
-    			// Lowercase `charset`
-    			if (key === 'charset') {
-    				value = value.toLowerCase();
-
-    				if (value === DATA_URL_DEFAULT_CHARSET) {
-    					return '';
-    				}
-    			}
-
-    			return `${key}${value ? `=${value}` : ''}`;
-    		})
-    		.filter(Boolean);
-
-    	const normalizedMediaType = [
-    		...attributes
-    	];
-
-    	if (isBase64) {
-    		normalizedMediaType.push('base64');
-    	}
-
-    	if (normalizedMediaType.length !== 0 || (mimeType && mimeType !== DATA_URL_DEFAULT_MIME_TYPE)) {
-    		normalizedMediaType.unshift(mimeType);
-    	}
-
-    	return `data:${normalizedMediaType.join(';')},${isBase64 ? data.trim() : data}${hash ? `#${hash}` : ''}`;
-    };
-
-    const normalizeUrl = (urlString, options) => {
-    	options = {
-    		defaultProtocol: 'http:',
-    		normalizeProtocol: true,
-    		forceHttp: false,
-    		forceHttps: false,
-    		stripAuthentication: true,
-    		stripHash: false,
-    		stripWWW: true,
-    		removeQueryParameters: [/^utm_\w+/i],
-    		removeTrailingSlash: true,
-    		removeSingleSlash: true,
-    		removeDirectoryIndex: false,
-    		sortQueryParameters: true,
-    		...options
-    	};
-
-    	urlString = urlString.trim();
-
-    	// Data URL
-    	if (/^data:/i.test(urlString)) {
-    		return normalizeDataURL(urlString, options);
-    	}
-
-    	if (/^view-source:/i.test(urlString)) {
-    		throw new Error('`view-source:` is not supported as it is a non-standard protocol');
-    	}
-
-    	const hasRelativeProtocol = urlString.startsWith('//');
-    	const isRelativeUrl = !hasRelativeProtocol && /^\.*\//.test(urlString);
-
-    	// Prepend protocol
-    	if (!isRelativeUrl) {
-    		urlString = urlString.replace(/^(?!(?:\w+:)?\/\/)|^\/\//, options.defaultProtocol);
-    	}
-
-    	const urlObj = new URL(urlString);
-
-    	if (options.forceHttp && options.forceHttps) {
-    		throw new Error('The `forceHttp` and `forceHttps` options cannot be used together');
-    	}
-
-    	if (options.forceHttp && urlObj.protocol === 'https:') {
-    		urlObj.protocol = 'http:';
-    	}
-
-    	if (options.forceHttps && urlObj.protocol === 'http:') {
-    		urlObj.protocol = 'https:';
-    	}
-
-    	// Remove auth
-    	if (options.stripAuthentication) {
-    		urlObj.username = '';
-    		urlObj.password = '';
-    	}
-
-    	// Remove hash
-    	if (options.stripHash) {
-    		urlObj.hash = '';
-    	}
-
-    	// Remove duplicate slashes if not preceded by a protocol
-    	if (urlObj.pathname) {
-    		urlObj.pathname = urlObj.pathname.replace(/(?<!\b(?:[a-z][a-z\d+\-.]{1,50}:))\/{2,}/g, '/');
-    	}
-
-    	// Decode URI octets
-    	if (urlObj.pathname) {
-    		try {
-    			urlObj.pathname = decodeURI(urlObj.pathname);
-    		} catch (_) {}
-    	}
-
-    	// Remove directory index
-    	if (options.removeDirectoryIndex === true) {
-    		options.removeDirectoryIndex = [/^index\.[a-z]+$/];
-    	}
-
-    	if (Array.isArray(options.removeDirectoryIndex) && options.removeDirectoryIndex.length > 0) {
-    		let pathComponents = urlObj.pathname.split('/');
-    		const lastComponent = pathComponents[pathComponents.length - 1];
-
-    		if (testParameter(lastComponent, options.removeDirectoryIndex)) {
-    			pathComponents = pathComponents.slice(0, pathComponents.length - 1);
-    			urlObj.pathname = pathComponents.slice(1).join('/') + '/';
-    		}
-    	}
-
-    	if (urlObj.hostname) {
-    		// Remove trailing dot
-    		urlObj.hostname = urlObj.hostname.replace(/\.$/, '');
-
-    		// Remove `www.`
-    		if (options.stripWWW && /^www\.(?!www\.)(?:[a-z\-\d]{1,63})\.(?:[a-z.\-\d]{2,63})$/.test(urlObj.hostname)) {
-    			// Each label should be max 63 at length (min: 1).
-    			// Source: https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
-    			// Each TLD should be up to 63 characters long (min: 2).
-    			// It is technically possible to have a single character TLD, but none currently exist.
-    			urlObj.hostname = urlObj.hostname.replace(/^www\./, '');
-    		}
-    	}
-
-    	// Remove query unwanted parameters
-    	if (Array.isArray(options.removeQueryParameters)) {
-    		for (const key of [...urlObj.searchParams.keys()]) {
-    			if (testParameter(key, options.removeQueryParameters)) {
-    				urlObj.searchParams.delete(key);
-    			}
-    		}
-    	}
-
-    	// Sort query parameters
-    	if (options.sortQueryParameters) {
-    		urlObj.searchParams.sort();
-    	}
-
-    	if (options.removeTrailingSlash) {
-    		urlObj.pathname = urlObj.pathname.replace(/\/$/, '');
-    	}
-
-    	const oldUrlString = urlString;
-
-    	// Take advantage of many of the Node `url` normalizations
-    	urlString = urlObj.toString();
-
-    	if (!options.removeSingleSlash && urlObj.pathname === '/' && !oldUrlString.endsWith('/') && urlObj.hash === '') {
-    		urlString = urlString.replace(/\/$/, '');
-    	}
-
-    	// Remove ending `/` unless removeSingleSlash is false
-    	if ((options.removeTrailingSlash || urlObj.pathname === '/') && urlObj.hash === '' && options.removeSingleSlash) {
-    		urlString = urlString.replace(/\/$/, '');
-    	}
-
-    	// Restore relative protocol, if applicable
-    	if (hasRelativeProtocol && !options.normalizeProtocol) {
-    		urlString = urlString.replace(/^http:\/\//, '//');
-    	}
-
-    	// Remove http/https
-    	if (options.stripProtocol) {
-    		urlString = urlString.replace(/^(?:https?:)?\/\//, '');
-    	}
-
-    	return urlString;
-    };
-
-    var normalizeUrl_1 = normalizeUrl;
 
     var jquery = createCommonjsModule(function (module) {
     /*!
@@ -14443,7 +14450,7 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (128:31) 
+    // (120:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -14471,9 +14478,9 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 128, 1, 4129);
+    			add_location(h1, file$2, 120, 1, 3860);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 129, 1, 4161);
+    			add_location(button, file$2, 121, 1, 3892);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
@@ -14532,7 +14539,7 @@ var app = (function () {
     	};
     }
 
-    // (110:31) 
+    // (102:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, t5, await_block_anchor, promise, current, dispose;
 
@@ -14572,10 +14579,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 110, 1, 3580);
-    			add_location(button, file$2, 111, 1, 3654);
-    			add_location(br0, file$2, 112, 1, 3707);
-    			add_location(br1, file$2, 113, 1, 3715);
+    			add_location(input, file$2, 102, 1, 3311);
+    			add_location(button, file$2, 103, 1, 3385);
+    			add_location(br0, file$2, 104, 1, 3438);
+    			add_location(br1, file$2, 105, 1, 3446);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14662,7 +14669,7 @@ var app = (function () {
     	};
     }
 
-    // (107:0) {#if isEmpty(hash)}
+    // (99:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14673,8 +14680,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 107, 1, 3399);
-    			add_location(button1, file$2, 108, 1, 3470);
+    			add_location(button0, file$2, 99, 1, 3130);
+    			add_location(button1, file$2, 100, 1, 3201);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14704,7 +14711,7 @@ var app = (function () {
     	};
     }
 
-    // (144:1) {:catch error}
+    // (136:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14713,7 +14720,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 144, 2, 4524);
+    			add_location(p, file$2, 136, 2, 4255);
     		},
 
     		m: function mount(target, anchor) {
@@ -14738,7 +14745,7 @@ var app = (function () {
     	};
     }
 
-    // (141:1) {:then his}
+    // (133:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14785,7 +14792,7 @@ var app = (function () {
     	};
     }
 
-    // (139:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (131:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14793,7 +14800,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 139, 2, 4322);
+    			add_location(p, file$2, 131, 2, 4053);
     		},
 
     		m: function mount(target, anchor) {
@@ -14812,7 +14819,7 @@ var app = (function () {
     	};
     }
 
-    // (125:1) {:catch error}
+    // (117:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14821,7 +14828,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 125, 2, 4044);
+    			add_location(p, file$2, 117, 2, 3775);
     		},
 
     		m: function mount(target, anchor) {
@@ -14846,7 +14853,7 @@ var app = (function () {
     	};
     }
 
-    // (119:1) {:then coll}
+    // (111:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -14893,7 +14900,7 @@ var app = (function () {
     	};
     }
 
-    // (117:20)    <p>...waiting</p>  {:then coll}
+    // (109:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -14901,7 +14908,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 117, 2, 3826);
+    			add_location(p, file$2, 109, 2, 3557);
     		},
 
     		m: function mount(target, anchor) {
@@ -14958,11 +14965,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 100, 0, 3217);
-    			add_location(hr0, file$2, 101, 0, 3274);
+    			add_location(a0, file$2, 92, 0, 2948);
+    			add_location(hr0, file$2, 93, 0, 3005);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 102, 0, 3281);
-    			add_location(hr1, file$2, 103, 0, 3369);
+    			add_location(a1, file$2, 94, 0, 3012);
+    			add_location(hr1, file$2, 95, 0, 3100);
     		},
 
     		l: function claim(nodes) {
@@ -15119,16 +15126,8 @@ var app = (function () {
     		});
     		const blacklist = await chromePromise$1.storage.sync.get('blacklist');
     		
-    		const p = pipe(
-    			filter(item => !blacklist['blacklist'].some(term => item['url'].includes(term))),
-    			map(item => ({...item, url: normalizeUrl_1(item.url, {stripHash: true})})),
-    			map(e => ({ ...e, dateCreated: e.lastVisitTime })),
-    			uniqBy(e => e.url),
-    			filter(item=> (item.url.split("/").length - 1)>2) //no homepages, only if has path aka something.com//superfancy
-    		);
-    		//filter out historyItems that intersect with blacklist
-
-    		historyItems = p(historyItems);
+    		historyItems = historyPipe(blacklist["blacklist"])(historyItems).filter(item=> (item.url.split("/").length - 1)>2);
+    							 //no homepages, only if has path aka something.com//superfancy
 
     		historyItems = await asyncFilter(historyItems, async item => {
     			const doc = await idiotSafe(UrlToDOM)(item["url"]);

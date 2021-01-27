@@ -2,7 +2,7 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { JSONDownloadable, UrlToDOM, trimString, Node, asyncFilter, idiotSafe } from './utils/utils';
+	import { JSONDownloadable, UrlToDOM, trimString, Node, asyncFilter, idiotSafe, historyPipe } from './utils/utils';
 	import { assoc, isEmpty, uniqBy, pipe, map, filter } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
@@ -76,16 +76,8 @@
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');
 		
-		const p = pipe(
-			filter(item => !blacklist['blacklist'].some(term => item['url'].includes(term))),
-			map(item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})),
-			map(e => ({ ...e, dateCreated: e.lastVisitTime })),
-			uniqBy(e => e.url),
-			filter(item=> (item.url.split("/").length - 1)>2) //no homepages, only if has path aka something.com//superfancy
-		)
-		//filter out historyItems that intersect with blacklist
-
-		historyItems = p(historyItems)
+		historyItems = historyPipe(blacklist["blacklist"])(historyItems).filter(item=> (item.url.split("/").length - 1)>2)
+							 //no homepages, only if has path aka something.com//superfancy
 
 		historyItems = await asyncFilter(historyItems, async item => {
 			const doc = await idiotSafe(UrlToDOM)(item["url"])

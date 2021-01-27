@@ -1,5 +1,14 @@
-import { pickBy, assoc, head } from 'ramda';
+import { pickBy, assoc, head, pipe, map, filter, uniqBy } from 'ramda';
 import chromep from 'chrome-promise';
+import normalizeUrl from 'normalize-url';
+
+export const historyPipe = blacklist => pipe(
+    filter(item => !blacklist.some(term => item['url'].includes(term))),
+    map(item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})),
+    map(e => ({ ...e, dateCreated: e.lastVisitTime })),
+    uniqBy(e => e.url),
+     //no homepages, only if has path aka something.com//superfancy
+)
 
 export const trimString = (s, l = 50) => s.length > l
     ? s.substring(0, l) + "..."
@@ -18,7 +27,6 @@ export const Node = (url, title, dateCreated=Date.now()) => ({
 });
 
 export const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
-
 	
 export const idiotSafe = (fn, config={log: false}) => async (...args) => {
     try {
