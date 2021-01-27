@@ -1032,9 +1032,277 @@ var app = (function () {
       return _equals(a, b, [], []);
     });
 
+    function _indexOf(list, a, idx) {
+      var inf, item; // Array.prototype.indexOf doesn't exist below IE9
+
+      if (typeof list.indexOf === 'function') {
+        switch (typeof a) {
+          case 'number':
+            if (a === 0) {
+              // manually crawl the list to distinguish between +0 and -0
+              inf = 1 / a;
+
+              while (idx < list.length) {
+                item = list[idx];
+
+                if (item === 0 && 1 / item === inf) {
+                  return idx;
+                }
+
+                idx += 1;
+              }
+
+              return -1;
+            } else if (a !== a) {
+              // NaN
+              while (idx < list.length) {
+                item = list[idx];
+
+                if (typeof item === 'number' && item !== item) {
+                  return idx;
+                }
+
+                idx += 1;
+              }
+
+              return -1;
+            } // non-zero numbers can utilise Set
+
+
+            return list.indexOf(a, idx);
+          // all these types can utilise Set
+
+          case 'string':
+          case 'boolean':
+          case 'function':
+          case 'undefined':
+            return list.indexOf(a, idx);
+
+          case 'object':
+            if (a === null) {
+              // null can utilise Set
+              return list.indexOf(a, idx);
+            }
+
+        }
+      } // anything else not covered above, defer to R.equals
+
+
+      while (idx < list.length) {
+        if (equals(list[idx], a)) {
+          return idx;
+        }
+
+        idx += 1;
+      }
+
+      return -1;
+    }
+
+    function _includes(a, list) {
+      return _indexOf(list, a, 0) >= 0;
+    }
+
     function _isObject(x) {
       return Object.prototype.toString.call(x) === '[object Object]';
     }
+
+    var _Set =
+    /*#__PURE__*/
+    function () {
+      function _Set() {
+        /* globals Set */
+        this._nativeSet = typeof Set === 'function' ? new Set() : null;
+        this._items = {};
+      }
+
+      // until we figure out why jsdoc chokes on this
+      // @param item The item to add to the Set
+      // @returns {boolean} true if the item did not exist prior, otherwise false
+      //
+      _Set.prototype.add = function (item) {
+        return !hasOrAdd(item, true, this);
+      }; //
+      // @param item The item to check for existence in the Set
+      // @returns {boolean} true if the item exists in the Set, otherwise false
+      //
+
+
+      _Set.prototype.has = function (item) {
+        return hasOrAdd(item, false, this);
+      }; //
+      // Combines the logic for checking whether an item is a member of the set and
+      // for adding a new item to the set.
+      //
+      // @param item       The item to check or add to the Set instance.
+      // @param shouldAdd  If true, the item will be added to the set if it doesn't
+      //                   already exist.
+      // @param set        The set instance to check or add to.
+      // @return {boolean} true if the item already existed, otherwise false.
+      //
+
+
+      return _Set;
+    }();
+
+    function hasOrAdd(item, shouldAdd, set) {
+      var type = typeof item;
+      var prevSize, newSize;
+
+      switch (type) {
+        case 'string':
+        case 'number':
+          // distinguish between +0 and -0
+          if (item === 0 && 1 / item === -Infinity) {
+            if (set._items['-0']) {
+              return true;
+            } else {
+              if (shouldAdd) {
+                set._items['-0'] = true;
+              }
+
+              return false;
+            }
+          } // these types can all utilise the native Set
+
+
+          if (set._nativeSet !== null) {
+            if (shouldAdd) {
+              prevSize = set._nativeSet.size;
+
+              set._nativeSet.add(item);
+
+              newSize = set._nativeSet.size;
+              return newSize === prevSize;
+            } else {
+              return set._nativeSet.has(item);
+            }
+          } else {
+            if (!(type in set._items)) {
+              if (shouldAdd) {
+                set._items[type] = {};
+                set._items[type][item] = true;
+              }
+
+              return false;
+            } else if (item in set._items[type]) {
+              return true;
+            } else {
+              if (shouldAdd) {
+                set._items[type][item] = true;
+              }
+
+              return false;
+            }
+          }
+
+        case 'boolean':
+          // set._items['boolean'] holds a two element array
+          // representing [ falseExists, trueExists ]
+          if (type in set._items) {
+            var bIdx = item ? 1 : 0;
+
+            if (set._items[type][bIdx]) {
+              return true;
+            } else {
+              if (shouldAdd) {
+                set._items[type][bIdx] = true;
+              }
+
+              return false;
+            }
+          } else {
+            if (shouldAdd) {
+              set._items[type] = item ? [false, true] : [true, false];
+            }
+
+            return false;
+          }
+
+        case 'function':
+          // compare functions for reference equality
+          if (set._nativeSet !== null) {
+            if (shouldAdd) {
+              prevSize = set._nativeSet.size;
+
+              set._nativeSet.add(item);
+
+              newSize = set._nativeSet.size;
+              return newSize === prevSize;
+            } else {
+              return set._nativeSet.has(item);
+            }
+          } else {
+            if (!(type in set._items)) {
+              if (shouldAdd) {
+                set._items[type] = [item];
+              }
+
+              return false;
+            }
+
+            if (!_includes(item, set._items[type])) {
+              if (shouldAdd) {
+                set._items[type].push(item);
+              }
+
+              return false;
+            }
+
+            return true;
+          }
+
+        case 'undefined':
+          if (set._items[type]) {
+            return true;
+          } else {
+            if (shouldAdd) {
+              set._items[type] = true;
+            }
+
+            return false;
+          }
+
+        case 'object':
+          if (item === null) {
+            if (!set._items['null']) {
+              if (shouldAdd) {
+                set._items['null'] = true;
+              }
+
+              return false;
+            }
+
+            return true;
+          }
+
+        /* falls through */
+
+        default:
+          // reduce the search size of heterogeneous sets by creating buckets
+          // for each type.
+          type = Object.prototype.toString.call(item);
+
+          if (!(type in set._items)) {
+            if (shouldAdd) {
+              set._items[type] = [item];
+            }
+
+            return false;
+          } // scan through all previously applied items
+
+
+          if (!_includes(item, set._items[type])) {
+            if (shouldAdd) {
+              set._items[type].push(item);
+            }
+
+            return false;
+          }
+
+          return true;
+      }
+    } // A simple Set type that honours R.equals semantics
 
     /**
      * Returns the empty value of its argument's type. Ramda defines the empty
@@ -1067,6 +1335,47 @@ var app = (function () {
         return arguments;
       }() : void 0 // else
       ;
+    });
+
+    /**
+     * Returns a new list containing only one copy of each element in the original
+     * list, based upon the value returned by applying the supplied function to
+     * each list element. Prefers the first item if the supplied function produces
+     * the same value on two items. [`R.equals`](#equals) is used for comparison.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.16.0
+     * @category List
+     * @sig (a -> b) -> [a] -> [a]
+     * @param {Function} fn A function used to produce a value to use during comparisons.
+     * @param {Array} list The array to consider.
+     * @return {Array} The list of unique items.
+     * @example
+     *
+     *      R.uniqBy(Math.abs, [-1, -5, 2, 10, 1, 2]); //=> [-1, -5, 2, 10]
+     */
+
+    var uniqBy =
+    /*#__PURE__*/
+    _curry2(function uniqBy(fn, list) {
+      var set = new _Set();
+      var result = [];
+      var idx = 0;
+      var appliedItem, item;
+
+      while (idx < list.length) {
+        item = list[idx];
+        appliedItem = fn(item);
+
+        if (set.add(appliedItem)) {
+          result.push(item);
+        }
+
+        idx += 1;
+      }
+
+      return result;
     });
 
     /**
@@ -1104,6 +1413,21 @@ var app = (function () {
     const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`;
+
+    const UrlToDOM = async url =>
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                // Convert the HTML string into a document object
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                console.log("DOOOC", doc);
+                return doc
+            })
+            .catch(function (err) {
+                // There was an error
+                console.log('URL FAIL: ', url, err);
+            });
 
     /* src/Dashboard.svelte generated by Svelte v3.5.4 */
 
@@ -1387,11 +1711,219 @@ var app = (function () {
     	}
     }
 
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+    const DATA_URL_DEFAULT_MIME_TYPE = 'text/plain';
+    const DATA_URL_DEFAULT_CHARSET = 'us-ascii';
+
+    const testParameter = (name, filters) => {
+    	return filters.some(filter => filter instanceof RegExp ? filter.test(name) : filter === name);
+    };
+
+    const normalizeDataURL = (urlString, {stripHash}) => {
+    	const match = /^data:(?<type>.*?),(?<data>.*?)(?:#(?<hash>.*))?$/.exec(urlString);
+
+    	if (!match) {
+    		throw new Error(`Invalid URL: ${urlString}`);
+    	}
+
+    	let {type, data, hash} = match.groups;
+    	const mediaType = type.split(';');
+    	hash = stripHash ? '' : hash;
+
+    	let isBase64 = false;
+    	if (mediaType[mediaType.length - 1] === 'base64') {
+    		mediaType.pop();
+    		isBase64 = true;
+    	}
+
+    	// Lowercase MIME type
+    	const mimeType = (mediaType.shift() || '').toLowerCase();
+    	const attributes = mediaType
+    		.map(attribute => {
+    			let [key, value = ''] = attribute.split('=').map(string => string.trim());
+
+    			// Lowercase `charset`
+    			if (key === 'charset') {
+    				value = value.toLowerCase();
+
+    				if (value === DATA_URL_DEFAULT_CHARSET) {
+    					return '';
+    				}
+    			}
+
+    			return `${key}${value ? `=${value}` : ''}`;
+    		})
+    		.filter(Boolean);
+
+    	const normalizedMediaType = [
+    		...attributes
+    	];
+
+    	if (isBase64) {
+    		normalizedMediaType.push('base64');
+    	}
+
+    	if (normalizedMediaType.length !== 0 || (mimeType && mimeType !== DATA_URL_DEFAULT_MIME_TYPE)) {
+    		normalizedMediaType.unshift(mimeType);
+    	}
+
+    	return `data:${normalizedMediaType.join(';')},${isBase64 ? data.trim() : data}${hash ? `#${hash}` : ''}`;
+    };
+
+    const normalizeUrl = (urlString, options) => {
+    	options = {
+    		defaultProtocol: 'http:',
+    		normalizeProtocol: true,
+    		forceHttp: false,
+    		forceHttps: false,
+    		stripAuthentication: true,
+    		stripHash: false,
+    		stripWWW: true,
+    		removeQueryParameters: [/^utm_\w+/i],
+    		removeTrailingSlash: true,
+    		removeSingleSlash: true,
+    		removeDirectoryIndex: false,
+    		sortQueryParameters: true,
+    		...options
+    	};
+
+    	urlString = urlString.trim();
+
+    	// Data URL
+    	if (/^data:/i.test(urlString)) {
+    		return normalizeDataURL(urlString, options);
+    	}
+
+    	if (/^view-source:/i.test(urlString)) {
+    		throw new Error('`view-source:` is not supported as it is a non-standard protocol');
+    	}
+
+    	const hasRelativeProtocol = urlString.startsWith('//');
+    	const isRelativeUrl = !hasRelativeProtocol && /^\.*\//.test(urlString);
+
+    	// Prepend protocol
+    	if (!isRelativeUrl) {
+    		urlString = urlString.replace(/^(?!(?:\w+:)?\/\/)|^\/\//, options.defaultProtocol);
+    	}
+
+    	const urlObj = new URL(urlString);
+
+    	if (options.forceHttp && options.forceHttps) {
+    		throw new Error('The `forceHttp` and `forceHttps` options cannot be used together');
+    	}
+
+    	if (options.forceHttp && urlObj.protocol === 'https:') {
+    		urlObj.protocol = 'http:';
+    	}
+
+    	if (options.forceHttps && urlObj.protocol === 'http:') {
+    		urlObj.protocol = 'https:';
+    	}
+
+    	// Remove auth
+    	if (options.stripAuthentication) {
+    		urlObj.username = '';
+    		urlObj.password = '';
+    	}
+
+    	// Remove hash
+    	if (options.stripHash) {
+    		urlObj.hash = '';
+    	}
+
+    	// Remove duplicate slashes if not preceded by a protocol
+    	if (urlObj.pathname) {
+    		urlObj.pathname = urlObj.pathname.replace(/(?<!\b(?:[a-z][a-z\d+\-.]{1,50}:))\/{2,}/g, '/');
+    	}
+
+    	// Decode URI octets
+    	if (urlObj.pathname) {
+    		try {
+    			urlObj.pathname = decodeURI(urlObj.pathname);
+    		} catch (_) {}
+    	}
+
+    	// Remove directory index
+    	if (options.removeDirectoryIndex === true) {
+    		options.removeDirectoryIndex = [/^index\.[a-z]+$/];
+    	}
+
+    	if (Array.isArray(options.removeDirectoryIndex) && options.removeDirectoryIndex.length > 0) {
+    		let pathComponents = urlObj.pathname.split('/');
+    		const lastComponent = pathComponents[pathComponents.length - 1];
+
+    		if (testParameter(lastComponent, options.removeDirectoryIndex)) {
+    			pathComponents = pathComponents.slice(0, pathComponents.length - 1);
+    			urlObj.pathname = pathComponents.slice(1).join('/') + '/';
+    		}
+    	}
+
+    	if (urlObj.hostname) {
+    		// Remove trailing dot
+    		urlObj.hostname = urlObj.hostname.replace(/\.$/, '');
+
+    		// Remove `www.`
+    		if (options.stripWWW && /^www\.(?!www\.)(?:[a-z\-\d]{1,63})\.(?:[a-z.\-\d]{2,63})$/.test(urlObj.hostname)) {
+    			// Each label should be max 63 at length (min: 1).
+    			// Source: https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_host_names
+    			// Each TLD should be up to 63 characters long (min: 2).
+    			// It is technically possible to have a single character TLD, but none currently exist.
+    			urlObj.hostname = urlObj.hostname.replace(/^www\./, '');
+    		}
+    	}
+
+    	// Remove query unwanted parameters
+    	if (Array.isArray(options.removeQueryParameters)) {
+    		for (const key of [...urlObj.searchParams.keys()]) {
+    			if (testParameter(key, options.removeQueryParameters)) {
+    				urlObj.searchParams.delete(key);
+    			}
+    		}
+    	}
+
+    	// Sort query parameters
+    	if (options.sortQueryParameters) {
+    		urlObj.searchParams.sort();
+    	}
+
+    	if (options.removeTrailingSlash) {
+    		urlObj.pathname = urlObj.pathname.replace(/\/$/, '');
+    	}
+
+    	const oldUrlString = urlString;
+
+    	// Take advantage of many of the Node `url` normalizations
+    	urlString = urlObj.toString();
+
+    	if (!options.removeSingleSlash && urlObj.pathname === '/' && !oldUrlString.endsWith('/') && urlObj.hash === '') {
+    		urlString = urlString.replace(/\/$/, '');
+    	}
+
+    	// Remove ending `/` unless removeSingleSlash is false
+    	if ((options.removeTrailingSlash || urlObj.pathname === '/') && urlObj.hash === '' && options.removeSingleSlash) {
+    		urlString = urlString.replace(/\/$/, '');
+    	}
+
+    	// Restore relative protocol, if applicable
+    	if (hasRelativeProtocol && !options.normalizeProtocol) {
+    		urlString = urlString.replace(/^http:\/\//, '//');
+    	}
+
+    	// Remove http/https
+    	if (options.stripProtocol) {
+    		urlString = urlString.replace(/^(?:https?:)?\/\//, '');
+    	}
+
+    	return urlString;
+    };
+
+    var normalizeUrl_1 = normalizeUrl;
+
     /* src/Popup.svelte generated by Svelte v3.5.4 */
 
     const file$1 = "src/Popup.svelte";
 
-    // (115:31) 
+    // (140:31) 
     function create_if_block_2(ctx) {
     	var div, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -1419,8 +1951,8 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(div, file$1, 115, 1, 3339);
-    			add_location(button, file$1, 116, 1, 3373);
+    			add_location(div, file$1, 140, 1, 4146);
+    			add_location(button, file$1, 141, 1, 4180);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
@@ -1479,7 +2011,7 @@ var app = (function () {
     	};
     }
 
-    // (98:31) 
+    // (123:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
@@ -1512,10 +2044,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 98, 1, 2870);
-    			add_location(button, file$1, 99, 1, 2944);
-    			add_location(br0, file$1, 100, 1, 2997);
-    			add_location(br1, file$1, 101, 1, 3005);
+    			add_location(input, file$1, 123, 1, 3677);
+    			add_location(button, file$1, 124, 1, 3751);
+    			add_location(br0, file$1, 125, 1, 3804);
+    			add_location(br1, file$1, 126, 1, 3812);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -1590,7 +2122,7 @@ var app = (function () {
     	};
     }
 
-    // (95:0) {#if isEmpty(hash)}
+    // (120:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -1601,8 +2133,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$1, 95, 1, 2689);
-    			add_location(button1, file$1, 96, 1, 2760);
+    			add_location(button0, file$1, 120, 1, 3496);
+    			add_location(button1, file$1, 121, 1, 3567);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -1632,7 +2164,7 @@ var app = (function () {
     	};
     }
 
-    // (125:1) {:catch error}
+    // (154:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -1641,7 +2173,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 125, 2, 3639);
+    			add_location(p, file$1, 154, 2, 4461);
     		},
 
     		m: function mount(target, anchor) {
@@ -1666,7 +2198,7 @@ var app = (function () {
     	};
     }
 
-    // (121:1) {:then his}
+    // (151:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -1713,7 +2245,7 @@ var app = (function () {
     	};
     }
 
-    // (119:17)   <p>...history</p>  {:then his}
+    // (149:17)    <p>...history</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -1721,7 +2253,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...history";
-    			add_location(p, file$1, 119, 1, 3478);
+    			add_location(p, file$1, 149, 2, 4301);
     		},
 
     		m: function mount(target, anchor) {
@@ -1740,7 +2272,7 @@ var app = (function () {
     	};
     }
 
-    // (112:1) {:catch error}
+    // (137:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -1749,7 +2281,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 112, 2, 3254);
+    			add_location(p, file$1, 137, 2, 4061);
     		},
 
     		m: function mount(target, anchor) {
@@ -1774,7 +2306,7 @@ var app = (function () {
     	};
     }
 
-    // (106:1) {:then coll}
+    // (131:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -1821,7 +2353,7 @@ var app = (function () {
     	};
     }
 
-    // (104:20)    <p>...waiting</p>  {:then coll}
+    // (129:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -1829,7 +2361,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 104, 2, 3036);
+    			add_location(p, file$1, 129, 2, 3843);
     		},
 
     		m: function mount(target, anchor) {
@@ -1886,11 +2418,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 88, 0, 2507);
-    			add_location(hr0, file$1, 89, 0, 2564);
+    			add_location(a0, file$1, 113, 0, 3314);
+    			add_location(hr0, file$1, 114, 0, 3371);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 90, 0, 2571);
-    			add_location(hr1, file$1, 91, 0, 2659);
+    			add_location(a1, file$1, 115, 0, 3378);
+    			add_location(hr1, file$1, 116, 0, 3466);
     		},
 
     		l: function claim(nodes) {
@@ -1982,6 +2514,7 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
 
+
     	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
     	const getStorage = async () => {
@@ -1994,7 +2527,7 @@ var app = (function () {
     				dateCreated,
     				url,
     			}))
-    			.filter(({url}) => url != "blacklist" ));
+    			.filter(({ url }) => url != 'blacklist'));
     		$$invalidate('link', link = JSONDownloadable(collection));
     		return collection;
     	};
@@ -2005,7 +2538,6 @@ var app = (function () {
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
     	let history = [];
-    	
 
     	fetch('https://dacapo.io/hacking-scientific-text')
     		.then(res => res)
@@ -2039,25 +2571,49 @@ var app = (function () {
     	// 	getStorage();
     	// };
 
-    	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 31) => {
+    	//TODO:
+    		//dedupe, normalize (no hashes), "no-homepage"
+    	const asyncFilter = async (arr, predicate) =>
+    		Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
+
+    	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
     		let historyItems = await chromePromise$1.history.search({
     			text: '', // Return every history item....
     			startTime: new Date().getTime() - msSinceNow,
-    			maxResults: 100000,
+    			maxResults: 3000,
     			// that was accessed less than one week ago.
     		});
-    		const blacklist = await chromePromise$1.storage.sync.get("blacklist");
+    		const blacklist = await chromePromise$1.storage.sync.get('blacklist');
 
     		//filter out historyItems that intersect with blacklist
-    		historyItems = historyItems
-    			.filter(item => !blacklist["blacklist"].some(term => item["url"].includes(term)));
 
-    		//cast lastVisitTime -> dateCreated 
-    		historyItems = historyItems.map(e => ({...e, "dateCreated": e.lastVisitTime}));
+    		historyItems = historyItems.filter(
+    			item => !blacklist['blacklist'].some(term => item['url'].includes(term))
+    		).map(
+    			item => ({...item, url: normalizeUrl_1(item.url, {stripHash: true})})
+    		);
+    		historyItems = uniqBy(e => e.url, historyItems)
+    		//no homepages, only if has path aka something.com
+    		.filter(item=> (item.url.split("/").length - 1)>2); //superfancy
+
+    		historyItems = await asyncFilter(historyItems, async item => {
+    			let doc;
+    			try {
+    				doc = await UrlToDOM(item.url);
+    				console.log(item.url, 'worked', doc);
+    				return !!doc.querySelector('article');
+    			} catch (err) {
+    				console.log(err, 'error in DOM');
+    				return false;
+    			}
+    		});
+
+    		//cast lastVisitTime -> dateCreated
+    		historyItems = historyItems.map(e => ({ ...e, dateCreated: e.lastVisitTime }));
     		//callback
 
-    		console.log('history', historyItems, blacklist["blacklist"]);
-    		
+    		console.log('history', historyItems, blacklist['blacklist']);
+
     		return historyItems;
     	};
 
@@ -2074,7 +2630,9 @@ var app = (function () {
     		$$invalidate('deleteConfirm', deleteConfirm);
     	}
 
-    	function click_handler_2() {history = getHistory(); $$invalidate('history', history);}
+    	function click_handler_2() {
+    				history = getHistory(); $$invalidate('history', history);
+    			}
 
     	return {
     		collection,

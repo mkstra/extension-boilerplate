@@ -3,14 +3,15 @@
 - [x] Keypresses like Shift+R
 - [x] add to "marks" 
 - [x] separate YOUDB storage from TEMP-session
-- [ ] don't auto-add; just have reminder toast display!
-- [ ] Regex and rules to trim URL names; remove duplicates
+- [x] don't auto-add; just have reminder toast display!
+- [ ] Regex and rules to trim URL names; 
+- [ ] remove duplicates in history
+- [ ] UI: fold similar candidates
 - [x] todo and display message (change css)
-- [ ] black and white list storage
+- [ ] black and white list always on
 - [ ] implement reframe in Svelte ..... lol
 - [ ] slowly think about testing (look at https://github.com/Lamden/wallet/)
 - [ ] run client side classifier (isPost)
-- [ ] always-on lists and blocklists
 
 ## Features
 - [ ] we can watch extension from

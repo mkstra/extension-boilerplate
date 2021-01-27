@@ -14,21 +14,23 @@ export const loadBlackList = async () => fetch("https://raw.githubusercontent.co
      .then(res => res.json())
      // .then(res => console.log("aaa", res))
      .then(({blacklist}) => chromep.storage.sync.set({blacklist}))
-     
-export const UrlToDOM = async url => {
+
+const pipeAwait = (...fns) => param => fns.reduce(async (result, next) => next(await result), param)     
+
+export const UrlToDOM = async url =>
     fetch(url)
         .then(response => response.text())
         .then(html => {
             // Convert the HTML string into a document object
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
+            console.log("DOOOC", doc)
             return doc
         })
         .catch(function (err) {
             // There was an error
             console.log('URL FAIL: ', url, err);
-        });
-}
+        })
 
 export const getActiveTab = async (detectionIntervalSeconds = 20) => {
     const idleState = await chromep.idle.queryState(detectionIntervalSeconds);

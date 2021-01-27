@@ -2,9 +2,11 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { JSONDownloadable, trimString } from './utils/utils';
-	import { assoc, isEmpty } from 'ramda';
+	import { JSONDownloadable, UrlToDOM, trimString } from './utils/utils';
+	import { assoc, isEmpty, uniqBy } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
+	import normalizeUrl from 'normalize-url';
+
 
 	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
@@ -18,7 +20,7 @@
 				dateCreated,
 				url,
 			}))
-			.filter(({url}) => url != "blacklist" )
+			.filter(({ url }) => url != 'blacklist');
 		link = JSONDownloadable(collection);
 		return collection;
 	};
@@ -29,7 +31,6 @@
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
-	
 
 	fetch('https://dacapo.io/hacking-scientific-text')
 		.then(res => res)
@@ -63,25 +64,49 @@
 	// 	getStorage();
 	// };
 
-	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 31) => {
+	//TODO:
+		//dedupe, normalize (no hashes), "no-homepage"
+	const asyncFilter = async (arr, predicate) =>
+		Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
+
+	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
-			maxResults: 100000,
+			maxResults: 3000,
 			// that was accessed less than one week ago.
 		});
-		const blacklist = await chromep.storage.sync.get("blacklist")
+		const blacklist = await chromep.storage.sync.get('blacklist');
 
 		//filter out historyItems that intersect with blacklist
-		historyItems = historyItems
-			.filter(item => !blacklist["blacklist"].some(term => item["url"].includes(term)))
 
-		//cast lastVisitTime -> dateCreated 
-		historyItems = historyItems.map(e => ({...e, "dateCreated": e.lastVisitTime}))
+		historyItems = historyItems.filter(
+			item => !blacklist['blacklist'].some(term => item['url'].includes(term))
+		).map(
+			item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})
+		)
+		historyItems = uniqBy(e => e.url, historyItems)
+		//no homepages, only if has path aka something.com
+		.filter(item=> (item.url.split("/").length - 1)>2); //superfancy
+
+		historyItems = await asyncFilter(historyItems, async item => {
+			let doc;
+			try {
+				doc = await UrlToDOM(item.url);
+				console.log(item.url, 'worked', doc);
+				return !!doc.querySelector('article');
+			} catch (err) {
+				console.log(err, 'error in DOM');
+				return false;
+			}
+		});
+
+		//cast lastVisitTime -> dateCreated
+		historyItems = historyItems.map(e => ({ ...e, dateCreated: e.lastVisitTime }));
 		//callback
 
-		console.log('history', historyItems, blacklist["blacklist"]);
-		
+		console.log('history', historyItems, blacklist['blacklist']);
+
 		return historyItems;
 	};
 </script>
@@ -114,17 +139,19 @@
 	{/await}
 {:else if hash == '#bootstrap'}
 	<div>Bootstrap your STREAM</div>
-	<button on:click={() => {history = getHistory()}}>CHECK LAST WEEK's HISTORY</button>
+	<button
+		on:click={() => {
+			history = getHistory();
+		}}>
+		CHECK LAST WEEK's HISTORY
+	</button>
 
 	{#await history}
-	<p>...history</p>
+		<p>...history</p>
 	{:then his}
 		<!-- <p>The number is {coll}</p> -->
 		<Dashboard collection={his} on:message={onRemove} addAction={true} />
-
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
-
-
 {/if}
