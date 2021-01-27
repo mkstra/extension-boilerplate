@@ -3,7 +3,7 @@
 	'use strict';
 	import chromep from 'chrome-promise';
 	import { JSONDownloadable, UrlToDOM, trimString, Node } from './utils/utils';
-	import { assoc, isEmpty, uniqBy } from 'ramda';
+	import { assoc, isEmpty, uniqBy, pipe, map, filter } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
 
@@ -19,11 +19,6 @@
 
 		collection = Object.entries(storage)
 			.map(([url, node]) => assoc('url', url, node))
-			.map(({ url, title, dateCreated }) => ({
-				title: title || '',
-				dateCreated,
-				url,
-			}))
 			.filter(({ url }) => url != 'blacklist');
 		link = JSONDownloadable(collection);
 		return collection;
@@ -36,16 +31,16 @@
 	let hash = window.location.hash;
 	let history = [];
 
-	fetch('https://dacapo.io/hacking-scientific-text')
-		.then(res => res)
-		.then(res => console.log('aaaasa', res));
+	// fetch('https://dacapo.io/hacking-scientific-text')
+	// 	.then(res => res)
+	// 	.then(res => console.log('aaaasa', res));
 
-	const openTab = hash => {
-		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
+
+	/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
             #window lets popup know what's up
         */
-		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
-	};
+	const openTab = hash => chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
+	
 
 	const clearStorage = async () => {
 		if (deleteConfirm == 'IRREVERSIBLE') {
@@ -78,43 +73,50 @@
 
 	//TODO:
 		//dedupe, normalize (no hashes), "no-homepage"
-	const asyncFilter = async (arr, predicate) =>
-		Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
+	const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
+
+	
+	const idiotSafe = (fn, config={log: false}) => async (...args) => {
+		try {
+				return await fn(...args)
+			}
+		catch(err) {
+				config["log"] && console.log(err, " Args: ", ...args)
+				return false
+		}
+	}
 
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
-			maxResults: 50,
+			maxResults: 300,
 			// that was accessed less than one week ago.
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');
-
+		
+		// historyItems = pipe
 		//filter out historyItems that intersect with blacklist
 
 		historyItems = historyItems.filter(
 			item => !blacklist['blacklist'].some(term => item['url'].includes(term))
 		).map(
 			item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})
-		)
+		).map(e => ({ ...e, dateCreated: e.lastVisitTime }))
+		
 		historyItems = uniqBy(e => e.url, historyItems)
 		//no homepages, only if has path aka something.com
-		.filter(item=> (item.url.split("/").length - 1)>2); //superfancy
+			.filter(item=> (item.url.split("/").length - 1)>2); //superfancy
 
-		historyItems = await asyncFilter(historyItems, async item => {
-			let doc;
-			try {
-				doc = await UrlToDOM(item.url);
-				console.log(item.url, 'worked', doc);
-				return !!doc.querySelector('article');
-			} catch (err) {
-				console.log(err, 'error in DOM');
-				return false;
-			}
-		});
+		historyItems = await asyncFilter(
+			historyItems, 
+		async item => {
+			const doc = await idiotSafe(UrlToDOM)(item["url"])
+			return !!(doc && doc.querySelector('article'))
+		})
 
 		//cast lastVisitTime -> dateCreated
-		historyItems = historyItems.map(e => ({ ...e, dateCreated: e.lastVisitTime }));
+		historyItems = historyItems;
 		//callback
 
 		console.log('history', historyItems, blacklist['blacklist']);
@@ -155,7 +157,7 @@
 		on:click={() => {
 			history = getHistory();
 		}}>
-		CHECK LAST WEEK's HISTORY
+		CHECK HISTORY for ARTICLES (last 30 days)
 	</button>
 
 	{#await history}
