@@ -9,6 +9,7 @@
 
 	import toastr from 'toastr';
 	import { toastrOptions } from './utils/params';
+	import Table from './Table.svelte';
 
 	toastr.options = toastrOptions
 
@@ -111,6 +112,7 @@
 	<button on:click={clearStorage}>DELETE ALL</button>
 	<br />
 	<br />
+	<Table collection={[{a: "b", b:"cc", c:"www"}, {a: "wq", b:"wq", c:"wqa"}]} />
 
 	{#await collection}
 		<p>...waiting</p>
