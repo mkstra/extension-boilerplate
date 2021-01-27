@@ -16,6 +16,20 @@ export const Node = (url, title, dateCreated=Date.now()) => ({
     title: title || "",
     url,
 });
+
+export const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
+
+	
+export const idiotSafe = (fn, config={log: false}) => async (...args) => {
+    try {
+            return await fn(...args)
+        }
+    catch(err) {
+            config["log"] && console.log(err, " Args: ", ...args)
+            return false
+    }
+}
+
 export const loadBlackList = async () => fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
      .then(res => res.json())
      // .then(res => console.log("aaa", res))

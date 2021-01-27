@@ -2,7 +2,7 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { JSONDownloadable, UrlToDOM, trimString, Node } from './utils/utils';
+	import { JSONDownloadable, UrlToDOM, trimString, Node, asyncFilter, idiotSafe } from './utils/utils';
 	import { assoc, isEmpty, uniqBy, pipe, map, filter } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
@@ -20,13 +20,13 @@
 		collection = Object.entries(storage)
 			.map(([url, node]) => assoc('url', url, node))
 			.filter(({ url }) => url != 'blacklist');
-		link = JSONDownloadable(collection);
 		return collection;
 	};
 
-	let collection = getStorage();
-
 	let link = '';
+	let collection = getStorage().then(c => {link = JSONDownloadable(c)});
+
+	
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
@@ -41,6 +41,9 @@
         */
 	const openTab = hash => chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
 	
+	chrome.storage.onChanged.addListener((changes, namespace) => {
+		getStorage().then(c => {link = JSONDownloadable(c)})
+	})
 
 	const clearStorage = async () => {
 		if (deleteConfirm == 'IRREVERSIBLE') {
@@ -48,13 +51,11 @@
 		} else {
 			alert("type in 'IRREVERSIBLE' into the input field");
 		}
-		getStorage();
 	};
 
 	const onRemove = async ({ detail }) => {
 		console.log(detail, 'detail');
 		await chromep.storage.sync.remove(detail.url);
-		getStorage();
 	};
 
 	const onAdd = async ({ detail }) => {
@@ -62,36 +63,14 @@
 		const {url, title, dateCreated} = detail
 		await chromep.storage.sync.set({[url]: Node(url, title, dateCreated)});
 		toastr.success(`${title} added to stream`)
-		getStorage();
 	};
-
-	getStorage();
-	// const removeItem = async itemID => {
-	// 	await chromep.storage.sync.remove(itemID);
-	// 	getStorage();
-	// };
-
-	//TODO:
-		//dedupe, normalize (no hashes), "no-homepage"
-	const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
-
 	
-	const idiotSafe = (fn, config={log: false}) => async (...args) => {
-		try {
-				return await fn(...args)
-			}
-		catch(err) {
-				config["log"] && console.log(err, " Args: ", ...args)
-				return false
-		}
-	}
-
-
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
+		const maxResults = 300
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
-			maxResults: 300,
+			maxResults,
 			// that was accessed less than one week ago.
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');

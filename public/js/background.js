@@ -353,6 +353,7 @@ var app = (function () {
         title: title || "",
         url,
     });
+
     const loadBlackList = async () => fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
          .then(res => res.json())
          // .then(res => console.log("aaa", res))
