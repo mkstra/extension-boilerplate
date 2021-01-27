@@ -1215,6 +1215,18 @@ var app = (function () {
     }));
 
     /**
+     * Determine if the passed argument is an integer.
+     *
+     * @private
+     * @param {*} n
+     * @category Type
+     * @return {Boolean}
+     */
+    var _isInteger = Number.isInteger || function _isInteger(n) {
+      return n << 0 === n;
+    };
+
+    /**
      * Returns the nth element of the given list or string. If n is negative the
      * element at index length + n is returned.
      *
@@ -1246,6 +1258,74 @@ var app = (function () {
     _curry2(function nth(offset, list) {
       var idx = offset < 0 ? list.length + offset : offset;
       return _isString(list) ? list.charAt(idx) : list[idx];
+    });
+
+    /**
+     * Retrieves the values at given paths of an object.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.27.1
+     * @category Object
+     * @typedefn Idx = [String | Int]
+     * @sig [Idx] -> {a} -> [a | Undefined]
+     * @param {Array} pathsArray The array of paths to be fetched.
+     * @param {Object} obj The object to retrieve the nested properties from.
+     * @return {Array} A list consisting of values at paths specified by "pathsArray".
+     * @see R.path
+     * @example
+     *
+     *      R.paths([['a', 'b'], ['p', 0, 'q']], {a: {b: 2}, p: [{q: 3}]}); //=> [2, 3]
+     *      R.paths([['a', 'b'], ['p', 'r']], {a: {b: 2}, p: [{q: 3}]}); //=> [2, undefined]
+     */
+
+    var paths =
+    /*#__PURE__*/
+    _curry2(function paths(pathsArray, obj) {
+      return pathsArray.map(function (paths) {
+        var val = obj;
+        var idx = 0;
+        var p;
+
+        while (idx < paths.length) {
+          if (val == null) {
+            return;
+          }
+
+          p = paths[idx];
+          val = _isInteger(p) ? nth(p, val) : val[p];
+          idx += 1;
+        }
+
+        return val;
+      });
+    });
+
+    /**
+     * Retrieve the value at a given path.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.2.0
+     * @category Object
+     * @typedefn Idx = String | Int
+     * @sig [Idx] -> {a} -> a | Undefined
+     * @param {Array} path The path to use.
+     * @param {Object} obj The object to retrieve the nested property from.
+     * @return {*} The data at `path`.
+     * @see R.prop, R.nth
+     * @example
+     *
+     *      R.path(['a', 'b'], {a: {b: 2}}); //=> 2
+     *      R.path(['a', 'b'], {c: {b: 2}}); //=> undefined
+     *      R.path(['a', 'b', 0], {a: {b: [1, 2, 3]}}); //=> 1
+     *      R.path(['a', 'b', -2], {a: {b: [1, 2, 3]}}); //=> 2
+     */
+
+    var path =
+    /*#__PURE__*/
+    _curry2(function path(pathAr, obj) {
+      return paths([pathAr], obj)[0];
     });
 
     /**
@@ -2758,6 +2838,37 @@ var app = (function () {
     		throw new Error("<Dashboard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
+
+    const getISBNsfromAmazonPage = doc => //{ISBN-10: "1577315936", ISBN-13: "978-1577315933"} 
+        {
+            try {
+                return Array.from(doc
+                    .getElementById("detailBulletsWrapper_feature_div")
+                    .querySelectorAll("span"))
+                    .map(span => span.innerText)
+                    .filter(text => text.includes("ISBN-10") || text.includes("ISBN-13"))
+                    .filter(e => e.length > 15)
+                    .map(e => e.split(" : "))
+                    .map(([a, b]) => ({ [a]: b })) //[ [], []]
+                    .reduce((acc, next) => ({ ...acc, ...next }), {})
+            }
+            catch (err) {
+                console.log(err, "error ISBN");
+                return ({a: 5})
+            }
+        };    
+
+
+    const AmazonBookPageInfo = doc => (
+        {
+            img: path(['src'], doc.querySelector("#imgBlkFront")),
+            productTitle: path(['textContent'], doc.querySelector("#productTitle")),
+            author: path(['textContent'], doc.querySelector("#bylineInfo > span:nth-child(1) > span.a-declarative > a.a-link-normal.contributorNameID")),
+            
+            ...getISBNsfromAmazonPage(doc)
+        });
+    //TODO use Chrome Dev Tools to "copy JS Path"
+    /* This won't work for Kindle */
 
     var jquery = createCommonjsModule(function (module) {
     /*!
@@ -14130,7 +14241,7 @@ var app = (function () {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 31, 12, 629);
+    			add_location(th, file$1, 31, 12, 632);
     		},
 
     		m: function mount(target, anchor) {
@@ -14161,7 +14272,7 @@ var app = (function () {
     			td = element("td");
     			td.textContent = "Wobble";
     			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 50, 16, 1191);
+    			add_location(td, file$1, 50, 16, 1194);
     		},
 
     		m: function mount(target, anchor) {
@@ -14206,10 +14317,10 @@ var app = (function () {
 
     			t2 = space();
     			attr(button, "style", `background: ${ "green" }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 40, 20, 850);
+    			add_location(button, file$1, 40, 20, 853);
     			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 39, 16, 825);
-    			add_location(tr, file$1, 38, 12, 804);
+    			add_location(td, file$1, 39, 16, 828);
+    			add_location(tr, file$1, 38, 12, 807);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14298,12 +14409,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 29, 12, 543);
-    			add_location(tr, file$1, 28, 8, 526);
-    			add_location(thead, file$1, 27, 4, 510);
-    			add_location(tbody, file$1, 36, 4, 750);
+    			add_location(th, file$1, 29, 12, 546);
+    			add_location(tr, file$1, 28, 8, 529);
+    			add_location(thead, file$1, 27, 4, 513);
+    			add_location(tbody, file$1, 36, 4, 753);
     			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file$1, 26, 0, 498);
+    			add_location(table, file$1, 26, 0, 501);
     		},
 
     		l: function claim(nodes) {
@@ -14390,10 +14501,12 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	
-        let { collection, action } = $$props; //as propsAschildren??
+        let { collection } = $$props;
+
+        // export let action //as propsAschildren??
         const dispatch = createEventDispatcher();
 
-    	const writable_props = ['collection', 'action'];
+    	const writable_props = ['collection'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Table> was created with unknown prop '${key}'`);
     	});
@@ -14404,29 +14517,20 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ('collection' in $$props) $$invalidate('collection', collection = $$props.collection);
-    		if ('action' in $$props) $$invalidate('action', action = $$props.action);
     	};
 
-    	return {
-    		collection,
-    		action,
-    		dispatch,
-    		click_handler
-    	};
+    	return { collection, dispatch, click_handler };
     }
 
     class Table extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["collection", "action"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["collection"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.collection === undefined && !('collection' in props)) {
     			console.warn("<Table> was created without expected prop 'collection'");
-    		}
-    		if (ctx.action === undefined && !('action' in props)) {
-    			console.warn("<Table> was created without expected prop 'action'");
     		}
     	}
 
@@ -14437,21 +14541,13 @@ var app = (function () {
     	set collection(value) {
     		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
-
-    	get action() {
-    		throw new Error("<Table>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set action(value) {
-    		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
     }
 
     /* src/Popup.svelte generated by Svelte v3.5.4 */
 
     const file$2 = "src/Popup.svelte";
 
-    // (160:31) 
+    // (171:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -14479,10 +14575,10 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 160, 1, 4589);
+    			add_location(h1, file$2, 171, 1, 4908);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 161, 1, 4621);
-    			dispose = listen(button, "click", ctx.click_handler_2);
+    			add_location(button, file$2, 172, 1, 4940);
+    			dispose = listen(button, "click", ctx.click_handler_3);
     		},
 
     		m: function mount(target, anchor) {
@@ -14540,12 +14636,12 @@ var app = (function () {
     	};
     }
 
-    // (139:31) 
+    // (146:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, t7, await_block_anchor, promise, current, dispose;
 
     	var table = new Table({
-    		props: { collection: [{ a: 'b', b: 'cc', c: 'www' }, { a: 'wq', b: 'wq', c: 'wqa' }] },
+    		props: { collection: [{a:5, b:2}, {a:3, b:1}] },
     		$$inline: true
     	});
 
@@ -14583,16 +14679,16 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 139, 1, 3980);
-    			add_location(button0, file$2, 140, 1, 4054);
-    			add_location(br0, file$2, 141, 1, 4107);
-    			add_location(br1, file$2, 142, 1, 4115);
-    			add_location(button1, file$2, 143, 1, 4123);
+    			add_location(input, file$2, 146, 1, 4295);
+    			add_location(button0, file$2, 147, 1, 4369);
+    			add_location(br0, file$2, 148, 1, 4422);
+    			add_location(br1, file$2, 149, 1, 4430);
+    			add_location(button1, file$2, 150, 1, 4438);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
     				listen(button0, "click", ctx.clearStorage),
-    				listen(button1, "click", ctx.getBooks)
+    				listen(button1, "click", ctx.click_handler_2)
     			];
     		},
 
@@ -14679,7 +14775,7 @@ var app = (function () {
     	};
     }
 
-    // (136:0) {#if isEmpty(hash)}
+    // (143:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14690,8 +14786,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 136, 1, 3799);
-    			add_location(button1, file$2, 137, 1, 3870);
+    			add_location(button0, file$2, 143, 1, 4114);
+    			add_location(button1, file$2, 144, 1, 4185);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14721,7 +14817,7 @@ var app = (function () {
     	};
     }
 
-    // (175:1) {:catch error}
+    // (186:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14730,7 +14826,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 175, 2, 4980);
+    			add_location(p, file$2, 186, 2, 5299);
     		},
 
     		m: function mount(target, anchor) {
@@ -14755,7 +14851,7 @@ var app = (function () {
     	};
     }
 
-    // (172:1) {:then his}
+    // (183:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14802,7 +14898,7 @@ var app = (function () {
     	};
     }
 
-    // (170:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (181:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14810,7 +14906,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 170, 2, 4778);
+    			add_location(p, file$2, 181, 2, 5097);
     		},
 
     		m: function mount(target, anchor) {
@@ -14829,7 +14925,7 @@ var app = (function () {
     	};
     }
 
-    // (157:1) {:catch error}
+    // (168:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14838,7 +14934,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 157, 2, 4504);
+    			add_location(p, file$2, 168, 2, 4823);
     		},
 
     		m: function mount(target, anchor) {
@@ -14863,7 +14959,7 @@ var app = (function () {
     	};
     }
 
-    // (151:1) {:then coll}
+    // (162:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -14910,7 +15006,7 @@ var app = (function () {
     	};
     }
 
-    // (149:20)    <p>...waiting</p>  {:then coll}
+    // (160:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -14918,7 +15014,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 149, 2, 4286);
+    			add_location(p, file$2, 160, 2, 4605);
     		},
 
     		m: function mount(target, anchor) {
@@ -14975,11 +15071,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 129, 0, 3617);
-    			add_location(hr0, file$2, 130, 0, 3674);
+    			add_location(a0, file$2, 136, 0, 3932);
+    			add_location(hr0, file$2, 137, 0, 3989);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 131, 0, 3681);
-    			add_location(hr1, file$2, 132, 0, 3769);
+    			add_location(a1, file$2, 138, 0, 3996);
+    			add_location(hr1, file$2, 139, 0, 4084);
     		},
 
     		l: function claim(nodes) {
@@ -15092,6 +15188,7 @@ var app = (function () {
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
     	let history = [];
+    	let bookCollection = [];
 
     	// fetch('https://dacapo.io/hacking-scientific-text')
     	// 	.then(res => res)
@@ -15158,23 +15255,29 @@ var app = (function () {
     		let historyItems = await chromePromise$1.history.search({
     			text: '', // Return every history item....
     			startTime: 0,
-    			maxResults:20000,
+    			maxResults: 20000,
     			// that was accessed less than one week ago.
     		});
     		historyItems = historyPipe([])(historyItems).filter(
     			e => e.url.includes('amazon.') && !e.url.includes('aws')
     		);
-    		console.log(historyItems,"d");
-    		const docs = await asyncMap(historyItems.slice(0,20), async item => {
-    			try {
-    				return await UrlToDOM(item["url"])
-    			}
-    			catch (err) {
-    				console.log("error at", item["url"]);
-    				return false
-    			}
-    		});
-    		console.log(docs, "aa");
+    		console.log(historyItems, 'd');
+    		let nodes = await asyncMap(historyItems.slice(-200), async item => ({
+    			...item,
+    			doc: await idiotSafe(UrlToDOM)(item['url']),
+    		}));
+
+    		const bookColl = nodes
+    			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
+    			.filter(n => path(['ISBN-10'], n) || path(['ISBN-13'], n))
+    			.map(({ productTitle, author, img, dateCreated }) => ({
+    				productTitle,
+    				author,
+    				img,
+    				dateCreated,
+    			}));
+    		console.log(bookColl, 'books!');
+    		return bookColl;
     	};
 
     	function click_handler() {
@@ -15191,6 +15294,10 @@ var app = (function () {
     	}
 
     	function click_handler_2() {
+    				bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
+    			}
+
+    	function click_handler_3() {
     				history = getHistory(); $$invalidate('history', history);
     			}
 
@@ -15200,6 +15307,7 @@ var app = (function () {
     		deleteConfirm,
     		hash,
     		history,
+    		bookCollection,
     		openTab,
     		clearStorage,
     		onRemove,
@@ -15209,7 +15317,8 @@ var app = (function () {
     		click_handler,
     		click_handler_1,
     		input_input_handler,
-    		click_handler_2
+    		click_handler_2,
+    		click_handler_3
     	};
     }
 

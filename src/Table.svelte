@@ -4,7 +4,7 @@
     import {head} from "ramda"
     export let collection
 
-    export let action //as propsAschildren??
+    // export let action //as propsAschildren??
     const dispatch = createEventDispatcher();
 
 </script>

@@ -38,6 +38,16 @@ export const idiotSafe = (fn, config={log: false}) => async (...args) => {
             return false
     }
 }
+export const safe = (fn, config={log: false}) => (...args) => {
+    //TODO:: return values are problems....
+    try {
+            return fn(...args)
+        }
+    catch(err) {
+            config["log"] && console.log(err, " Args: ", ...args)
+            return false
+    }
+}
 
 export const loadBlackList = async () => fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
      .then(res => res.json())

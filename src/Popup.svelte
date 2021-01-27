@@ -12,10 +12,10 @@
 		historyPipe,
 		asyncMap,
 	} from './utils/utils';
-	import { assoc, isEmpty, uniqBy, pipe, map, filter } from 'ramda';
+	import { assoc, isEmpty, path, uniqBy, pipe, map, filter } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
-
+	import { AmazonBookPageInfo } from './adapters/amazon';
 	import toastr from 'toastr';
 	import { toastrOptions } from './utils/params';
 	import Table from './Table.svelte';
@@ -41,6 +41,7 @@
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
+	let bookCollection = [];
 
 	// fetch('https://dacapo.io/hacking-scientific-text')
 	// 	.then(res => res)
@@ -107,24 +108,30 @@
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: 0,
-			maxResults:20000,
+			maxResults: 20000,
 			// that was accessed less than one week ago.
 		});
 		historyItems = historyPipe([])(historyItems).filter(
 			e => e.url.includes('amazon.') && !e.url.includes('aws')
 		);
-		console.log(historyItems,"d")
-		const docs = await asyncMap(historyItems.slice(0,20), async item => {
-			try {
-				return await UrlToDOM(item["url"])
-			}
-			catch (err) {
-				console.log("error at", item["url"])
-				return false
-			}
-		})
-		console.log(docs, "aa")
-	}
+		console.log(historyItems, 'd');
+		let nodes = await asyncMap(historyItems.slice(-200), async item => ({
+			...item,
+			doc: await idiotSafe(UrlToDOM)(item['url']),
+		}));
+
+		const bookColl = nodes
+			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
+			.filter(n => path(['ISBN-10'], n) || path(['ISBN-13'], n))
+			.map(({ productTitle, author, img, dateCreated }) => ({
+				productTitle,
+				author,
+				img,
+				dateCreated,
+			}));
+		console.log(bookColl, 'books!');
+		return bookColl;
+	};
 </script>
 
 <a href={link} download="data.json">Download my Data</a>
@@ -141,11 +148,15 @@
 	<button on:click={clearStorage}>DELETE ALL</button>
 	<br />
 	<br />
-	<button on:click={getBooks}>Get Books!</button>
-
-	<Table
-		collection={[{ a: 'b', b: 'cc', c: 'www' }, { a: 'wq', b: 'wq', c: 'wqa' }]} />
-
+	<button
+		on:click={() => {
+			bookCollection = getBooks();
+		}}>
+		Get Books!
+	</button>
+	
+		<Table collection={[{a:5, b:2}, {a:3, b:1}]} />
+	
 	{#await collection}
 		<p>...waiting</p>
 	{:then coll}
