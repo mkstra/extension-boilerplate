@@ -26,6 +26,7 @@ export const Node = (url, title, dateCreated=Date.now()) => ({
     url,
 });
 
+export const asyncMap = async (arr, predicate) => Promise.all(arr.map(predicate))
 export const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
 	
 export const idiotSafe = (fn, config={log: false}) => async (...args) => {

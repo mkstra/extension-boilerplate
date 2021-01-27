@@ -2449,7 +2449,6 @@ var app = (function () {
         title: title || "",
         url,
     });
-
     const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
     	
     const idiotSafe = (fn, config={log: false}) => async (...args) => {
