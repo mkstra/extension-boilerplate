@@ -40,7 +40,9 @@
                 <div>
                     <button
                     on:click={() => dispatch('message', {
-                        url: row.url
+                        url: row.url,
+                        title: row.title,
+                        dateCreated: row.dateCreated
                     })}
                     style={`background: ${addAction ? "green" : "red"}; color: white; font-weight: bold"`}>
                     {addAction ? "(+)": "X"}

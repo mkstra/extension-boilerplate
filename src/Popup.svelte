@@ -2,7 +2,7 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { JSONDownloadable, UrlToDOM, trimString } from './utils/utils';
+	import { JSONDownloadable, UrlToDOM, trimString, Node } from './utils/utils';
 	import { assoc, isEmpty, uniqBy } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
@@ -59,7 +59,7 @@
 	};
 
 	const onAdd = async ({ detail }) => {
-		console.log(detail, 'detail');
+		console.log(detail, "yo")
 		const {url, title, dateCreated} = detail
 		await chromep.storage.sync.set({[url]: Node(url, title, dateCreated)});
 		getStorage();
@@ -80,7 +80,7 @@
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
-			maxResults: 1000,
+			maxResults: 50,
 			// that was accessed less than one week ago.
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');
