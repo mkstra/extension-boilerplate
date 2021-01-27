@@ -37,7 +37,7 @@
     <tbody>
         {#each collection as row}
             <tr>
-                <div>
+                <td>
                     <button
                     on:click={() => dispatch('message', {
                         url: row.url,
@@ -47,7 +47,7 @@
                     style={`background: ${addAction ? "green" : "red"}; color: white; font-weight: bold"`}>
                     {addAction ? "(+)": "X"}
                 </button>
-                </div>
+                </td>
             
 
                 <td style="min-width: 15rem">{trimString(row.title) || '/'}</td>

@@ -1449,7 +1449,7 @@ var app = (function () {
 
     // (38:8) {#each collection as row}
     function create_each_block(ctx) {
-    	var tr, div, button, t0_value = ctx.addAction ? "(+)": "X", t0, button_style_value, t1, td0, t2_value = trimString(ctx.row.title) || '/', t2, t3, td1, t4_value = new Date(ctx.row.dateCreated).toDateString(), t4, t5, td2, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
+    	var tr, td0, button, t0_value = ctx.addAction ? "(+)": "X", t0, button_style_value, t1, td1, t2_value = trimString(ctx.row.title) || '/', t2, t3, td2, t4_value = new Date(ctx.row.dateCreated).toDateString(), t4, t5, td3, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
 
     	function click_handler() {
     		return ctx.click_handler(ctx);
@@ -1458,50 +1458,51 @@ var app = (function () {
     	return {
     		c: function create() {
     			tr = element("tr");
-    			div = element("div");
+    			td0 = element("td");
     			button = element("button");
     			t0 = text(t0_value);
     			t1 = space();
-    			td0 = element("td");
+    			td1 = element("td");
     			t2 = text(t2_value);
     			t3 = space();
-    			td1 = element("td");
+    			td2 = element("td");
     			t4 = text(t4_value);
     			t5 = space();
-    			td2 = element("td");
+    			td3 = element("td");
     			a = element("a");
     			t6 = text(t6_value);
     			t7 = space();
     			attr(button, "style", button_style_value = `background: ${ctx.addAction ? "green" : "red"}; color: white; font-weight: bold"`);
-    			add_location(button, file, 40, 20, 806);
-    			add_location(div, file, 39, 16, 780);
-    			set_style(td0, "min-width", "15rem");
+    			add_location(button, file, 40, 20, 805);
     			attr(td0, "class", "svelte-o60a6m");
-    			add_location(td0, file, 52, 16, 1261);
+    			add_location(td0, file, 39, 16, 780);
+    			set_style(td1, "min-width", "15rem");
     			attr(td1, "class", "svelte-o60a6m");
-    			add_location(td1, file, 53, 16, 1342);
-    			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 55, 20, 1435);
+    			add_location(td1, file, 52, 16, 1259);
     			attr(td2, "class", "svelte-o60a6m");
-    			add_location(td2, file, 54, 16, 1410);
+    			add_location(td2, file, 53, 16, 1340);
+    			attr(a, "href", a_href_value = ctx.row.url);
+    			add_location(a, file, 55, 20, 1433);
+    			attr(td3, "class", "svelte-o60a6m");
+    			add_location(td3, file, 54, 16, 1408);
     			add_location(tr, file, 38, 12, 759);
     			dispose = listen(button, "click", click_handler);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, tr, anchor);
-    			append(tr, div);
-    			append(div, button);
+    			append(tr, td0);
+    			append(td0, button);
     			append(button, t0);
     			append(tr, t1);
-    			append(tr, td0);
-    			append(td0, t2);
-    			append(tr, t3);
     			append(tr, td1);
-    			append(td1, t4);
-    			append(tr, t5);
+    			append(td1, t2);
+    			append(tr, t3);
     			append(tr, td2);
-    			append(td2, a);
+    			append(td2, t4);
+    			append(tr, t5);
+    			append(tr, td3);
+    			append(td3, a);
     			append(a, t6);
     			append(tr, t7);
     		},
