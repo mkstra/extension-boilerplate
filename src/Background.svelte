@@ -2,7 +2,8 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import {loadBlackList} from './utils/utils'
+	import {loadBlackList, Node} from './utils/utils'
+	import normalizeUrl from 'normalize-url';
 
 	loadBlackList();
 
@@ -17,15 +18,9 @@
 		return true; //async message passing
 	});
 
-	const Node = (url, title) => ({
-		dateCreated: Date.now(),
-		// marked: false,
-		// blocked: false,
-		title: title || "",
-		url,
-	});
 
 	const update = async (url, title) => {
+		url = normalizeUrl(url, {stripHash: true})
 		let entry = await chromep.storage.sync.get(url);
 		const node = Node(url, title);
 		console.log(node, 'node here');

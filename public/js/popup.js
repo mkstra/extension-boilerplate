@@ -1923,7 +1923,7 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (140:31) 
+    // (147:31) 
     function create_if_block_2(ctx) {
     	var div, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -1951,8 +1951,8 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(div, file$1, 140, 1, 4146);
-    			add_location(button, file$1, 141, 1, 4180);
+    			add_location(div, file$1, 147, 1, 4356);
+    			add_location(button, file$1, 148, 1, 4390);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
@@ -2011,7 +2011,7 @@ var app = (function () {
     	};
     }
 
-    // (123:31) 
+    // (130:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
@@ -2044,10 +2044,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 123, 1, 3677);
-    			add_location(button, file$1, 124, 1, 3751);
-    			add_location(br0, file$1, 125, 1, 3804);
-    			add_location(br1, file$1, 126, 1, 3812);
+    			add_location(input, file$1, 130, 1, 3887);
+    			add_location(button, file$1, 131, 1, 3961);
+    			add_location(br0, file$1, 132, 1, 4014);
+    			add_location(br1, file$1, 133, 1, 4022);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -2122,7 +2122,7 @@ var app = (function () {
     	};
     }
 
-    // (120:0) {#if isEmpty(hash)}
+    // (127:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -2133,8 +2133,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$1, 120, 1, 3496);
-    			add_location(button1, file$1, 121, 1, 3567);
+    			add_location(button0, file$1, 127, 1, 3706);
+    			add_location(button1, file$1, 128, 1, 3777);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -2164,7 +2164,7 @@ var app = (function () {
     	};
     }
 
-    // (154:1) {:catch error}
+    // (161:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -2173,7 +2173,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 154, 2, 4461);
+    			add_location(p, file$1, 161, 2, 4668);
     		},
 
     		m: function mount(target, anchor) {
@@ -2198,7 +2198,7 @@ var app = (function () {
     	};
     }
 
-    // (151:1) {:then his}
+    // (158:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -2209,7 +2209,7 @@ var app = (function () {
     	},
     		$$inline: true
     	});
-    	dashboard.$on("message", ctx.onRemove);
+    	dashboard.$on("message", ctx.onAdd);
 
     	return {
     		c: function create() {
@@ -2245,7 +2245,7 @@ var app = (function () {
     	};
     }
 
-    // (149:17)    <p>...history</p>  {:then his}
+    // (156:17)    <p>...history</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -2253,7 +2253,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...history";
-    			add_location(p, file$1, 149, 2, 4301);
+    			add_location(p, file$1, 156, 2, 4511);
     		},
 
     		m: function mount(target, anchor) {
@@ -2272,7 +2272,7 @@ var app = (function () {
     	};
     }
 
-    // (137:1) {:catch error}
+    // (144:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -2281,7 +2281,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 137, 2, 4061);
+    			add_location(p, file$1, 144, 2, 4271);
     		},
 
     		m: function mount(target, anchor) {
@@ -2306,7 +2306,7 @@ var app = (function () {
     	};
     }
 
-    // (131:1) {:then coll}
+    // (138:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -2353,7 +2353,7 @@ var app = (function () {
     	};
     }
 
-    // (129:20)    <p>...waiting</p>  {:then coll}
+    // (136:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -2361,7 +2361,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 129, 2, 3843);
+    			add_location(p, file$1, 136, 2, 4053);
     		},
 
     		m: function mount(target, anchor) {
@@ -2418,11 +2418,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 113, 0, 3314);
-    			add_location(hr0, file$1, 114, 0, 3371);
+    			add_location(a0, file$1, 120, 0, 3524);
+    			add_location(hr0, file$1, 121, 0, 3581);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 115, 0, 3378);
-    			add_location(hr1, file$1, 116, 0, 3466);
+    			add_location(a1, file$1, 122, 0, 3588);
+    			add_location(hr1, file$1, 123, 0, 3676);
     		},
 
     		l: function claim(nodes) {
@@ -2565,6 +2565,13 @@ var app = (function () {
     		getStorage();
     	};
 
+    	const onAdd = async ({ detail }) => {
+    		console.log(detail, 'detail');
+    		const {url, title, dateCreated} = detail;
+    		await chromePromise$1.storage.sync.set({[url]: Node(url, title, dateCreated)});
+    		getStorage();
+    	};
+
     	getStorage();
     	// const removeItem = async itemID => {
     	// 	await chromep.storage.sync.remove(itemID);
@@ -2580,7 +2587,7 @@ var app = (function () {
     		let historyItems = await chromePromise$1.history.search({
     			text: '', // Return every history item....
     			startTime: new Date().getTime() - msSinceNow,
-    			maxResults: 3000,
+    			maxResults: 1000,
     			// that was accessed less than one week ago.
     		});
     		const blacklist = await chromePromise$1.storage.sync.get('blacklist');
@@ -2643,6 +2650,7 @@ var app = (function () {
     		openTab,
     		clearStorage,
     		onRemove,
+    		onAdd,
     		getHistory,
     		click_handler,
     		click_handler_1,

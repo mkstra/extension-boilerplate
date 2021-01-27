@@ -9,13 +9,19 @@ export const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`
 
-
+export const Node = (url, title, dateCreated=Date.now()) => ({
+    dateCreated,
+    // marked: false,
+    // blocked: false,
+    title: title || "",
+    url,
+});
 export const loadBlackList = async () => fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
      .then(res => res.json())
      // .then(res => console.log("aaa", res))
      .then(({blacklist}) => chromep.storage.sync.set({blacklist}))
 
-const pipeAwait = (...fns) => param => fns.reduce(async (result, next) => next(await result), param)     
+export const pipeAwait = (...fns) => param => fns.reduce(async (result, next) => next(await result), param)     
 
 export const UrlToDOM = async url =>
     fetch(url)

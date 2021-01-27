@@ -12981,7 +12981,7 @@ var app = (function () {
     			t = text(t_value);
     			attr(button, "class", "prosebar");
     			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
-    			add_location(button, file, 110, 0, 2678);
+    			add_location(button, file, 106, 0, 2474);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -13028,11 +13028,8 @@ var app = (function () {
     	let marked = false;
 
     	let showReminder = true;
-    	const currentUrl = normalizeUrl_1(window.location.href);
-    	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
-    	// 	.then(res => res.json())
-    	// 	.then(res => console.log("aaa", res))
-    	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+    	const currentUrl = normalizeUrl_1(window.location.href, {stripHash: true});
+    	
 
     	let startTimer = () =>
     		//for the .info toast()
@@ -13045,7 +13042,7 @@ var app = (function () {
     				//! kinda nasty hack
     				window.clearInterval(trackActiveTime);
     			}
-    			console.log(activeTime);
+    			// console.log(activeTime);
     		}, interval);
 
     	let trackActiveTime = startTimer();
@@ -13053,7 +13050,6 @@ var app = (function () {
     	document.addEventListener(
     		'visibilitychange',
     		() => {
-
     			/*only count when TAB is active tab*/
     			document.hidden && window.clearInterval(trackActiveTime);
 

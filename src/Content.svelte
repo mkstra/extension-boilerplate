@@ -14,11 +14,8 @@
 	let marked = false;
 
 	let showReminder = true;
-	const currentUrl = normalizeUrl(window.location.href);
-	// fetch("https://raw.githubusercontent.com/mkstra/browserhistory/main/params.json")
-	// 	.then(res => res.json())
-	// 	.then(res => console.log("aaa", res))
-	// 	// .then(({blacklist}) =>chromep.storage.sync.set({blacklist}))
+	const currentUrl = normalizeUrl(window.location.href, {stripHash: true});
+	
 
 	let startTimer = () =>
 		//for the .info toast()
@@ -31,7 +28,7 @@
 				//! kinda nasty hack
 				window.clearInterval(trackActiveTime);
 			}
-			console.log(activeTime);
+			// console.log(activeTime);
 		}, interval);
 
 	let trackActiveTime = startTimer();
@@ -39,7 +36,6 @@
 	document.addEventListener(
 		'visibilitychange',
 		() => {
-
 			/*only count when TAB is active tab*/
 			document.hidden && window.clearInterval(trackActiveTime);
 
@@ -77,7 +73,7 @@
       url: {oldValue: {...}, newValue: {....}}, url2: {...}
 	}*/
 		window.clearInterval(trackActiveTime);
-		showReminder = false
+		showReminder = false;
 		const m = !!path([currentUrl, 'newValue'], changes);
 
 		if (m == marked) return; //nothing changed (except timestamps)

@@ -58,6 +58,13 @@
 		getStorage();
 	};
 
+	const onAdd = async ({ detail }) => {
+		console.log(detail, 'detail');
+		const {url, title, dateCreated} = detail
+		await chromep.storage.sync.set({[url]: Node(url, title, dateCreated)});
+		getStorage();
+	};
+
 	getStorage();
 	// const removeItem = async itemID => {
 	// 	await chromep.storage.sync.remove(itemID);
@@ -73,7 +80,7 @@
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
-			maxResults: 3000,
+			maxResults: 1000,
 			// that was accessed less than one week ago.
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');
@@ -150,7 +157,7 @@
 		<p>...history</p>
 	{:then his}
 		<!-- <p>The number is {coll}</p> -->
-		<Dashboard collection={his} on:message={onRemove} addAction={true} />
+		<Dashboard collection={his} on:message={onAdd} addAction={true} />
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
