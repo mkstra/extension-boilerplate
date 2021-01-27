@@ -39,11 +39,7 @@
             <tr>
                 <td>
                     <button
-                    on:click={() => dispatch('message', {
-                        url: row.url,
-                        title: row.title,
-                        dateCreated: row.dateCreated
-                    })}
+                    on:click={() => dispatch('message',row)}
                     style={`background: ${addAction ? "green" : "red"}; color: white; font-weight: bold"`}>
                     {addAction ? "(+)": "X"}
                 </button>

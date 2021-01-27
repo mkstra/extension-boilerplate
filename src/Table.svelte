@@ -37,29 +37,22 @@
     <tbody>
         {#each collection as row}
             <tr>
-                <td>X</td>
+                <td>
+                    <button
+                    on:click={() => dispatch('message', row)}
+                    style={`background: ${true ? "green" : "red"}; color: white; font-weight: bold"`}>
+                    
+                    {`++`}
+                </button>
+
+
+                </td>
                 {#each Object.entries(row) as [k, v]}
                 <td>
-                    
-   <!-- on:click={() => dispatch('message', {
-                        url: row.url,
-                        title: row.title,
-                        dateCreated: row.dateCreated
-                    })} -->
-                    <button
-                 
-                    style={`background: ${true ? "green" : "red"}; color: white; font-weight: bold"`}>
-                    <!-- {console.log(k,v, "entry")} -->
-                    {`${k}-${v}`}
-                </button>
+                    Wobble
                 </td>
             
                 {/each}
-                <!-- <td style="min-width: 15rem">{trimString(row.title) || '/'}</td>
-                <td>{new Date(row.dateCreated).toDateString()}</td>
-                <td>
-                    <a href={row.url}>{trimString(row.url, 70)}</a>
-                </td> -->
             </tr>
         {/each}
     </tbody>

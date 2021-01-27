@@ -2303,13 +2303,13 @@ var app = (function () {
     			add_location(td0, file, 39, 16, 780);
     			set_style(td1, "min-width", "15rem");
     			attr(td1, "class", "svelte-o60a6m");
-    			add_location(td1, file, 52, 16, 1259);
+    			add_location(td1, file, 48, 16, 1105);
     			attr(td2, "class", "svelte-o60a6m");
-    			add_location(td2, file, 53, 16, 1340);
+    			add_location(td2, file, 49, 16, 1186);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 55, 20, 1433);
+    			add_location(a, file, 51, 20, 1279);
     			attr(td3, "class", "svelte-o60a6m");
-    			add_location(td3, file, 54, 16, 1408);
+    			add_location(td3, file, 50, 16, 1254);
     			add_location(tr, file, 38, 12, 759);
     			dispose = listen(button, "click", click_handler);
     		},
@@ -2495,11 +2495,7 @@ var app = (function () {
     	});
 
     	function click_handler({ row }) {
-    		return dispatch('message', {
-    	                        url: row.url,
-    	                        title: row.title,
-    	                        dateCreated: row.dateCreated
-    	                    });
+    		return dispatch('message',row);
     	}
 
     	$$self.$set = $$props => {
@@ -14148,33 +14144,20 @@ var app = (function () {
     	};
     }
 
-    // (41:16) {#each Object.entries(row) as [k, v]}
+    // (50:16) {#each Object.entries(row) as [k, v]}
     function create_each_block_1(ctx) {
-    	var td, button, t0_value = `${ctx.k}-${ctx.v}`, t0, t1;
+    	var td;
 
     	return {
     		c: function create() {
     			td = element("td");
-    			button = element("button");
-    			t0 = text(t0_value);
-    			t1 = space();
-    			attr(button, "style", `background: ${ "green" }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 48, 20, 1159);
+    			td.textContent = "Wobble";
     			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 41, 16, 906);
+    			add_location(td, file$1, 50, 16, 1191);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, td, anchor);
-    			append(td, button);
-    			append(button, t0);
-    			append(td, t1);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.collection) && t0_value !== (t0_value = `${ctx.k}-${ctx.v}`)) {
-    				set_data(t0, t0_value);
-    			}
     		},
 
     		d: function destroy(detaching) {
@@ -14187,7 +14170,11 @@ var app = (function () {
 
     // (38:8) {#each collection as row}
     function create_each_block$1(ctx) {
-    	var tr, td, t1, t2;
+    	var tr, td, button, t0_value = `++`, t0, t1, t2, dispose;
+
+    	function click_handler() {
+    		return ctx.click_handler(ctx);
+    	}
 
     	var each_value_1 = Object.entries(ctx.row);
 
@@ -14201,7 +14188,8 @@ var app = (function () {
     		c: function create() {
     			tr = element("tr");
     			td = element("td");
-    			td.textContent = "X";
+    			button = element("button");
+    			t0 = text(t0_value);
     			t1 = space();
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -14209,14 +14197,19 @@ var app = (function () {
     			}
 
     			t2 = space();
+    			attr(button, "style", `background: ${ "green" }; color: white; font-weight: bold"`);
+    			add_location(button, file$1, 40, 20, 850);
     			attr(td, "class", "svelte-o60a6m");
     			add_location(td, file$1, 39, 16, 825);
     			add_location(tr, file$1, 38, 12, 804);
+    			dispose = listen(button, "click", click_handler);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, tr, anchor);
     			append(tr, td);
+    			append(td, button);
+    			append(button, t0);
     			append(tr, t1);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -14226,23 +14219,20 @@ var app = (function () {
     			append(tr, t2);
     		},
 
-    		p: function update(changed, ctx) {
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
     			if (changed.collection) {
     				each_value_1 = Object.entries(ctx.row);
 
-    				for (var i = 0; i < each_value_1.length; i += 1) {
+    				for (var i = each_blocks.length; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1(ctx, each_value_1, i);
 
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
-    					} else {
-    						each_blocks[i] = create_each_block_1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(tr, t2);
-    					}
+    					each_blocks[i] = create_each_block_1();
+    					each_blocks[i].c();
+    					each_blocks[i].m(tr, t2);
     				}
 
-    				for (; i < each_blocks.length; i += 1) {
+    				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
     					each_blocks[i].d(1);
     				}
     				each_blocks.length = each_value_1.length;
@@ -14255,6 +14245,8 @@ var app = (function () {
     			}
 
     			destroy_each(each_blocks, detaching);
+
+    			dispose();
     		}
     	};
     }
@@ -14391,18 +14383,28 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	
         let { collection, action } = $$props; //as propsAschildren??
+        const dispatch = createEventDispatcher();
 
     	const writable_props = ['collection', 'action'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Table> was created with unknown prop '${key}'`);
     	});
 
+    	function click_handler({ row }) {
+    		return dispatch('message', row);
+    	}
+
     	$$self.$set = $$props => {
     		if ('collection' in $$props) $$invalidate('collection', collection = $$props.collection);
     		if ('action' in $$props) $$invalidate('action', action = $$props.action);
     	};
 
-    	return { collection, action };
+    	return {
+    		collection,
+    		action,
+    		dispatch,
+    		click_handler
+    	};
     }
 
     class Table extends SvelteComponentDev {
