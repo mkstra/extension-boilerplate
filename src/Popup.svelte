@@ -86,6 +86,7 @@
 		}
 	}
 
+
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
@@ -95,29 +96,21 @@
 		});
 		const blacklist = await chromep.storage.sync.get('blacklist');
 		
-		// historyItems = pipe
+		const p = pipe(
+			filter(item => !blacklist['blacklist'].some(term => item['url'].includes(term))),
+			map(item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})),
+			map(e => ({ ...e, dateCreated: e.lastVisitTime })),
+			uniqBy(e => e.url),
+			filter(item=> (item.url.split("/").length - 1)>2) //no homepages, only if has path aka something.com//superfancy
+		)
 		//filter out historyItems that intersect with blacklist
 
-		historyItems = historyItems.filter(
-			item => !blacklist['blacklist'].some(term => item['url'].includes(term))
-		).map(
-			item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})
-		).map(e => ({ ...e, dateCreated: e.lastVisitTime }))
-		
-		historyItems = uniqBy(e => e.url, historyItems)
-		//no homepages, only if has path aka something.com
-			.filter(item=> (item.url.split("/").length - 1)>2); //superfancy
+		historyItems = p(historyItems)
 
-		historyItems = await asyncFilter(
-			historyItems, 
-		async item => {
+		historyItems = await asyncFilter(historyItems, async item => {
 			const doc = await idiotSafe(UrlToDOM)(item["url"])
 			return !!(doc && doc.querySelector('article'))
 		})
-
-		//cast lastVisitTime -> dateCreated
-		historyItems = historyItems;
-		//callback
 
 		console.log('history', historyItems, blacklist['blacklist']);
 
