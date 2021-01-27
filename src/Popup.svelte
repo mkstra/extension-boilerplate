@@ -41,8 +41,8 @@
         */
 	const openTab = hash => chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
 	
-	chrome.storage.onChanged.addListener((changes, namespace) => {
-		getStorage().then(c => {link = JSONDownloadable(c)})
+	chrome.storage.onChanged.addListener((_c, _ns) => {
+		getStorage().then(coll => {link = JSONDownloadable(coll)})
 	})
 
 	const clearStorage = async () => {
@@ -124,7 +124,7 @@
 		<p style="color: red">{error.message}</p>
 	{/await}
 {:else if hash == '#bootstrap'}
-	<div>Bootstrap your STREAM</div>
+	<h1>Bootstrap your STREAM</h1>
 	<button
 		class="yellow-btn"
 		on:click={() => {

@@ -14040,7 +14040,7 @@ var app = (function () {
 
     // (126:31) 
     function create_if_block_2(ctx) {
-    	var div, t1, button, t3, await_block_anchor, promise, current, dispose;
+    	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
     	let info = {
     		ctx,
@@ -14057,8 +14057,8 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div = element("div");
-    			div.textContent = "Bootstrap your STREAM";
+    			h1 = element("h1");
+    			h1.textContent = "Bootstrap your STREAM";
     			t1 = space();
     			button = element("button");
     			button.textContent = "Scan history for articles (last 30 days)";
@@ -14066,14 +14066,14 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(div, file$1, 126, 1, 4017);
+    			add_location(h1, file$1, 126, 1, 4012);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$1, 127, 1, 4051);
+    			add_location(button, file$1, 127, 1, 4044);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
+    			insert(target, h1, anchor);
     			insert(target, t1, anchor);
     			insert(target, button, anchor);
     			insert(target, t3, anchor);
@@ -14112,7 +14112,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(h1);
     				detach(t1);
     				detach(button);
     				detach(t3);
@@ -14160,10 +14160,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 109, 1, 3548);
-    			add_location(button, file$1, 110, 1, 3622);
-    			add_location(br0, file$1, 111, 1, 3675);
-    			add_location(br1, file$1, 112, 1, 3683);
+    			add_location(input, file$1, 109, 1, 3543);
+    			add_location(button, file$1, 110, 1, 3617);
+    			add_location(br0, file$1, 111, 1, 3670);
+    			add_location(br1, file$1, 112, 1, 3678);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14249,8 +14249,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$1, 106, 1, 3367);
-    			add_location(button1, file$1, 107, 1, 3438);
+    			add_location(button0, file$1, 106, 1, 3362);
+    			add_location(button1, file$1, 107, 1, 3433);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14289,7 +14289,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 142, 2, 4414);
+    			add_location(p, file$1, 142, 2, 4407);
     		},
 
     		m: function mount(target, anchor) {
@@ -14369,7 +14369,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$1, 137, 2, 4212);
+    			add_location(p, file$1, 137, 2, 4205);
     		},
 
     		m: function mount(target, anchor) {
@@ -14397,7 +14397,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 123, 2, 3932);
+    			add_location(p, file$1, 123, 2, 3927);
     		},
 
     		m: function mount(target, anchor) {
@@ -14477,7 +14477,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 115, 2, 3714);
+    			add_location(p, file$1, 115, 2, 3709);
     		},
 
     		m: function mount(target, anchor) {
@@ -14534,11 +14534,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 99, 0, 3185);
-    			add_location(hr0, file$1, 100, 0, 3242);
+    			add_location(a0, file$1, 99, 0, 3180);
+    			add_location(hr0, file$1, 100, 0, 3237);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 101, 0, 3249);
-    			add_location(hr1, file$1, 102, 0, 3337);
+    			add_location(a1, file$1, 101, 0, 3244);
+    			add_location(hr1, file$1, 102, 0, 3332);
     		},
 
     		l: function claim(nodes) {
@@ -14661,8 +14661,8 @@ var app = (function () {
             */
     	const openTab = hash => chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
     	
-    	chrome.storage.onChanged.addListener((changes, namespace) => {
-    		getStorage().then(c => {$$invalidate('link', link = JSONDownloadable(c));});
+    	chrome.storage.onChanged.addListener((_c, _ns) => {
+    		getStorage().then(coll => {$$invalidate('link', link = JSONDownloadable(coll));});
     	});
 
     	const clearStorage = async () => {
