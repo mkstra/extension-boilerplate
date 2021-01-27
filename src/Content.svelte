@@ -5,6 +5,7 @@
 	import hotkeys from 'hotkeys-js';
 	import { path, isEmpty } from 'ramda';
 	import normalizeUrl from 'normalize-url';
+	import { toastrOptions } from './utils/params';
 
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
@@ -86,22 +87,7 @@
 		return true; //needed for async?!
 	});
 
-	toastr.options = {
-		closeButton: false,
-		debug: false,
-		newestOnTop: false,
-		progressBar: true,
-		positionClass: 'toast-bottom-center',
-		preventDuplicates: false,
-		showDuration: '300',
-		hideDuration: '1000',
-		timeOut: '5000',
-		extendedTimeOut: '1000',
-		showEasing: 'swing',
-		hideEasing: 'linear',
-		showMethod: 'fadeIn',
-		hideMethod: 'fadeOut',
-	};
+	toastr.options = toastrOptions
 </script>
 
 <button

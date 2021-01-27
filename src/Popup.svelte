@@ -7,6 +7,10 @@
 	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
 
+	import toastr from 'toastr';
+	import { toastrOptions } from './utils/params';
+
+	toastr.options = toastrOptions
 
 	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
@@ -62,6 +66,7 @@
 		console.log(detail, "yo")
 		const {url, title, dateCreated} = detail
 		await chromep.storage.sync.set({[url]: Node(url, title, dateCreated)});
+		toastr.success(`${title} added to stream`)
 		getStorage();
 	};
 
