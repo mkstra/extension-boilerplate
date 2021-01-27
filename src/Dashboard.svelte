@@ -3,6 +3,7 @@
 	import { trimString } from './utils/utils';
 
     export let collection
+    export let addAction
     const dispatch = createEventDispatcher();
 
 </script>
@@ -25,10 +26,10 @@
 <table>
     <thead>
         <tr>
-            <th>Delete Entry</th>
+            <th>{addAction ?  "Add": "Delete"} Entry</th>
 
             <th>title</th>
-            <th>createTime</th>
+            <th>date</th>
             <th>url</th>
             <!-- <th on:click={sort("val")}>val</th> -->
         </tr>
@@ -41,8 +42,8 @@
                     on:click={() => dispatch('message', {
                         url: row.url
                     })}
-                    style="background: red; color: white; font-weight: bold">
-                    X
+                    style={`background: ${addAction ? "green" : "red"}; color: white; font-weight: bold"`}>
+                    {addAction ? "(+)": "X"}
                 </button>
                 </div>
             

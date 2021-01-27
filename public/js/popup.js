@@ -1097,9 +1097,9 @@ var app = (function () {
       return x != null && equals(x, empty$1(x));
     });
 
-    const trimString = (s, l=50) => s.length > l 
-                ? s.substring(0, l) + "..."
-                : s;
+    const trimString = (s, l = 50) => s.length > l
+        ? s.substring(0, l) + "..."
+        : s;
 
     const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
@@ -1115,9 +1115,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (37:8) {#each collection as row}
+    // (38:8) {#each collection as row}
     function create_each_block(ctx) {
-    	var tr, div, button, t1, td0, t2_value = trimString(ctx.row.title) || '/', t2, t3, td1, t4_value = new Date(ctx.row.dateCreated).toDateString(), t4, t5, td2, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
+    	var tr, div, button, t0_value = ctx.addAction ? "(+)": "X", t0, button_style_value, t1, td0, t2_value = trimString(ctx.row.title) || '/', t2, t3, td1, t4_value = new Date(ctx.row.dateCreated).toDateString(), t4, t5, td2, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
 
     	function click_handler() {
     		return ctx.click_handler(ctx);
@@ -1128,7 +1128,7 @@ var app = (function () {
     			tr = element("tr");
     			div = element("div");
     			button = element("button");
-    			button.textContent = "X";
+    			t0 = text(t0_value);
     			t1 = space();
     			td0 = element("td");
     			t2 = text(t2_value);
@@ -1140,21 +1140,19 @@ var app = (function () {
     			a = element("a");
     			t6 = text(t6_value);
     			t7 = space();
-    			set_style(button, "background", "red");
-    			set_style(button, "color", "white");
-    			set_style(button, "font-weight", "bold");
-    			add_location(button, file, 39, 20, 763);
-    			add_location(div, file, 38, 16, 737);
+    			attr(button, "style", button_style_value = `background: ${ctx.addAction ? "green" : "red"}; color: white; font-weight: bold"`);
+    			add_location(button, file, 40, 20, 806);
+    			add_location(div, file, 39, 16, 780);
     			set_style(td0, "min-width", "15rem");
     			attr(td0, "class", "svelte-o60a6m");
-    			add_location(td0, file, 49, 16, 1069);
+    			add_location(td0, file, 50, 16, 1165);
     			attr(td1, "class", "svelte-o60a6m");
-    			add_location(td1, file, 50, 16, 1150);
+    			add_location(td1, file, 51, 16, 1246);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 52, 20, 1243);
+    			add_location(a, file, 53, 20, 1339);
     			attr(td2, "class", "svelte-o60a6m");
-    			add_location(td2, file, 51, 16, 1218);
-    			add_location(tr, file, 37, 12, 716);
+    			add_location(td2, file, 52, 16, 1314);
+    			add_location(tr, file, 38, 12, 759);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -1162,6 +1160,7 @@ var app = (function () {
     			insert(target, tr, anchor);
     			append(tr, div);
     			append(div, button);
+    			append(button, t0);
     			append(tr, t1);
     			append(tr, td0);
     			append(td0, t2);
@@ -1177,6 +1176,14 @@ var app = (function () {
 
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
+    			if ((changed.addAction) && t0_value !== (t0_value = ctx.addAction ? "(+)": "X")) {
+    				set_data(t0, t0_value);
+    			}
+
+    			if ((changed.addAction) && button_style_value !== (button_style_value = `background: ${ctx.addAction ? "green" : "red"}; color: white; font-weight: bold"`)) {
+    				attr(button, "style", button_style_value);
+    			}
+
     			if ((changed.collection) && t2_value !== (t2_value = trimString(ctx.row.title) || '/')) {
     				set_data(t2, t2_value);
     			}
@@ -1205,7 +1212,7 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
-    	var table, thead, tr, th0, t1, th1, t3, th2, t5, th3, t7, tbody;
+    	var table, thead, tr, th0, t0_value = ctx.addAction ?  "Add": "Delete", t0, t1, t2, th1, t4, th2, t6, th3, t8, tbody;
 
     	var each_value = ctx.collection;
 
@@ -1221,35 +1228,36 @@ var app = (function () {
     			thead = element("thead");
     			tr = element("tr");
     			th0 = element("th");
-    			th0.textContent = "Delete Entry";
-    			t1 = space();
+    			t0 = text(t0_value);
+    			t1 = text(" Entry");
+    			t2 = space();
     			th1 = element("th");
     			th1.textContent = "title";
-    			t3 = space();
+    			t4 = space();
     			th2 = element("th");
-    			th2.textContent = "createTime";
-    			t5 = space();
+    			th2.textContent = "date";
+    			t6 = space();
     			th3 = element("th");
     			th3.textContent = "url";
-    			t7 = space();
+    			t8 = space();
     			tbody = element("tbody");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(th0, "class", "svelte-o60a6m");
-    			add_location(th0, file, 27, 12, 467);
+    			add_location(th0, file, 28, 12, 492);
     			attr(th1, "class", "svelte-o60a6m");
-    			add_location(th1, file, 29, 12, 502);
+    			add_location(th1, file, 30, 12, 551);
     			attr(th2, "class", "svelte-o60a6m");
-    			add_location(th2, file, 30, 12, 529);
+    			add_location(th2, file, 31, 12, 578);
     			attr(th3, "class", "svelte-o60a6m");
-    			add_location(th3, file, 31, 12, 561);
-    			add_location(tr, file, 26, 8, 450);
-    			add_location(thead, file, 25, 4, 434);
-    			add_location(tbody, file, 35, 4, 662);
+    			add_location(th3, file, 32, 12, 604);
+    			add_location(tr, file, 27, 8, 475);
+    			add_location(thead, file, 26, 4, 459);
+    			add_location(tbody, file, 36, 4, 705);
     			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file, 24, 0, 422);
+    			add_location(table, file, 25, 0, 447);
     		},
 
     		l: function claim(nodes) {
@@ -1261,13 +1269,15 @@ var app = (function () {
     			append(table, thead);
     			append(thead, tr);
     			append(tr, th0);
-    			append(tr, t1);
+    			append(th0, t0);
+    			append(th0, t1);
+    			append(tr, t2);
     			append(tr, th1);
-    			append(tr, t3);
+    			append(tr, t4);
     			append(tr, th2);
-    			append(tr, t5);
+    			append(tr, t6);
     			append(tr, th3);
-    			append(table, t7);
+    			append(table, t8);
     			append(table, tbody);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -1276,7 +1286,11 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.collection || changed.trimString) {
+    			if ((changed.addAction) && t0_value !== (t0_value = ctx.addAction ?  "Add": "Delete")) {
+    				set_data(t0, t0_value);
+    			}
+
+    			if (changed.collection || changed.trimString || changed.addAction) {
     				each_value = ctx.collection;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -1314,10 +1328,10 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	
 
-        let { collection } = $$props;
+        let { collection, addAction } = $$props;
         const dispatch = createEventDispatcher();
 
-    	const writable_props = ['collection'];
+    	const writable_props = ['collection', 'addAction'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Dashboard> was created with unknown prop '${key}'`);
     	});
@@ -1330,20 +1344,29 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ('collection' in $$props) $$invalidate('collection', collection = $$props.collection);
+    		if ('addAction' in $$props) $$invalidate('addAction', addAction = $$props.addAction);
     	};
 
-    	return { collection, dispatch, click_handler };
+    	return {
+    		collection,
+    		addAction,
+    		dispatch,
+    		click_handler
+    	};
     }
 
     class Dashboard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, ["collection"]);
+    		init(this, options, instance, create_fragment, safe_not_equal, ["collection", "addAction"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.collection === undefined && !('collection' in props)) {
     			console.warn("<Dashboard> was created without expected prop 'collection'");
+    		}
+    		if (ctx.addAction === undefined && !('addAction' in props)) {
+    			console.warn("<Dashboard> was created without expected prop 'addAction'");
     		}
     	}
 
@@ -1354,40 +1377,109 @@ var app = (function () {
     	set collection(value) {
     		throw new Error("<Dashboard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get addAction() {
+    		throw new Error("<Dashboard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set addAction(value) {
+    		throw new Error("<Dashboard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Popup.svelte generated by Svelte v3.5.4 */
 
     const file$1 = "src/Popup.svelte";
 
-    // (93:31) 
+    // (115:31) 
     function create_if_block_2(ctx) {
-    	var div;
+    	var div, t1, button, t3, await_block_anchor, promise, current, dispose;
+
+    	let info = {
+    		ctx,
+    		current: null,
+    		pending: create_pending_block_1,
+    		then: create_then_block_1,
+    		catch: create_catch_block_1,
+    		value: 'his',
+    		error: 'error',
+    		blocks: Array(3)
+    	};
+
+    	handle_promise(promise = ctx.history, info);
 
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "bootstrap";
-    			add_location(div, file$1, 93, 1, 2494);
+    			div.textContent = "Bootstrap your STREAM";
+    			t1 = space();
+    			button = element("button");
+    			button.textContent = "CHECK LAST WEEK's HISTORY";
+    			t3 = space();
+    			await_block_anchor = empty();
+
+    			info.block.c();
+    			add_location(div, file$1, 115, 1, 3339);
+    			add_location(button, file$1, 116, 1, 3373);
+    			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, div, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, button, anchor);
+    			insert(target, t3, anchor);
+    			insert(target, await_block_anchor, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => await_block_anchor.parentNode;
+    			info.anchor = await_block_anchor;
+
+    			current = true;
     		},
 
-    		p: noop,
-    		i: noop,
-    		o: noop,
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			info.ctx = ctx;
+
+    			if (('history' in changed) && promise !== (promise = ctx.history) && handle_promise(promise, info)) ; else {
+    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(info.block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info.blocks[i];
+    				transition_out(block);
+    			}
+
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div);
+    				detach(t1);
+    				detach(button);
+    				detach(t3);
+    				detach(await_block_anchor);
     			}
+
+    			info.block.d(detaching);
+    			info = null;
+
+    			dispose();
     		}
     	};
     }
 
-    // (76:31) 
+    // (98:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
@@ -1420,10 +1512,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 76, 1, 2045);
-    			add_location(button, file$1, 77, 1, 2119);
-    			add_location(br0, file$1, 78, 1, 2172);
-    			add_location(br1, file$1, 79, 1, 2180);
+    			add_location(input, file$1, 98, 1, 2870);
+    			add_location(button, file$1, 99, 1, 2944);
+    			add_location(br0, file$1, 100, 1, 2997);
+    			add_location(br1, file$1, 101, 1, 3005);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -1498,7 +1590,7 @@ var app = (function () {
     	};
     }
 
-    // (71:0) {#if isEmpty(hash)}
+    // (95:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -1509,8 +1601,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$1, 71, 1, 1864);
-    			add_location(button1, file$1, 72, 1, 1934);
+    			add_location(button0, file$1, 95, 1, 2689);
+    			add_location(button1, file$1, 96, 1, 2760);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -1540,7 +1632,115 @@ var app = (function () {
     	};
     }
 
-    // (89:1) {:catch error}
+    // (125:1) {:catch error}
+    function create_catch_block_1(ctx) {
+    	var p, t_value = ctx.error.message, t;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			set_style(p, "color", "red");
+    			add_location(p, file$1, 125, 2, 3639);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			append(p, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.history) && t_value !== (t_value = ctx.error.message)) {
+    				set_data(t, t_value);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (121:1) {:then his}
+    function create_then_block_1(ctx) {
+    	var current;
+
+    	var dashboard = new Dashboard({
+    		props: {
+    		collection: ctx.his,
+    		addAction: true
+    	},
+    		$$inline: true
+    	});
+    	dashboard.$on("message", ctx.onRemove);
+
+    	return {
+    		c: function create() {
+    			dashboard.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(dashboard, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var dashboard_changes = {};
+    			if (changed.history) dashboard_changes.collection = ctx.his;
+    			dashboard.$set(dashboard_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(dashboard.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(dashboard.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(dashboard, detaching);
+    		}
+    	};
+    }
+
+    // (119:17)   <p>...history</p>  {:then his}
+    function create_pending_block_1(ctx) {
+    	var p;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "...history";
+    			add_location(p, file$1, 119, 1, 3478);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (112:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -1549,7 +1749,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 89, 2, 2408);
+    			add_location(p, file$1, 112, 2, 3254);
     		},
 
     		m: function mount(target, anchor) {
@@ -1574,12 +1774,15 @@ var app = (function () {
     	};
     }
 
-    // (84:1) {:then coll}
+    // (106:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
     	var dashboard = new Dashboard({
-    		props: { collection: ctx.coll.sort(func) },
+    		props: {
+    		collection: ctx.coll.sort(func),
+    		addAction: false
+    	},
     		$$inline: true
     	});
     	dashboard.$on("message", ctx.onRemove);
@@ -1618,7 +1821,7 @@ var app = (function () {
     	};
     }
 
-    // (82:20)    <p>...waiting</p>  {:then coll}
+    // (104:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -1626,7 +1829,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 82, 2, 2211);
+    			add_location(p, file$1, 104, 2, 3036);
     		},
 
     		m: function mount(target, anchor) {
@@ -1658,8 +1861,8 @@ var app = (function () {
 
     	function select_block_type(ctx) {
     		if (isEmpty(ctx.hash)) return 0;
-    		if (ctx.hash == "#dashboard") return 1;
-    		if (ctx.hash == "#bootstrap") return 2;
+    		if (ctx.hash == '#dashboard') return 1;
+    		if (ctx.hash == '#bootstrap') return 2;
     		return -1;
     	}
 
@@ -1683,11 +1886,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 64, 0, 1682);
-    			add_location(hr0, file$1, 65, 0, 1739);
+    			add_location(a0, file$1, 88, 0, 2507);
+    			add_location(hr0, file$1, 89, 0, 2564);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 66, 0, 1746);
-    			add_location(hr1, file$1, 67, 0, 1834);
+    			add_location(a1, file$1, 90, 0, 2571);
+    			add_location(hr1, file$1, 91, 0, 2659);
     		},
 
     		l: function claim(nodes) {
@@ -1779,7 +1982,6 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
 
-
     	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
     	const getStorage = async () => {
@@ -1791,7 +1993,8 @@ var app = (function () {
     				title: title || '',
     				dateCreated,
     				url,
-    			})));
+    			}))
+    			.filter(({url}) => url != "blacklist" ));
     		$$invalidate('link', link = JSONDownloadable(collection));
     		return collection;
     	};
@@ -1801,16 +2004,18 @@ var app = (function () {
     	let link = '';
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
+    	let history = [];
+    	
 
     	fetch('https://dacapo.io/hacking-scientific-text')
     		.then(res => res)
     		.then(res => console.log('aaaasa', res));
 
-    	const openTab = (hash) => {
+    	const openTab = hash => {
     		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
                 #window lets popup know what's up
             */
-    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#'+hash) });
+    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
     	};
 
     	const clearStorage = async () => {
@@ -1834,12 +2039,34 @@ var app = (function () {
     	// 	getStorage();
     	// };
 
+    	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 31) => {
+    		let historyItems = await chromePromise$1.history.search({
+    			text: '', // Return every history item....
+    			startTime: new Date().getTime() - msSinceNow,
+    			maxResults: 100000,
+    			// that was accessed less than one week ago.
+    		});
+    		const blacklist = await chromePromise$1.storage.sync.get("blacklist");
+
+    		//filter out historyItems that intersect with blacklist
+    		historyItems = historyItems
+    			.filter(item => !blacklist["blacklist"].some(term => item["url"].includes(term)));
+
+    		//cast lastVisitTime -> dateCreated 
+    		historyItems = historyItems.map(e => ({...e, "dateCreated": e.lastVisitTime}));
+    		//callback
+
+    		console.log('history', historyItems, blacklist["blacklist"]);
+    		
+    		return historyItems;
+    	};
+
     	function click_handler() {
-    		return openTab("dashboard");
+    		return openTab('dashboard');
     	}
 
     	function click_handler_1() {
-    		return openTab("bootstrap");
+    		return openTab('bootstrap');
     	}
 
     	function input_input_handler() {
@@ -1847,17 +2074,22 @@ var app = (function () {
     		$$invalidate('deleteConfirm', deleteConfirm);
     	}
 
+    	function click_handler_2() {history = getHistory(); $$invalidate('history', history);}
+
     	return {
     		collection,
     		link,
     		deleteConfirm,
     		hash,
+    		history,
     		openTab,
     		clearStorage,
     		onRemove,
+    		getHistory,
     		click_handler,
     		click_handler_1,
-    		input_input_handler
+    		input_input_handler,
+    		click_handler_2
     	};
     }
 

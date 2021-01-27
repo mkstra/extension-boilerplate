@@ -6,7 +6,6 @@
 	import { assoc, isEmpty } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 
-
 	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
 	const getStorage = async () => {
@@ -18,7 +17,8 @@
 				title: title || '',
 				dateCreated,
 				url,
-			}));
+			}))
+			.filter(({url}) => url != "blacklist" )
 		link = JSONDownloadable(collection);
 		return collection;
 	};
@@ -28,16 +28,18 @@
 	let link = '';
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
+	let history = [];
+	
 
 	fetch('https://dacapo.io/hacking-scientific-text')
 		.then(res => res)
 		.then(res => console.log('aaaasa', res));
 
-	const openTab = (hash) => {
+	const openTab = hash => {
 		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
             #window lets popup know what's up
         */
-		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#'+hash) });
+		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
 	};
 
 	const clearStorage = async () => {
@@ -60,6 +62,28 @@
 	// 	await chromep.storage.sync.remove(itemID);
 	// 	getStorage();
 	// };
+
+	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 31) => {
+		let historyItems = await chromep.history.search({
+			text: '', // Return every history item....
+			startTime: new Date().getTime() - msSinceNow,
+			maxResults: 100000,
+			// that was accessed less than one week ago.
+		});
+		const blacklist = await chromep.storage.sync.get("blacklist")
+
+		//filter out historyItems that intersect with blacklist
+		historyItems = historyItems
+			.filter(item => !blacklist["blacklist"].some(term => item["url"].includes(term)))
+
+		//cast lastVisitTime -> dateCreated 
+		historyItems = historyItems.map(e => ({...e, "dateCreated": e.lastVisitTime}))
+		//callback
+
+		console.log('history', historyItems, blacklist["blacklist"]);
+		
+		return historyItems;
+	};
 </script>
 
 <a href={link} download="data.json">Download my Data</a>
@@ -69,11 +93,9 @@
 
 
 {#if isEmpty(hash)}
-	<button on:click={()=> openTab("dashboard")}>View Dashboard</button>
-	<button on:click={()=> openTab("bootstrap")}>Bootstrap your Stream</button>
-
-
-{:else if hash == "#dashboard"}
+	<button on:click={() => openTab('dashboard')}>View Dashboard</button>
+	<button on:click={() => openTab('bootstrap')}>Bootstrap your Stream</button>
+{:else if hash == '#dashboard'}
 	<input style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 	<button on:click={clearStorage}>DELETE ALL</button>
 	<br />
@@ -85,11 +107,24 @@
 		<!-- <p>The number is {coll}</p> -->
 		<Dashboard
 			collection={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
-			on:message={onRemove} />
+			on:message={onRemove}
+			addAction={false} />
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
+{:else if hash == '#bootstrap'}
+	<div>Bootstrap your STREAM</div>
+	<button on:click={() => {history = getHistory()}}>CHECK LAST WEEK's HISTORY</button>
+
+	{#await history}
+	<p>...history</p>
+	{:then his}
+		<!-- <p>The number is {coll}</p> -->
+		<Dashboard collection={his} on:message={onRemove} addAction={true} />
+
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
 
-{:else if hash == "#bootstrap"}
-	<div>bootstrap</div>
+
 {/if}

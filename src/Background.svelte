@@ -2,6 +2,9 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
+	import {loadBlackList} from './utils/utils'
+
+	loadBlackList();
 
 	chrome.runtime.onMessage.addListener(function({ action, title, url }, sender, sendResponse) {
 		if (action == 'toggle:content') {

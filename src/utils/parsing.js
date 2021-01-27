@@ -4,20 +4,7 @@
 //https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/history/showHistory/typedUrls.js
 
 
-export const UrlToDOM = async url => {
-    fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            // Convert the HTML string into a document object
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            return doc
-        })
-        .catch(function (err) {
-            // There was an error
-            console.log('URL FAIL: ', url, err);
-        });
-}
+
 
 //exclude from history
 const excludeSites = [
@@ -25,10 +12,10 @@ const excludeSites = [
     "google.com",
     "..."
 ]
-export const getHistory = () => {
+export const getHistory = (msSinceNow=(1000*60*60*24*7)) => {
     chrome.history.search({
         'text': '',              // Return every history item....
-        'startTime': (new Date).getTime() - 100000  // that was accessed less than one week ago.
+        'startTime': (new Date).getTime() - msSinceNow  // that was accessed less than one week ago.
     }, function (historyItems) {
 
         console.log("history", historyItems)
