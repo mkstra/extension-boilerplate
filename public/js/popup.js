@@ -606,6 +606,128 @@ var app = (function () {
     }
 
     /**
+     * Tests whether or not an object is an array.
+     *
+     * @private
+     * @param {*} val The object to test.
+     * @return {Boolean} `true` if `val` is an array, `false` otherwise.
+     * @example
+     *
+     *      _isArray([]); //=> true
+     *      _isArray(null); //=> false
+     *      _isArray({}); //=> false
+     */
+    var _isArray = Array.isArray || function _isArray(val) {
+      return val != null && val.length >= 0 && Object.prototype.toString.call(val) === '[object Array]';
+    };
+
+    function _isString(x) {
+      return Object.prototype.toString.call(x) === '[object String]';
+    }
+
+    function _has(prop, obj) {
+      return Object.prototype.hasOwnProperty.call(obj, prop);
+    }
+
+    var toString = Object.prototype.toString;
+
+    var _isArguments =
+    /*#__PURE__*/
+    function () {
+      return toString.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
+        return toString.call(x) === '[object Arguments]';
+      } : function _isArguments(x) {
+        return _has('callee', x);
+      };
+    }();
+
+    var hasEnumBug = !
+    /*#__PURE__*/
+    {
+      toString: null
+    }.propertyIsEnumerable('toString');
+    var nonEnumerableProps = ['constructor', 'valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString']; // Safari bug
+
+    var hasArgsEnumBug =
+    /*#__PURE__*/
+    function () {
+
+      return arguments.propertyIsEnumerable('length');
+    }();
+
+    var contains = function contains(list, item) {
+      var idx = 0;
+
+      while (idx < list.length) {
+        if (list[idx] === item) {
+          return true;
+        }
+
+        idx += 1;
+      }
+
+      return false;
+    };
+    /**
+     * Returns a list containing the names of all the enumerable own properties of
+     * the supplied object.
+     * Note that the order of the output array is not guaranteed to be consistent
+     * across different JS platforms.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Object
+     * @sig {k: v} -> [k]
+     * @param {Object} obj The object to extract properties from
+     * @return {Array} An array of the object's own properties.
+     * @see R.keysIn, R.values
+     * @example
+     *
+     *      R.keys({a: 1, b: 2, c: 3}); //=> ['a', 'b', 'c']
+     */
+
+
+    var keys = typeof Object.keys === 'function' && !hasArgsEnumBug ?
+    /*#__PURE__*/
+    _curry1(function keys(obj) {
+      return Object(obj) !== obj ? [] : Object.keys(obj);
+    }) :
+    /*#__PURE__*/
+    _curry1(function keys(obj) {
+      if (Object(obj) !== obj) {
+        return [];
+      }
+
+      var prop, nIdx;
+      var ks = [];
+
+      var checkArgsLength = hasArgsEnumBug && _isArguments(obj);
+
+      for (prop in obj) {
+        if (_has(prop, obj) && (!checkArgsLength || prop !== 'length')) {
+          ks[ks.length] = prop;
+        }
+      }
+
+      if (hasEnumBug) {
+        nIdx = nonEnumerableProps.length - 1;
+
+        while (nIdx >= 0) {
+          prop = nonEnumerableProps[nIdx];
+
+          if (_has(prop, obj) && !contains(ks, prop)) {
+            ks[ks.length] = prop;
+          }
+
+          nIdx -= 1;
+        }
+      }
+
+      return ks;
+    });
+
+    /**
      * Makes a shallow clone of an object, setting or overriding the specified
      * property with the given value. Note that this copies and flattens prototype
      * properties onto the new object as well. All non-primitive properties are
@@ -637,6 +759,342 @@ var app = (function () {
 
       result[prop] = val;
       return result;
+    });
+
+    /**
+     * Gives a single-word string description of the (native) type of a value,
+     * returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not
+     * attempt to distinguish user Object types any further, reporting them all as
+     * 'Object'.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.8.0
+     * @category Type
+     * @sig (* -> {*}) -> String
+     * @param {*} val The value to test
+     * @return {String}
+     * @example
+     *
+     *      R.type({}); //=> "Object"
+     *      R.type(1); //=> "Number"
+     *      R.type(false); //=> "Boolean"
+     *      R.type('s'); //=> "String"
+     *      R.type(null); //=> "Null"
+     *      R.type([]); //=> "Array"
+     *      R.type(/[A-z]/); //=> "RegExp"
+     *      R.type(() => {}); //=> "Function"
+     *      R.type(undefined); //=> "Undefined"
+     */
+
+    var type =
+    /*#__PURE__*/
+    _curry1(function type(val) {
+      return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
+    });
+
+    function _arrayFromIterator(iter) {
+      var list = [];
+      var next;
+
+      while (!(next = iter.next()).done) {
+        list.push(next.value);
+      }
+
+      return list;
+    }
+
+    function _includesWith(pred, x, list) {
+      var idx = 0;
+      var len = list.length;
+
+      while (idx < len) {
+        if (pred(x, list[idx])) {
+          return true;
+        }
+
+        idx += 1;
+      }
+
+      return false;
+    }
+
+    function _functionName(f) {
+      // String(x => x) evaluates to "x => x", so the pattern may not match.
+      var match = String(f).match(/^function (\w*)/);
+      return match == null ? '' : match[1];
+    }
+
+    // Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+    function _objectIs(a, b) {
+      // SameValue algorithm
+      if (a === b) {
+        // Steps 1-5, 7-10
+        // Steps 6.b-6.e: +0 != -0
+        return a !== 0 || 1 / a === 1 / b;
+      } else {
+        // Step 6.a: NaN == NaN
+        return a !== a && b !== b;
+      }
+    }
+
+    var _objectIs$1 = typeof Object.is === 'function' ? Object.is : _objectIs;
+
+    /**
+     * private _uniqContentEquals function.
+     * That function is checking equality of 2 iterator contents with 2 assumptions
+     * - iterators lengths are the same
+     * - iterators values are unique
+     *
+     * false-positive result will be returned for comparision of, e.g.
+     * - [1,2,3] and [1,2,3,4]
+     * - [1,1,1] and [1,2,3]
+     * */
+
+    function _uniqContentEquals(aIterator, bIterator, stackA, stackB) {
+      var a = _arrayFromIterator(aIterator);
+
+      var b = _arrayFromIterator(bIterator);
+
+      function eq(_a, _b) {
+        return _equals(_a, _b, stackA.slice(), stackB.slice());
+      } // if *a* array contains any element that is not included in *b*
+
+
+      return !_includesWith(function (b, aItem) {
+        return !_includesWith(eq, aItem, b);
+      }, b, a);
+    }
+
+    function _equals(a, b, stackA, stackB) {
+      if (_objectIs$1(a, b)) {
+        return true;
+      }
+
+      var typeA = type(a);
+
+      if (typeA !== type(b)) {
+        return false;
+      }
+
+      if (a == null || b == null) {
+        return false;
+      }
+
+      if (typeof a['fantasy-land/equals'] === 'function' || typeof b['fantasy-land/equals'] === 'function') {
+        return typeof a['fantasy-land/equals'] === 'function' && a['fantasy-land/equals'](b) && typeof b['fantasy-land/equals'] === 'function' && b['fantasy-land/equals'](a);
+      }
+
+      if (typeof a.equals === 'function' || typeof b.equals === 'function') {
+        return typeof a.equals === 'function' && a.equals(b) && typeof b.equals === 'function' && b.equals(a);
+      }
+
+      switch (typeA) {
+        case 'Arguments':
+        case 'Array':
+        case 'Object':
+          if (typeof a.constructor === 'function' && _functionName(a.constructor) === 'Promise') {
+            return a === b;
+          }
+
+          break;
+
+        case 'Boolean':
+        case 'Number':
+        case 'String':
+          if (!(typeof a === typeof b && _objectIs$1(a.valueOf(), b.valueOf()))) {
+            return false;
+          }
+
+          break;
+
+        case 'Date':
+          if (!_objectIs$1(a.valueOf(), b.valueOf())) {
+            return false;
+          }
+
+          break;
+
+        case 'Error':
+          return a.name === b.name && a.message === b.message;
+
+        case 'RegExp':
+          if (!(a.source === b.source && a.global === b.global && a.ignoreCase === b.ignoreCase && a.multiline === b.multiline && a.sticky === b.sticky && a.unicode === b.unicode)) {
+            return false;
+          }
+
+          break;
+      }
+
+      var idx = stackA.length - 1;
+
+      while (idx >= 0) {
+        if (stackA[idx] === a) {
+          return stackB[idx] === b;
+        }
+
+        idx -= 1;
+      }
+
+      switch (typeA) {
+        case 'Map':
+          if (a.size !== b.size) {
+            return false;
+          }
+
+          return _uniqContentEquals(a.entries(), b.entries(), stackA.concat([a]), stackB.concat([b]));
+
+        case 'Set':
+          if (a.size !== b.size) {
+            return false;
+          }
+
+          return _uniqContentEquals(a.values(), b.values(), stackA.concat([a]), stackB.concat([b]));
+
+        case 'Arguments':
+        case 'Array':
+        case 'Object':
+        case 'Boolean':
+        case 'Number':
+        case 'String':
+        case 'Date':
+        case 'Error':
+        case 'RegExp':
+        case 'Int8Array':
+        case 'Uint8Array':
+        case 'Uint8ClampedArray':
+        case 'Int16Array':
+        case 'Uint16Array':
+        case 'Int32Array':
+        case 'Uint32Array':
+        case 'Float32Array':
+        case 'Float64Array':
+        case 'ArrayBuffer':
+          break;
+
+        default:
+          // Values of other types are only equal if identical.
+          return false;
+      }
+
+      var keysA = keys(a);
+
+      if (keysA.length !== keys(b).length) {
+        return false;
+      }
+
+      var extendedStackA = stackA.concat([a]);
+      var extendedStackB = stackB.concat([b]);
+      idx = keysA.length - 1;
+
+      while (idx >= 0) {
+        var key = keysA[idx];
+
+        if (!(_has(key, b) && _equals(b[key], a[key], extendedStackA, extendedStackB))) {
+          return false;
+        }
+
+        idx -= 1;
+      }
+
+      return true;
+    }
+
+    /**
+     * Returns `true` if its arguments are equivalent, `false` otherwise. Handles
+     * cyclical data structures.
+     *
+     * Dispatches symmetrically to the `equals` methods of both arguments, if
+     * present.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.15.0
+     * @category Relation
+     * @sig a -> b -> Boolean
+     * @param {*} a
+     * @param {*} b
+     * @return {Boolean}
+     * @example
+     *
+     *      R.equals(1, 1); //=> true
+     *      R.equals(1, '1'); //=> false
+     *      R.equals([1, 2, 3], [1, 2, 3]); //=> true
+     *
+     *      const a = {}; a.v = a;
+     *      const b = {}; b.v = b;
+     *      R.equals(a, b); //=> true
+     */
+
+    var equals =
+    /*#__PURE__*/
+    _curry2(function equals(a, b) {
+      return _equals(a, b, [], []);
+    });
+
+    function _isObject(x) {
+      return Object.prototype.toString.call(x) === '[object Object]';
+    }
+
+    /**
+     * Returns the empty value of its argument's type. Ramda defines the empty
+     * value of Array (`[]`), Object (`{}`), String (`''`), and Arguments. Other
+     * types are supported if they define `<Type>.empty`,
+     * `<Type>.prototype.empty` or implement the
+     * [FantasyLand Monoid spec](https://github.com/fantasyland/fantasy-land#monoid).
+     *
+     * Dispatches to the `empty` method of the first argument, if present.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.3.0
+     * @category Function
+     * @sig a -> a
+     * @param {*} x
+     * @return {*}
+     * @example
+     *
+     *      R.empty(Just(42));      //=> Nothing()
+     *      R.empty([1, 2, 3]);     //=> []
+     *      R.empty('unicorns');    //=> ''
+     *      R.empty({x: 1, y: 2});  //=> {}
+     */
+
+    var empty$1 =
+    /*#__PURE__*/
+    _curry1(function empty(x) {
+      return x != null && typeof x['fantasy-land/empty'] === 'function' ? x['fantasy-land/empty']() : x != null && x.constructor != null && typeof x.constructor['fantasy-land/empty'] === 'function' ? x.constructor['fantasy-land/empty']() : x != null && typeof x.empty === 'function' ? x.empty() : x != null && x.constructor != null && typeof x.constructor.empty === 'function' ? x.constructor.empty() : _isArray(x) ? [] : _isString(x) ? '' : _isObject(x) ? {} : _isArguments(x) ? function () {
+        return arguments;
+      }() : void 0 // else
+      ;
+    });
+
+    /**
+     * Returns `true` if the given value is its type's empty value; `false`
+     * otherwise.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Logic
+     * @sig a -> Boolean
+     * @param {*} x
+     * @return {Boolean}
+     * @see R.empty
+     * @example
+     *
+     *      R.isEmpty([1, 2, 3]);   //=> false
+     *      R.isEmpty([]);          //=> true
+     *      R.isEmpty('');          //=> true
+     *      R.isEmpty(null);        //=> false
+     *      R.isEmpty({});          //=> true
+     *      R.isEmpty({length: 0}); //=> false
+     */
+
+    var isEmpty =
+    /*#__PURE__*/
+    _curry1(function isEmpty(x) {
+      return x != null && equals(x, empty$1(x));
     });
 
     const trimString = (s, l=50) => s.length > l 
@@ -685,18 +1143,18 @@ var app = (function () {
     			set_style(button, "background", "red");
     			set_style(button, "color", "white");
     			set_style(button, "font-weight", "bold");
-    			add_location(button, file, 39, 20, 757);
-    			add_location(div, file, 38, 16, 731);
+    			add_location(button, file, 39, 20, 763);
+    			add_location(div, file, 38, 16, 737);
     			set_style(td0, "min-width", "15rem");
     			attr(td0, "class", "svelte-o60a6m");
-    			add_location(td0, file, 49, 16, 1063);
+    			add_location(td0, file, 49, 16, 1069);
     			attr(td1, "class", "svelte-o60a6m");
-    			add_location(td1, file, 50, 16, 1144);
+    			add_location(td1, file, 50, 16, 1150);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 52, 20, 1237);
+    			add_location(a, file, 52, 20, 1243);
     			attr(td2, "class", "svelte-o60a6m");
-    			add_location(td2, file, 51, 16, 1212);
-    			add_location(tr, file, 37, 12, 710);
+    			add_location(td2, file, 51, 16, 1218);
+    			add_location(tr, file, 37, 12, 716);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -780,18 +1238,18 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(th0, "class", "svelte-o60a6m");
-    			add_location(th0, file, 27, 12, 461);
+    			add_location(th0, file, 27, 12, 467);
     			attr(th1, "class", "svelte-o60a6m");
-    			add_location(th1, file, 29, 12, 496);
+    			add_location(th1, file, 29, 12, 502);
     			attr(th2, "class", "svelte-o60a6m");
-    			add_location(th2, file, 30, 12, 523);
+    			add_location(th2, file, 30, 12, 529);
     			attr(th3, "class", "svelte-o60a6m");
-    			add_location(th3, file, 31, 12, 555);
-    			add_location(tr, file, 26, 8, 444);
-    			add_location(thead, file, 25, 4, 428);
-    			add_location(tbody, file, 35, 4, 656);
+    			add_location(th3, file, 31, 12, 561);
+    			add_location(tr, file, 26, 8, 450);
+    			add_location(thead, file, 25, 4, 434);
+    			add_location(tbody, file, 35, 4, 662);
     			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file, 24, 0, 416);
+    			add_location(table, file, 24, 0, 422);
     		},
 
     		l: function claim(nodes) {
@@ -902,8 +1360,35 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (71:0) {:else}
-    function create_else_block(ctx) {
+    // (93:31) 
+    function create_if_block_2(ctx) {
+    	var div;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "bootstrap";
+    			add_location(div, file$1, 93, 1, 2494);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    // (76:31) 
+    function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
     	let info = {
@@ -935,10 +1420,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 71, 1, 1901);
-    			add_location(button, file$1, 72, 1, 1975);
-    			add_location(br0, file$1, 73, 1, 2028);
-    			add_location(br1, file$1, 74, 1, 2036);
+    			add_location(input, file$1, 76, 1, 2045);
+    			add_location(button, file$1, 77, 1, 2119);
+    			add_location(br0, file$1, 78, 1, 2172);
+    			add_location(br1, file$1, 79, 1, 2180);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -1013,20 +1498,30 @@ var app = (function () {
     	};
     }
 
-    // (69:0) {#if !big}
+    // (71:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
-    	var button, dispose;
+    	var button0, t_1, button1, dispose;
 
     	return {
     		c: function create() {
-    			button = element("button");
-    			button.textContent = "View Dashboard";
-    			add_location(button, file$1, 69, 1, 1841);
-    			dispose = listen(button, "click", ctx.openTab);
+    			button0 = element("button");
+    			button0.textContent = "View Dashboard";
+    			t_1 = space();
+    			button1 = element("button");
+    			button1.textContent = "Bootstrap your Stream";
+    			add_location(button0, file$1, 71, 1, 1864);
+    			add_location(button1, file$1, 72, 1, 1934);
+
+    			dispose = [
+    				listen(button0, "click", ctx.click_handler),
+    				listen(button1, "click", ctx.click_handler_1)
+    			];
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, button, anchor);
+    			insert(target, button0, anchor);
+    			insert(target, t_1, anchor);
+    			insert(target, button1, anchor);
     		},
 
     		p: noop,
@@ -1035,15 +1530,17 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(button);
+    				detach(button0);
+    				detach(t_1);
+    				detach(button1);
     			}
 
-    			dispose();
+    			run_all(dispose);
     		}
     	};
     }
 
-    // (84:1) {:catch error}
+    // (89:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -1052,7 +1549,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 84, 2, 2270);
+    			add_location(p, file$1, 89, 2, 2408);
     		},
 
     		m: function mount(target, anchor) {
@@ -1077,12 +1574,12 @@ var app = (function () {
     	};
     }
 
-    // (79:1) {:then coll}
+    // (84:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
     	var dashboard = new Dashboard({
-    		props: { collection: ctx.collection.sort(func) },
+    		props: { collection: ctx.coll.sort(func) },
     		$$inline: true
     	});
     	dashboard.$on("message", ctx.onRemove);
@@ -1099,7 +1596,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			var dashboard_changes = {};
-    			if (changed.collection) dashboard_changes.collection = ctx.collection.sort(func);
+    			if (changed.collection) dashboard_changes.collection = ctx.coll.sort(func);
     			dashboard.$set(dashboard_changes);
     		},
 
@@ -1121,7 +1618,7 @@ var app = (function () {
     	};
     }
 
-    // (77:20)    <p>...waiting</p>  {:then coll}
+    // (82:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -1129,7 +1626,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 77, 2, 2067);
+    			add_location(p, file$1, 82, 2, 2211);
     		},
 
     		m: function mount(target, anchor) {
@@ -1153,18 +1650,22 @@ var app = (function () {
 
     	var if_block_creators = [
     		create_if_block,
-    		create_else_block
+    		create_if_block_1,
+    		create_if_block_2
     	];
 
     	var if_blocks = [];
 
     	function select_block_type(ctx) {
-    		if (!ctx.big) return 0;
-    		return 1;
+    		if (isEmpty(ctx.hash)) return 0;
+    		if (ctx.hash == "#dashboard") return 1;
+    		if (ctx.hash == "#bootstrap") return 2;
+    		return -1;
     	}
 
-    	current_block_type_index = select_block_type(ctx);
-    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	if (~(current_block_type_index = select_block_type(ctx))) {
+    		if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	}
 
     	return {
     		c: function create() {
@@ -1178,15 +1679,15 @@ var app = (function () {
     			t4 = space();
     			hr1 = element("hr");
     			t5 = space();
-    			if_block.c();
+    			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 64, 0, 1670);
-    			add_location(hr0, file$1, 65, 0, 1727);
+    			add_location(a0, file$1, 64, 0, 1682);
+    			add_location(hr0, file$1, 65, 0, 1739);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 66, 0, 1734);
-    			add_location(hr1, file$1, 67, 0, 1822);
+    			add_location(a1, file$1, 66, 0, 1746);
+    			add_location(hr1, file$1, 67, 0, 1834);
     		},
 
     		l: function claim(nodes) {
@@ -1203,7 +1704,7 @@ var app = (function () {
     			insert(target, t4, anchor);
     			insert(target, hr1, anchor);
     			insert(target, t5, anchor);
-    			if_blocks[current_block_type_index].m(target, anchor);
+    			if (~current_block_type_index) if_blocks[current_block_type_index].m(target, anchor);
     			insert(target, if_block_anchor, anchor);
     			current = true;
     		},
@@ -1216,21 +1717,27 @@ var app = (function () {
     			var previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
     			if (current_block_type_index === previous_block_index) {
-    				if_blocks[current_block_type_index].p(changed, ctx);
+    				if (~current_block_type_index) if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
-    				group_outros();
-    				transition_out(if_blocks[previous_block_index], 1, () => {
-    					if_blocks[previous_block_index] = null;
-    				});
-    				check_outros();
-
-    				if_block = if_blocks[current_block_type_index];
-    				if (!if_block) {
-    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block.c();
+    				if (if_block) {
+    					group_outros();
+    					transition_out(if_blocks[previous_block_index], 1, () => {
+    						if_blocks[previous_block_index] = null;
+    					});
+    					check_outros();
     				}
-    				transition_in(if_block, 1);
-    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+
+    				if (~current_block_type_index) {
+    					if_block = if_blocks[current_block_type_index];
+    					if (!if_block) {
+    						if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    						if_block.c();
+    					}
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				} else {
+    					if_block = null;
+    				}
     			}
     		},
 
@@ -1257,7 +1764,7 @@ var app = (function () {
     				detach(t5);
     			}
 
-    			if_blocks[current_block_type_index].d(detaching);
+    			if (~current_block_type_index) if_blocks[current_block_type_index].d(detaching);
 
     			if (detaching) {
     				detach(if_block_anchor);
@@ -1293,17 +1800,17 @@ var app = (function () {
 
     	let link = '';
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
-    	let big = window.location.hash == '#big';
+    	let hash = window.location.hash;
 
     	fetch('https://dacapo.io/hacking-scientific-text')
     		.then(res => res)
     		.then(res => console.log('aaaasa', res));
 
-    	const openTab = () => {
+    	const openTab = (hash) => {
     		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
                 #window lets popup know what's up
             */
-    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
+    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#'+hash) });
     	};
 
     	const clearStorage = async () => {
@@ -1327,6 +1834,14 @@ var app = (function () {
     	// 	getStorage();
     	// };
 
+    	function click_handler() {
+    		return openTab("dashboard");
+    	}
+
+    	function click_handler_1() {
+    		return openTab("bootstrap");
+    	}
+
     	function input_input_handler() {
     		deleteConfirm = this.value;
     		$$invalidate('deleteConfirm', deleteConfirm);
@@ -1336,10 +1851,12 @@ var app = (function () {
     		collection,
     		link,
     		deleteConfirm,
-    		big,
+    		hash,
     		openTab,
     		clearStorage,
     		onRemove,
+    		click_handler,
+    		click_handler_1,
     		input_input_handler
     	};
     }

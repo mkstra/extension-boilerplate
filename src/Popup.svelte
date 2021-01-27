@@ -3,7 +3,7 @@
 	'use strict';
 	import chromep from 'chrome-promise';
 	import { JSONDownloadable, trimString } from './utils/utils';
-	import { assoc } from 'ramda';
+	import { assoc, isEmpty } from 'ramda';
 	import Dashboard from './Dashboard.svelte';
 
 
@@ -27,17 +27,17 @@
 
 	let link = '';
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
-	let big = window.location.hash == '#big';
+	let hash = window.location.hash;
 
 	fetch('https://dacapo.io/hacking-scientific-text')
 		.then(res => res)
 		.then(res => console.log('aaaasa', res));
 
-	const openTab = () => {
+	const openTab = (hash) => {
 		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
             #window lets popup know what's up
         */
-		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
+		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#'+hash) });
 	};
 
 	const clearStorage = async () => {
@@ -66,9 +66,14 @@
 <hr />
 <a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">Publish my Data</a>
 <hr />
-{#if !big}
-	<button on:click={openTab}>View Dashboard</button>
-{:else}
+
+
+{#if isEmpty(hash)}
+	<button on:click={()=> openTab("dashboard")}>View Dashboard</button>
+	<button on:click={()=> openTab("bootstrap")}>Bootstrap your Stream</button>
+
+
+{:else if hash == "#dashboard"}
 	<input style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 	<button on:click={clearStorage}>DELETE ALL</button>
 	<br />
@@ -79,9 +84,12 @@
 	{:then coll}
 		<!-- <p>The number is {coll}</p> -->
 		<Dashboard
-			collection={collection.sort((a, b) => b.dateCreated - a.dateCreated)}
+			collection={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
 			on:message={onRemove} />
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
+
+{:else if hash == "#bootstrap"}
+	<div>bootstrap</div>
 {/if}

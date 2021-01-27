@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-	import { trimString } from './utils';
+	import { trimString } from './utils/utils';
 
     export let collection
     const dispatch = createEventDispatcher();
