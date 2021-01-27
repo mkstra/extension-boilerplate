@@ -9,6 +9,21 @@ export const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`
 
+    export const UrlToDOM = async url => {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                // Convert the HTML string into a document object
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                return doc
+            })
+            .catch(function (err) {
+                // There was an error
+                console.log('URL FAIL: ', url, err);
+            });
+    }
+
 export const getActiveTab = async (detectionIntervalSeconds=20) => {
     const idleState = await chromep.idle.queryState(detectionIntervalSeconds);
     if (idleState != 'active') return;

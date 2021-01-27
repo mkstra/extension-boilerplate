@@ -11,6 +11,10 @@
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let big = window.location.hash == '#big';
 
+	fetch("https://dacapo.io/hacking-scientific-text")
+		.then(res => res)
+		.then(res => console.log("aaaasa", res))
+
 	const openTab = () => {
 		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
             #window lets popup know what's up

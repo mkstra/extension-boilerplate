@@ -549,7 +549,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (73:0) {:else}
+    // (77:0) {:else}
     function create_else_block(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, table, thead, tr, th0, t6, th1, t8, th2, t10, th3, t12, tbody, dispose;
 
@@ -594,23 +594,23 @@ var app = (function () {
     			}
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file, 73, 1, 1774);
-    			add_location(button, file, 74, 4, 1851);
-    			add_location(br0, file, 75, 4, 1907);
-    			add_location(br1, file, 76, 8, 1920);
+    			add_location(input, file, 77, 1, 1890);
+    			add_location(button, file, 78, 4, 1967);
+    			add_location(br0, file, 79, 4, 2023);
+    			add_location(br1, file, 80, 8, 2036);
     			attr(th0, "class", "svelte-o60a6m");
-    			add_location(th0, file, 81, 4, 1957);
+    			add_location(th0, file, 85, 4, 2073);
     			attr(th1, "class", "svelte-o60a6m");
-    			add_location(th1, file, 83, 4, 1984);
+    			add_location(th1, file, 87, 4, 2100);
     			attr(th2, "class", "svelte-o60a6m");
-    			add_location(th2, file, 84, 4, 2003);
+    			add_location(th2, file, 88, 4, 2119);
     			attr(th3, "class", "svelte-o60a6m");
-    			add_location(th3, file, 85, 4, 2027);
-    			add_location(tr, file, 80, 3, 1948);
-    			add_location(thead, file, 79, 2, 1937);
-    			add_location(tbody, file, 89, 2, 2111);
+    			add_location(th3, file, 89, 4, 2143);
+    			add_location(tr, file, 84, 3, 2064);
+    			add_location(thead, file, 83, 2, 2053);
+    			add_location(tbody, file, 93, 2, 2227);
     			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file, 78, 1, 1927);
+    			add_location(table, file, 82, 1, 2043);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -693,7 +693,7 @@ var app = (function () {
     	};
     }
 
-    // (71:0) {#if !big}
+    // (75:0) {#if !big}
     function create_if_block(ctx) {
     	var button, dispose;
 
@@ -701,7 +701,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View Dashboard";
-    			add_location(button, file, 71, 1, 1714);
+    			add_location(button, file, 75, 1, 1830);
     			dispose = listen(button, "click", ctx.openTab);
     		},
 
@@ -721,7 +721,7 @@ var app = (function () {
     	};
     }
 
-    // (91:3) {#each collection as row}
+    // (95:3) {#each collection as row}
     function create_each_block(ctx) {
     	var tr, div, button, t1, td0, t2_value = trimString(ctx.row.title) || '/', t2, t3, td1, t4_value = ctx.row.created, t4, t5, td2, a, t6_value = trimString(ctx.row.url, 70), t6, a_href_value, t7, dispose;
 
@@ -749,18 +749,18 @@ var app = (function () {
     			set_style(button, "background", "red");
     			set_style(button, "color", "white");
     			set_style(button, "font-weight", "bold");
-    			add_location(button, file, 93, 24, 2207);
-    			add_location(div, file, 92, 20, 2177);
+    			add_location(button, file, 97, 24, 2323);
+    			add_location(div, file, 96, 20, 2293);
     			set_style(td0, "min-width", "15rem");
     			attr(td0, "class", "svelte-o60a6m");
-    			add_location(td0, file, 101, 5, 2383);
+    			add_location(td0, file, 105, 5, 2499);
     			attr(td1, "class", "svelte-o60a6m");
-    			add_location(td1, file, 102, 5, 2453);
+    			add_location(td1, file, 106, 5, 2569);
     			attr(a, "href", a_href_value = ctx.row.url);
-    			add_location(a, file, 104, 6, 2492);
+    			add_location(a, file, 108, 6, 2608);
     			attr(td2, "class", "svelte-o60a6m");
-    			add_location(td2, file, 103, 5, 2481);
-    			add_location(tr, file, 91, 4, 2152);
+    			add_location(td2, file, 107, 5, 2597);
+    			add_location(tr, file, 95, 4, 2268);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -837,11 +837,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file, 66, 0, 1543);
-    			add_location(hr0, file, 67, 0, 1600);
+    			add_location(a0, file, 70, 0, 1659);
+    			add_location(hr0, file, 71, 0, 1716);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file, 68, 0, 1607);
-    			add_location(hr1, file, 69, 0, 1695);
+    			add_location(a1, file, 72, 0, 1723);
+    			add_location(hr1, file, 73, 0, 1811);
     		},
 
     		l: function claim(nodes) {
@@ -910,6 +910,10 @@ var app = (function () {
     	let link = '';
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let big = window.location.hash == '#big';
+
+    	fetch("https://dacapo.io/hacking-scientific-text")
+    		.then(res => res)
+    		.then(res => console.log("aaaasa", res));
 
     	const openTab = () => {
     		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
