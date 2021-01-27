@@ -18,7 +18,7 @@
 		dateCreated: Date.now(),
 		// marked: false,
 		// blocked: false,
-		title,
+		title: title || "",
 		url,
 	});
 
@@ -36,21 +36,6 @@
 		}
 		return true;
 	};
-
-	// if (entry[url]) {
-	// 	try {
-	// 		await chromep.storage.sync.remove(url);
-	// 	} catch (err) {
-	// 		console.log(err, 'error in removing from DB');
-	// 	}
-	// } else {
-	// 	try {
-	// 		await chromep.storage.sync.set({ [url]: node });
-	// 	} catch (err) {
-	// 		console.log(err, 'error in SETTING');
-	// 	}
-	// }
-	// return true
 </script>
 
 

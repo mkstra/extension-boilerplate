@@ -2,25 +2,12 @@
 	/*global chrome*/
 	'use strict';
 	import chromep from 'chrome-promise';
-	import { JSONDownloadable, trimString } from './utils';
+	import { JSONDownloadable, trimString } from './utils/utils';
 	import { assoc } from 'ramda';
+	import Dashboard from './Dashboard.svelte';
 
-	let collection = [{ url: 'test.com', title: 'storage not loading.... sry' }];
 
-	let link = '';
-	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
-	let big = window.location.hash == '#big';
-
-	fetch("https://dacapo.io/hacking-scientific-text")
-		.then(res => res)
-		.then(res => console.log("aaaasa", res))
-
-	const openTab = () => {
-		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
-            #window lets popup know what's up
-        */
-		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
-	};
+	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
 	const getStorage = async () => {
 		const storage = await chromep.storage.sync.get(null);
@@ -29,10 +16,28 @@
 			.map(([url, node]) => assoc('url', url, node))
 			.map(({ url, title, dateCreated }) => ({
 				title: title || '',
-				created: new Date(dateCreated).toDateString(),
+				dateCreated,
 				url,
 			}));
 		link = JSONDownloadable(collection);
+		return collection;
+	};
+
+	let collection = getStorage();
+
+	let link = '';
+	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
+	let big = window.location.hash == '#big';
+
+	fetch('https://dacapo.io/hacking-scientific-text')
+		.then(res => res)
+		.then(res => console.log('aaaasa', res));
+
+	const openTab = () => {
+		/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
+            #window lets popup know what's up
+        */
+		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#big') });
 	};
 
 	const clearStorage = async () => {
@@ -44,29 +49,18 @@
 		getStorage();
 	};
 
-	getStorage();
-	const removeItem = async itemID => {
-		await chromep.storage.sync.remove(itemID);
+	const onRemove = async ({ detail }) => {
+		console.log(detail, 'detail');
+		await chromep.storage.sync.remove(detail.url);
 		getStorage();
 	};
+
+	getStorage();
+	// const removeItem = async itemID => {
+	// 	await chromep.storage.sync.remove(itemID);
+	// 	getStorage();
+	// };
 </script>
-
-<style>
-	/* ! needs bundle.css inside popup.html */
-	table,
-	th,
-	td {
-		border: 1px solid black;
-		border-collapse: collapse;
-		padding: 0.5rem;
-	}
-	table {
-		background: #eee;
-		min-width: 80vw;
-		text-align: center;
-	}
-
-</style>
 
 <a href={link} download="data.json">Download my Data</a>
 <hr />
@@ -76,40 +70,18 @@
 	<button on:click={openTab}>View Dashboard</button>
 {:else}
 	<input style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
-    <button on:click={clearStorage}>DELETE ALL</button>
-    <br>
-        <br>
+	<button on:click={clearStorage}>DELETE ALL</button>
+	<br />
+	<br />
 
-	<table>
-		<thead>
-			<tr>
-				<th>Delete Entry</th>
-
-				<th>title</th>
-				<th>createTime</th>
-				<th>url</th>
-				<!-- <th on:click={sort("val")}>val</th> -->
-			</tr>
-		</thead>
-		<tbody>
-			{#each collection as row}
-				<tr>
-                    <div>
-                        <button
-						on:click={() => removeItem(row.url)}
-						style="background: red; color: white; font-weight: bold">
-						X
-					</button>
-                    </div>
-				
-
-					<td style="min-width: 15rem">{trimString(row.title) || '/'}</td>
-					<td>{row.created}</td>
-					<td>
-						<a href={row.url}>{trimString(row.url, 70)}</a>
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
+	{#await collection}
+		<p>...waiting</p>
+	{:then coll}
+		<!-- <p>The number is {coll}</p> -->
+		<Dashboard
+			collection={collection.sort((a, b) => b.dateCreated - a.dateCreated)}
+			on:message={onRemove} />
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
 {/if}
