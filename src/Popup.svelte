@@ -64,7 +64,7 @@
 		await chromep.storage.sync.set({[url]: Node(url, title, dateCreated)});
 		toastr.success(`${title} added to stream`)
 	};
-	
+
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
 		const maxResults = 300
 		let historyItems = await chromep.history.search({
@@ -126,14 +126,16 @@
 {:else if hash == '#bootstrap'}
 	<div>Bootstrap your STREAM</div>
 	<button
+		class="yellow-btn"
 		on:click={() => {
+			
 			history = getHistory();
 		}}>
-		CHECK HISTORY for ARTICLES (last 30 days)
+		Scan history for articles (last 30 days)
 	</button>
 
 	{#await history}
-		<p>...history</p>
+		<p>...running **Article?** classifier on history documents</p>
 	{:then his}
 		<!-- <p>The number is {coll}</p> -->
 		<Dashboard collection={his} on:message={onAdd} addAction={true} />

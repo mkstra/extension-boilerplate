@@ -14061,13 +14061,14 @@ var app = (function () {
     			div.textContent = "Bootstrap your STREAM";
     			t1 = space();
     			button = element("button");
-    			button.textContent = "CHECK HISTORY for ARTICLES (last 30 days)";
+    			button.textContent = "Scan history for articles (last 30 days)";
     			t3 = space();
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(div, file$1, 126, 1, 4018);
-    			add_location(button, file$1, 127, 1, 4052);
+    			add_location(div, file$1, 126, 1, 4017);
+    			attr(button, "class", "yellow-btn");
+    			add_location(button, file$1, 127, 1, 4051);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
@@ -14159,10 +14160,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 109, 1, 3549);
-    			add_location(button, file$1, 110, 1, 3623);
-    			add_location(br0, file$1, 111, 1, 3676);
-    			add_location(br1, file$1, 112, 1, 3684);
+    			add_location(input, file$1, 109, 1, 3548);
+    			add_location(button, file$1, 110, 1, 3622);
+    			add_location(br0, file$1, 111, 1, 3675);
+    			add_location(br1, file$1, 112, 1, 3683);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14248,8 +14249,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$1, 106, 1, 3368);
-    			add_location(button1, file$1, 107, 1, 3439);
+    			add_location(button0, file$1, 106, 1, 3367);
+    			add_location(button1, file$1, 107, 1, 3438);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14279,7 +14280,7 @@ var app = (function () {
     	};
     }
 
-    // (140:1) {:catch error}
+    // (142:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14288,7 +14289,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 140, 2, 4346);
+    			add_location(p, file$1, 142, 2, 4414);
     		},
 
     		m: function mount(target, anchor) {
@@ -14313,7 +14314,7 @@ var app = (function () {
     	};
     }
 
-    // (137:1) {:then his}
+    // (139:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14360,15 +14361,15 @@ var app = (function () {
     	};
     }
 
-    // (135:17)    <p>...history</p>  {:then his}
+    // (137:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
-    			p.textContent = "...history";
-    			add_location(p, file$1, 135, 2, 4189);
+    			p.textContent = "...running **Article?** classifier on history documents";
+    			add_location(p, file$1, 137, 2, 4212);
     		},
 
     		m: function mount(target, anchor) {
@@ -14396,7 +14397,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 123, 2, 3933);
+    			add_location(p, file$1, 123, 2, 3932);
     		},
 
     		m: function mount(target, anchor) {
@@ -14476,7 +14477,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 115, 2, 3715);
+    			add_location(p, file$1, 115, 2, 3714);
     		},
 
     		m: function mount(target, anchor) {
@@ -14533,11 +14534,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 99, 0, 3186);
-    			add_location(hr0, file$1, 100, 0, 3243);
+    			add_location(a0, file$1, 99, 0, 3185);
+    			add_location(hr0, file$1, 100, 0, 3242);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 101, 0, 3250);
-    			add_location(hr1, file$1, 102, 0, 3338);
+    			add_location(a1, file$1, 101, 0, 3249);
+    			add_location(hr1, file$1, 102, 0, 3337);
     		},
 
     		l: function claim(nodes) {
@@ -14683,7 +14684,7 @@ var app = (function () {
     		await chromePromise$1.storage.sync.set({[url]: Node(url, title, dateCreated)});
     		toastr.success(`${title} added to stream`);
     	};
-    	
+
     	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
     		const maxResults = 300;
     		let historyItems = await chromePromise$1.history.search({

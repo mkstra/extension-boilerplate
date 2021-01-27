@@ -9,3 +9,12 @@
     opacity: 0.9;
     border-radius: 5px;
 }
+
+.yellow-btn {
+    background: gold;
+    padding: 0.6rem;
+    border: none;
+    font-weight: 500;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px grey;
+}
