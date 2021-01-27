@@ -2449,6 +2449,8 @@ var app = (function () {
         title: title || "",
         url,
     });
+
+    const asyncMap = async (arr, predicate) => Promise.all(arr.map(predicate));
     const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
     	
     const idiotSafe = (fn, config={log: false}) => async (...args) => {
@@ -14449,7 +14451,7 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (120:31) 
+    // (160:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -14477,9 +14479,9 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 120, 1, 3860);
+    			add_location(h1, file$2, 160, 1, 4589);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 121, 1, 3892);
+    			add_location(button, file$2, 161, 1, 4621);
     			dispose = listen(button, "click", ctx.click_handler_2);
     		},
 
@@ -14538,12 +14540,12 @@ var app = (function () {
     	};
     }
 
-    // (102:31) 
+    // (139:31) 
     function create_if_block_1(ctx) {
-    	var input, t0, button, t2, br0, t3, br1, t4, t5, await_block_anchor, promise, current, dispose;
+    	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, t7, await_block_anchor, promise, current, dispose;
 
     	var table = new Table({
-    		props: { collection: [{a: "b", b:"cc", c:"www"}, {a: "wq", b:"wq", c:"wqa"}] },
+    		props: { collection: [{ a: 'b', b: 'cc', c: 'www' }, { a: 'wq', b: 'wq', c: 'wqa' }] },
     		$$inline: true
     	});
 
@@ -14564,28 +14566,33 @@ var app = (function () {
     		c: function create() {
     			input = element("input");
     			t0 = space();
-    			button = element("button");
-    			button.textContent = "DELETE ALL";
+    			button0 = element("button");
+    			button0.textContent = "DELETE ALL";
     			t2 = space();
     			br0 = element("br");
     			t3 = space();
     			br1 = element("br");
     			t4 = space();
+    			button1 = element("button");
+    			button1.textContent = "Get Books!";
+    			t6 = space();
     			table.$$.fragment.c();
-    			t5 = space();
+    			t7 = space();
     			await_block_anchor = empty();
 
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 102, 1, 3311);
-    			add_location(button, file$2, 103, 1, 3385);
-    			add_location(br0, file$2, 104, 1, 3438);
-    			add_location(br1, file$2, 105, 1, 3446);
+    			add_location(input, file$2, 139, 1, 3980);
+    			add_location(button0, file$2, 140, 1, 4054);
+    			add_location(br0, file$2, 141, 1, 4107);
+    			add_location(br1, file$2, 142, 1, 4115);
+    			add_location(button1, file$2, 143, 1, 4123);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
-    				listen(button, "click", ctx.clearStorage)
+    				listen(button0, "click", ctx.clearStorage),
+    				listen(button1, "click", ctx.getBooks)
     			];
     		},
 
@@ -14595,14 +14602,16 @@ var app = (function () {
     			input.value = ctx.deleteConfirm;
 
     			insert(target, t0, anchor);
-    			insert(target, button, anchor);
+    			insert(target, button0, anchor);
     			insert(target, t2, anchor);
     			insert(target, br0, anchor);
     			insert(target, t3, anchor);
     			insert(target, br1, anchor);
     			insert(target, t4, anchor);
+    			insert(target, button1, anchor);
+    			insert(target, t6, anchor);
     			mount_component(table, target, anchor);
-    			insert(target, t5, anchor);
+    			insert(target, t7, anchor);
     			insert(target, await_block_anchor, anchor);
 
     			info.block.m(target, info.anchor = anchor);
@@ -14645,18 +14654,20 @@ var app = (function () {
     			if (detaching) {
     				detach(input);
     				detach(t0);
-    				detach(button);
+    				detach(button0);
     				detach(t2);
     				detach(br0);
     				detach(t3);
     				detach(br1);
     				detach(t4);
+    				detach(button1);
+    				detach(t6);
     			}
 
     			destroy_component(table, detaching);
 
     			if (detaching) {
-    				detach(t5);
+    				detach(t7);
     				detach(await_block_anchor);
     			}
 
@@ -14668,7 +14679,7 @@ var app = (function () {
     	};
     }
 
-    // (99:0) {#if isEmpty(hash)}
+    // (136:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14679,8 +14690,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 99, 1, 3130);
-    			add_location(button1, file$2, 100, 1, 3201);
+    			add_location(button0, file$2, 136, 1, 3799);
+    			add_location(button1, file$2, 137, 1, 3870);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14710,7 +14721,7 @@ var app = (function () {
     	};
     }
 
-    // (136:1) {:catch error}
+    // (175:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14719,7 +14730,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 136, 2, 4255);
+    			add_location(p, file$2, 175, 2, 4980);
     		},
 
     		m: function mount(target, anchor) {
@@ -14744,7 +14755,7 @@ var app = (function () {
     	};
     }
 
-    // (133:1) {:then his}
+    // (172:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14791,7 +14802,7 @@ var app = (function () {
     	};
     }
 
-    // (131:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (170:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14799,7 +14810,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 131, 2, 4053);
+    			add_location(p, file$2, 170, 2, 4778);
     		},
 
     		m: function mount(target, anchor) {
@@ -14818,7 +14829,7 @@ var app = (function () {
     	};
     }
 
-    // (117:1) {:catch error}
+    // (157:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14827,7 +14838,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 117, 2, 3775);
+    			add_location(p, file$2, 157, 2, 4504);
     		},
 
     		m: function mount(target, anchor) {
@@ -14852,7 +14863,7 @@ var app = (function () {
     	};
     }
 
-    // (111:1) {:then coll}
+    // (151:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -14899,7 +14910,7 @@ var app = (function () {
     	};
     }
 
-    // (109:20)    <p>...waiting</p>  {:then coll}
+    // (149:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -14907,7 +14918,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 109, 2, 3557);
+    			add_location(p, file$2, 149, 2, 4286);
     		},
 
     		m: function mount(target, anchor) {
@@ -14964,11 +14975,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 92, 0, 2948);
-    			add_location(hr0, file$2, 93, 0, 3005);
+    			add_location(a0, file$2, 129, 0, 3617);
+    			add_location(hr0, file$2, 130, 0, 3674);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 94, 0, 3012);
-    			add_location(hr1, file$2, 95, 0, 3100);
+    			add_location(a1, file$2, 131, 0, 3681);
+    			add_location(hr1, file$2, 132, 0, 3769);
     		},
 
     		l: function claim(nodes) {
@@ -15074,9 +15085,10 @@ var app = (function () {
     	};
 
     	let link = '';
-    	let collection = getStorage().then(c => {$$invalidate('link', link = JSONDownloadable(c));});
+    	let collection = getStorage().then(c => {
+    		$$invalidate('link', link = JSONDownloadable(c));
+    	});
 
-    	
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
     	let history = [];
@@ -15085,14 +15097,16 @@ var app = (function () {
     	// 	.then(res => res)
     	// 	.then(res => console.log('aaaasa', res));
 
-
     	/*https://stackoverflow.com/questions/9576615/open-chrome-extension-in-a-new-tab
                 #window lets popup know what's up
             */
-    	const openTab = hash => chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
-    	
+    	const openTab = hash =>
+    		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
+
     	chrome.storage.onChanged.addListener((_c, _ns) => {
-    		getStorage().then(coll => {$$invalidate('link', link = JSONDownloadable(coll));});
+    		getStorage().then(coll => {
+    			$$invalidate('link', link = JSONDownloadable(coll));
+    		});
     	});
 
     	const clearStorage = async () => {
@@ -15109,9 +15123,9 @@ var app = (function () {
     	};
 
     	const onAdd = async ({ detail }) => {
-    		console.log(detail, "yo");
-    		const {url, title, dateCreated} = detail;
-    		await chromePromise$1.storage.sync.set({[url]: Node(url, title, dateCreated)});
+    		console.log(detail, 'yo');
+    		const { url, title, dateCreated } = detail;
+    		await chromePromise$1.storage.sync.set({ [url]: Node(url, title, dateCreated) });
     		toastr.success(`${title} added to stream`);
     	};
 
@@ -15124,18 +15138,43 @@ var app = (function () {
     			// that was accessed less than one week ago.
     		});
     		const blacklist = await chromePromise$1.storage.sync.get('blacklist');
-    		
-    		historyItems = historyPipe(blacklist["blacklist"])(historyItems).filter(item=> (item.url.split("/").length - 1)>2);
-    							 //no homepages, only if has path aka something.com//superfancy
+
+    		historyItems = historyPipe(blacklist['blacklist'])(historyItems).filter(
+    			item => item.url.split('/').length - 1 > 2
+    		);
+    		//no homepages, only if has path aka something.com//superfancy
 
     		historyItems = await asyncFilter(historyItems, async item => {
-    			const doc = await idiotSafe(UrlToDOM)(item["url"]);
-    			return !!(doc && doc.querySelector('article'))
+    			const doc = await idiotSafe(UrlToDOM)(item['url']);
+    			return !!(doc && doc.querySelector('article'));
     		});
 
     		console.log('history', historyItems, blacklist['blacklist']);
 
     		return historyItems;
+    	};
+
+    	const getBooks = async () => {
+    		let historyItems = await chromePromise$1.history.search({
+    			text: '', // Return every history item....
+    			startTime: 0,
+    			maxResults:20000,
+    			// that was accessed less than one week ago.
+    		});
+    		historyItems = historyPipe([])(historyItems).filter(
+    			e => e.url.includes('amazon.') && !e.url.includes('aws')
+    		);
+    		console.log(historyItems,"d");
+    		const docs = await asyncMap(historyItems.slice(0,20), async item => {
+    			try {
+    				return await UrlToDOM(item["url"])
+    			}
+    			catch (err) {
+    				console.log("error at", item["url"]);
+    				return false
+    			}
+    		});
+    		console.log(docs, "aa");
     	};
 
     	function click_handler() {
@@ -15166,6 +15205,7 @@ var app = (function () {
     		onRemove,
     		onAdd,
     		getHistory,
+    		getBooks,
     		click_handler,
     		click_handler_1,
     		input_input_handler,
