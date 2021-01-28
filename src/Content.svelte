@@ -2,10 +2,11 @@
 	/*global chrome*/
 	'use strict';
 	import toastr from 'toastr';
+	import { toastrOptions } from './utils/params';
+
 	import hotkeys from 'hotkeys-js';
 	import { path, isEmpty } from 'ramda';
 	import normalizeUrl from 'normalize-url';
-	import { toastrOptions } from './utils/params';
 
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
@@ -22,8 +23,9 @@
 		//for the .info toast()
 		setInterval(() => {
 			activeTime += interval;
-
+			console.log(activeTime)
 			if (activeTime > 120000) {
+				
 				toastr.info('ADD content to your stream?');
 				showReminder = false;
 				//! kinda nasty hack
@@ -41,6 +43,7 @@
 			document.hidden && window.clearInterval(trackActiveTime);
 
 			if (!document.hidden && showReminder) {
+				console.log("show reminder")
 				trackActiveTime = startTimer();
 			}
 		},
