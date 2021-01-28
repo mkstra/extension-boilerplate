@@ -24,10 +24,6 @@ var app = (function () {
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
     }
-
-    function append(target, node) {
-        target.appendChild(node);
-    }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
     }
@@ -36,9 +32,6 @@ var app = (function () {
     }
     function element(name) {
         return document.createElement(name);
-    }
-    function text(data) {
-        return document.createTextNode(data);
     }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
@@ -52,14 +45,6 @@ var app = (function () {
     }
     function children(element) {
         return Array.from(element.childNodes);
-    }
-    function set_data(text, data) {
-        data = '' + data;
-        if (text.data !== data)
-            text.data = data;
-    }
-    function set_style(node, key, value) {
-        node.style.setProperty(key, value);
     }
 
     let current_component;
@@ -12990,15 +12975,14 @@ var app = (function () {
     const file = "src/Content.svelte";
 
     function create_fragment(ctx) {
-    	var button, t_value = ctx.marked ? '[X] Remove Mark (Shift+R)' : '[+] Mark Content (Shift+R)', t, dispose;
+    	var button, raw_value = ctx.marked ? '<b>X</b> Remove (Shift+R)' : '<b>+</b> Mark (Shift+R)', button_class_value, button_style_value, dispose;
 
     	return {
     		c: function create() {
     			button = element("button");
-    			t = text(t_value);
-    			attr(button, "class", "prosebar");
-    			set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
-    			add_location(button, file, 95, 0, 2258);
+    			attr(button, "class", button_class_value = "prosebar " + (!ctx.marked && "border-glow"));
+    			attr(button, "style", button_style_value = ctx.marked && "opacity: 0.75");
+    			add_location(button, file, 96, 0, 2295);
     			dispose = listen(button, "click", ctx.toggleContent);
     		},
 
@@ -13008,16 +12992,20 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert(target, button, anchor);
-    			append(button, t);
+    			button.innerHTML = raw_value;
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.marked) && t_value !== (t_value = ctx.marked ? '[X] Remove Mark (Shift+R)' : '[+] Mark Content (Shift+R)')) {
-    				set_data(t, t_value);
+    			if ((changed.marked) && raw_value !== (raw_value = ctx.marked ? '<b>X</b> Remove (Shift+R)' : '<b>+</b> Mark (Shift+R)')) {
+    				button.innerHTML = raw_value;
     			}
 
-    			if (changed.marked) {
-    				set_style(button, "background-color", (ctx.marked ? '#3aec19a1' : '#569ef7b3'));
+    			if ((changed.marked) && button_class_value !== (button_class_value = "prosebar " + (!ctx.marked && "border-glow"))) {
+    				attr(button, "class", button_class_value);
+    			}
+
+    			if ((changed.marked) && button_style_value !== (button_style_value = ctx.marked && "opacity: 0.75")) {
+    				attr(button, "style", button_style_value);
     			}
     		},
 
@@ -13043,7 +13031,6 @@ var app = (function () {
 
     	let activeTime = 0;
     	let marked = false;
-
     	let showReminder = true;
     	const currentUrl = normalizeUrl_1(window.location.href, {stripHash: true});
     	
@@ -13059,11 +13046,13 @@ var app = (function () {
     				showReminder = false;
     				//! kinda nasty hack
     				window.clearInterval(trackActiveTime);
+    				clearInterval(trackActiveTime);
     			}
     			// console.log(activeTime);
     		}, interval);
-
+    	
     	let trackActiveTime = startTimer();
+
 
     	document.addEventListener(
     		'visibilitychange',

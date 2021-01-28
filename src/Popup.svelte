@@ -217,7 +217,7 @@
 	<h1>Bootstrap your STREAM</h1>
 
 	<button
-		class="yellow-btn"
+		class="glow-on-hover"
 
 		on:click={() => {
 			bookCollection = getBooks();

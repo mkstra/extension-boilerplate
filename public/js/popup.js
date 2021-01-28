@@ -14309,7 +14309,7 @@ var app = (function () {
     		c: function create() {
     			td = element("td");
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 52, 5, 1068);
+    			add_location(td, file$1, 52, 5, 1090);
     		},
 
     		m: function mount(target, anchor) {
@@ -14361,8 +14361,8 @@ var app = (function () {
 
     			t2 = space();
     			attr(button, "style", `background: ${ 'green' }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 45, 5, 817);
-    			attr(td, "class", "svelte-1llhbd6");
+    			add_location(button, file$1, 45, 5, 839);
+    			attr(td, "class", "glow-on-hover svelte-1llhbd6");
     			add_location(td, file$1, 44, 4, 807);
     			add_location(tr, file$1, 43, 3, 798);
     			dispose = listen(button, "click", click_handler);
@@ -14673,10 +14673,10 @@ var app = (function () {
 
     			info_1.block.c();
     			add_location(h1, file$2, 216, 1, 5922);
-    			attr(button0, "class", "yellow-btn");
+    			attr(button0, "class", "glow-on-hover");
     			add_location(button0, file$2, 218, 1, 5955);
     			attr(button1, "class", "yellow-btn");
-    			add_location(button1, file$2, 237, 1, 6496);
+    			add_location(button1, file$2, 237, 1, 6499);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14930,7 +14930,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 234, 2, 6442);
+    			add_location(p, file$2, 234, 2, 6445);
     		},
 
     		m: function mount(target, anchor) {
@@ -15011,7 +15011,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$2, 227, 2, 6106);
+    			add_location(p, file$2, 227, 2, 6109);
     		},
 
     		m: function mount(target, anchor) {
@@ -15046,7 +15046,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 251, 2, 6855);
+    			add_location(p, file$2, 251, 2, 6858);
     		},
 
     		m: function mount(target, anchor) {
@@ -15126,7 +15126,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 246, 2, 6653);
+    			add_location(p, file$2, 246, 2, 6656);
     		},
 
     		m: function mount(target, anchor) {

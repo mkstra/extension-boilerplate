@@ -3,15 +3,19 @@
     position: fixed;
     z-index: 1000000;
     /* left: 50%; */
-    bottom: 1rem;
-    border: 0px black solid;
+    bottom: -0.4rem;
     padding: 0.5rem;
-    opacity: 0.9;
+    left: 45%;
+
+    opacity: 0.75;
     border-radius: 5px;
+    border: 1px solid grey;
 }
 
-.yellow-btn {
-    
+.border-glow {
+    border-radius: 10px;
+    border-image-source: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    border-image-slice: 1;
 }
 
 .glow-on-hover {
@@ -21,12 +25,13 @@
     outline: none;
     cursor: pointer;
     position: relative;
+    color: white;
     z-index: 0;
     border-radius: 10px;
-    background: gold;
+    background: rgb(2, 2, 0);
     padding: 0.6rem;
     border: none;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: 5px;
     box-shadow: 1px 1px 1px grey;
 }
@@ -66,7 +71,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #111;
+    background: black;
     left: 0;
     top: 0;
     border-radius: 10px;
@@ -76,4 +81,14 @@
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
+}
+
+
+.subtle-button {
+    background-color: rgba(255, 255, 255, 0.529);
+    color: rgb(75, 75, 75);
+    border-radius: 10px solid blue;
+    border-color: blue;
+    ;
+    
 }

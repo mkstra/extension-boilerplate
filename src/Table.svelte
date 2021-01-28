@@ -42,7 +42,7 @@
 	<tbody>
 		{#each collection as row}
 			<tr>
-				<td>
+				<td class="glow-on-hover">
 					<button
 						on:click={() => dispatch('message', row)}
 						style={`background: ${true ? 'green' : 'red'}; color: white; font-weight: bold"`}>

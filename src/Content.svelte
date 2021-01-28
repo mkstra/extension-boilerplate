@@ -14,7 +14,6 @@
 	let activeTime = 0;
 	const interval = 15000;
 	let marked = false;
-
 	let showReminder = true;
 	const currentUrl = normalizeUrl(window.location.href, {stripHash: true});
 	
@@ -30,11 +29,13 @@
 				showReminder = false;
 				//! kinda nasty hack
 				window.clearInterval(trackActiveTime);
+				clearInterval(trackActiveTime);
 			}
 			// console.log(activeTime);
 		}, interval);
-
+	
 	let trackActiveTime = startTimer();
+
 
 	document.addEventListener(
 		'visibilitychange',
@@ -94,8 +95,8 @@
 </script>
 
 <button
-	class="prosebar"
-	style="background-color: {marked ? '#3aec19a1' : '#569ef7b3'}"
+	class="prosebar {!marked && "border-glow"}"
+	style={marked && "opacity: 0.75"}
 	on:click={toggleContent}>
-	{marked ? '[X] Remove Mark (Shift+R)' : '[+] Mark Content (Shift+R)'}
+	{@html marked ? '<b>X</b> Remove (Shift+R)' : '<b>+</b> Mark (Shift+R)'}
 </button>
