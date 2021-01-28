@@ -14239,7 +14239,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (33:12) {#each Object.keys(head(collection)) as k}
+    // (32:3) {#each Object.keys(head(collection)) as k}
     function create_each_block_2(ctx) {
     	var th, t_value = ctx.k, t;
 
@@ -14247,8 +14247,8 @@ var app = (function () {
     		c: function create() {
     			th = element("th");
     			t = text(t_value);
-    			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 33, 12, 642);
+    			attr(th, "class", "svelte-1llhbd6");
+    			add_location(th, file$1, 32, 4, 587);
     		},
 
     		m: function mount(target, anchor) {
@@ -14270,20 +14270,26 @@ var app = (function () {
     	};
     }
 
-    // (52:16) {#each Object.entries(row) as [k, v]}
+    // (48:4) {#each Object.entries(row) as [k, v]}
     function create_each_block_1(ctx) {
-    	var td;
+    	var td, raw_value = ctx.v;
 
     	return {
     		c: function create() {
     			td = element("td");
-    			td.textContent = "Wobble";
-    			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 52, 16, 1204);
+    			attr(td, "class", "svelte-1llhbd6");
+    			add_location(td, file$1, 48, 5, 965);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, td, anchor);
+    			td.innerHTML = raw_value;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.collection) && raw_value !== (raw_value = ctx.v)) {
+    				td.innerHTML = raw_value;
+    			}
     		},
 
     		d: function destroy(detaching) {
@@ -14294,9 +14300,9 @@ var app = (function () {
     	};
     }
 
-    // (40:8) {#each collection as row}
+    // (39:2) {#each collection as row}
     function create_each_block$1(ctx) {
-    	var tr, td, button, t0_value = `++`, t0, t1, t2, dispose;
+    	var tr, td, button, t0_value = `+`, t0, t1, t2, dispose;
 
     	function click_handler() {
     		return ctx.click_handler(ctx);
@@ -14323,11 +14329,11 @@ var app = (function () {
     			}
 
     			t2 = space();
-    			attr(button, "style", `background: ${ "green" }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 42, 20, 863);
-    			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 41, 16, 838);
-    			add_location(tr, file$1, 40, 12, 817);
+    			attr(button, "style", `background: ${ 'green' }; color: white; font-weight: bold"`);
+    			add_location(button, file$1, 41, 5, 736);
+    			attr(td, "class", "svelte-1llhbd6");
+    			add_location(td, file$1, 40, 4, 726);
+    			add_location(tr, file$1, 39, 3, 717);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14350,15 +14356,19 @@ var app = (function () {
     			if (changed.collection) {
     				each_value_1 = Object.entries(ctx.row);
 
-    				for (var i = each_blocks.length; i < each_value_1.length; i += 1) {
+    				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1(ctx, each_value_1, i);
 
-    					each_blocks[i] = create_each_block_1();
-    					each_blocks[i].c();
-    					each_blocks[i].m(tr, t2);
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(tr, t2);
+    					}
     				}
 
-    				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
+    				for (; i < each_blocks.length; i += 1) {
     					each_blocks[i].d(1);
     				}
     				each_blocks.length = each_value_1.length;
@@ -14415,13 +14425,13 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 31, 12, 556);
-    			add_location(tr, file$1, 30, 8, 539);
-    			add_location(thead, file$1, 29, 4, 523);
-    			add_location(tbody, file$1, 38, 4, 763);
-    			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file$1, 28, 0, 511);
+    			attr(th, "class", "svelte-1llhbd6");
+    			add_location(th, file$1, 30, 3, 518);
+    			add_location(tr, file$1, 29, 2, 510);
+    			add_location(thead, file$1, 28, 1, 500);
+    			add_location(tbody, file$1, 37, 1, 678);
+    			attr(table, "class", "svelte-1llhbd6");
+    			add_location(table, file$1, 27, 0, 491);
     		},
 
     		l: function claim(nodes) {
@@ -14508,12 +14518,11 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	
-        
-        
-        let { collection } = $$props;
 
-        // export let action //as propsAschildren??
-        const dispatch = createEventDispatcher();
+    	let { collection } = $$props;
+
+    	// export let action //as propsAschildren??
+    	const dispatch = createEventDispatcher();
 
     	const writable_props = ['collection'];
     	Object.keys($$props).forEach(key => {
@@ -14556,7 +14565,7 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (193:31) 
+    // (219:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -14584,9 +14593,9 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 193, 1, 5417);
+    			add_location(h1, file$2, 219, 1, 6093);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 194, 1, 5449);
+    			add_location(button, file$2, 220, 1, 6125);
     			dispose = listen(button, "click", ctx.click_handler_3);
     		},
 
@@ -14645,7 +14654,7 @@ var app = (function () {
     	};
     }
 
-    // (162:31) 
+    // (187:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, promise, t7, await_block1_anchor, promise_1, current, dispose;
 
@@ -14687,7 +14696,7 @@ var app = (function () {
     			br1 = element("br");
     			t4 = space();
     			button1 = element("button");
-    			button1.textContent = "Get Books!";
+    			button1.textContent = "Get My Books!";
     			t6 = space();
 
     			info.block.c();
@@ -14698,11 +14707,11 @@ var app = (function () {
     			info_1.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 162, 1, 4700);
-    			add_location(button0, file$2, 163, 1, 4774);
-    			add_location(br0, file$2, 164, 1, 4827);
-    			add_location(br1, file$2, 165, 1, 4835);
-    			add_location(button1, file$2, 166, 1, 4843);
+    			add_location(input, file$2, 187, 1, 5265);
+    			add_location(button0, file$2, 188, 1, 5339);
+    			add_location(br0, file$2, 189, 1, 5392);
+    			add_location(br1, file$2, 190, 1, 5400);
+    			add_location(button1, file$2, 191, 1, 5408);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14807,7 +14816,7 @@ var app = (function () {
     	};
     }
 
-    // (159:0) {#if isEmpty(hash)}
+    // (184:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14818,8 +14827,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 159, 1, 4519);
-    			add_location(button1, file$2, 160, 1, 4590);
+    			add_location(button0, file$2, 184, 1, 5084);
+    			add_location(button1, file$2, 185, 1, 5155);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14849,7 +14858,7 @@ var app = (function () {
     	};
     }
 
-    // (208:1) {:catch error}
+    // (234:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14858,7 +14867,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 208, 2, 5808);
+    			add_location(p, file$2, 234, 2, 6484);
     		},
 
     		m: function mount(target, anchor) {
@@ -14883,7 +14892,7 @@ var app = (function () {
     	};
     }
 
-    // (205:1) {:then his}
+    // (231:1) {:then his}
     function create_then_block_2(ctx) {
     	var current;
 
@@ -14930,7 +14939,7 @@ var app = (function () {
     	};
     }
 
-    // (203:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (229:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_2(ctx) {
     	var p;
 
@@ -14938,7 +14947,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 203, 2, 5606);
+    			add_location(p, file$2, 229, 2, 6282);
     		},
 
     		m: function mount(target, anchor) {
@@ -14957,7 +14966,7 @@ var app = (function () {
     	};
     }
 
-    // (178:2) {:catch error}
+    // (205:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14966,7 +14975,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 178, 2, 5037);
+    			add_location(p, file$2, 205, 2, 5715);
     		},
 
     		m: function mount(target, anchor) {
@@ -14991,7 +15000,7 @@ var app = (function () {
     	};
     }
 
-    // (176:1) {:then bc}
+    // (203:1) {:then bc}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -15034,22 +15043,30 @@ var app = (function () {
     	};
     }
 
-    // (174:24)   <p>...waiting</p>  {:then bc}
+    // (198:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_1(ctx) {
-    	var p;
+    	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
+	 Amazon pages searched` : '-', t;
 
     	return {
     		c: function create() {
     			p = element("p");
-    			p.textContent = "...waiting";
-    			add_location(p, file$2, 174, 1, 4960);
+    			t = text(t_value);
+    			add_location(p, file$2, 198, 2, 5528);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, p, anchor);
+    			append(p, t);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if ((changed.scrapeCount) && t_value !== (t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
+	 Amazon pages searched` : '-')) {
+    				set_data(t, t_value);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -15061,7 +15078,7 @@ var app = (function () {
     	};
     }
 
-    // (190:1) {:catch error}
+    // (216:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15070,7 +15087,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 190, 2, 5332);
+    			add_location(p, file$2, 216, 2, 6008);
     		},
 
     		m: function mount(target, anchor) {
@@ -15095,7 +15112,7 @@ var app = (function () {
     	};
     }
 
-    // (184:1) {:then coll}
+    // (210:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15142,7 +15159,7 @@ var app = (function () {
     	};
     }
 
-    // (182:20)    <p>...waiting</p>  {:then coll}
+    // (208:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15150,7 +15167,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 182, 2, 5114);
+    			add_location(p, file$2, 208, 2, 5790);
     		},
 
     		m: function mount(target, anchor) {
@@ -15207,11 +15224,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 151, 0, 4336);
-    			add_location(hr0, file$2, 152, 0, 4393);
+    			add_location(a0, file$2, 176, 0, 4901);
+    			add_location(hr0, file$2, 177, 0, 4958);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 153, 0, 4400);
-    			add_location(hr1, file$2, 154, 0, 4488);
+    			add_location(a1, file$2, 178, 0, 4965);
+    			add_location(hr1, file$2, 179, 0, 5053);
     		},
 
     		l: function claim(nodes) {
@@ -15304,6 +15321,7 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
 
     	toastr.options = toastrOptions;
+    	let scrapeCount = [0, 0];
 
     	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
@@ -15323,14 +15341,31 @@ var app = (function () {
     			maxResults: 20000,
     			// that was accessed less than one week ago.
     		});
-    		historyItems = historyPipe([])(historyItems).filter(
-    			e => e.url.includes('amazon.') && !e.url.includes('aws')
-    		);
+    		historyItems = historyPipe([])(historyItems)
+    			.filter(e => e.url.includes('amazon.') && !e.url.includes('aws'))
+    			.filter(({ url }) => {
+    				try {
+    					return url
+    						.split('/')[3]
+    						.split('-')
+    						.every(s => s[0].toUpperCase() == s[0]);
+    				} catch (error) {
+    					console.log(error, 'URL probably not a book');
+    					return false;
+    				}
+    			});
+
+    		//for display during loading
+    		$$invalidate('scrapeCount', scrapeCount = [historyItems.length, 0]);
+
     		console.log(historyItems, 'd');
-    		let nodes = await asyncMap(historyItems.slice(-80), async item => ({
-    			...item,
-    			doc: await idiotSafe(UrlToDOM)(item['url']),
-    		}));
+    		let nodes = await asyncMap(historyItems, async item => {
+    			scrapeCount[1] += 1; $$invalidate('scrapeCount', scrapeCount);
+    			return {
+    				...item,
+    				doc: await idiotSafe(UrlToDOM)(item['url']),
+    			};
+    		});
 
     		const bookColl = nodes
     			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
@@ -15338,10 +15373,10 @@ var app = (function () {
     			// return n
     			// })
     			.filter(n => path(['hasISBN'], n))
-    			.map(({ productTitle, author, img, dateCreated }) => ({
-    				productTitle,
+    			.map(({ productTitle, author, img, url, dateCreated }) => ({
+    				productTitle: `<a href=${url}>${productTitle}</a>`,
     				author,
-    				img,
+    				// img: `<img src=${img}/>`,
     				dateCreated,
     			}));
     		console.log(bookColl, 'books!');
@@ -15356,7 +15391,9 @@ var app = (function () {
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
     	let history = [];
-    	let bookCollection = getBooks();
+    	let bookCollection = new Promise((res, rej) => {
+    		console.log('doing nothing');
+    	});
 
     	// fetch('https://dacapo.io/hacking-scientific-text')
     	// 	.then(res => res)
@@ -15419,6 +15456,8 @@ var app = (function () {
     		return historyItems;
     	};
 
+    	console.log(history, 'history');
+
     	function click_handler() {
     		return openTab('dashboard');
     	}
@@ -15434,7 +15473,6 @@ var app = (function () {
 
     	function click_handler_2() {
     				bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
-
     			}
 
     	function click_handler_3() {
@@ -15442,6 +15480,7 @@ var app = (function () {
     			}
 
     	return {
+    		scrapeCount,
     		getBooks,
     		link,
     		collection,

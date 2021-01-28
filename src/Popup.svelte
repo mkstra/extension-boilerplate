@@ -21,6 +21,7 @@
 	import Table from './Table.svelte';
 
 	toastr.options = toastrOptions;
+	let scrapeCount = [0, 0];
 
 	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
@@ -40,14 +41,31 @@
 			maxResults: 20000,
 			// that was accessed less than one week ago.
 		});
-		historyItems = historyPipe([])(historyItems).filter(
-			e => e.url.includes('amazon.') && !e.url.includes('aws')
-		);
+		historyItems = historyPipe([])(historyItems)
+			.filter(e => e.url.includes('amazon.') && !e.url.includes('aws'))
+			.filter(({ url }) => {
+				try {
+					return url
+						.split('/')[3]
+						.split('-')
+						.every(s => s[0].toUpperCase() == s[0]);
+				} catch (error) {
+					console.log(error, 'URL probably not a book');
+					return false;
+				}
+			});
+
+		//for display during loading
+		scrapeCount = [historyItems.length, 0];
+
 		console.log(historyItems, 'd');
-		let nodes = await asyncMap(historyItems.slice(-80), async item => ({
-			...item,
-			doc: await idiotSafe(UrlToDOM)(item['url']),
-		}));
+		let nodes = await asyncMap(historyItems, async item => {
+			scrapeCount[1] += 1;
+			return {
+				...item,
+				doc: await idiotSafe(UrlToDOM)(item['url']),
+			};
+		});
 
 		const bookColl = nodes
 			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
@@ -55,10 +73,10 @@
 			// return n
 			// })
 			.filter(n => path(['hasISBN'], n))
-			.map(({ productTitle, author, img, dateCreated }) => ({
-				productTitle,
+			.map(({ productTitle, author, img, url, dateCreated }) => ({
+				productTitle: `<a href=${url}>${productTitle}</a>`,
 				author,
-				img,
+				// img: `<img src=${img}/>`,
 				dateCreated,
 			}));
 		console.log(bookColl, 'books!');
@@ -73,7 +91,9 @@
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
-	let bookCollection = getBooks();
+	let bookCollection = new Promise((res, rej) => {
+		console.log('doing nothing');
+	});
 
 	// fetch('https://dacapo.io/hacking-scientific-text')
 	// 	.then(res => res)
@@ -136,17 +156,22 @@
 		return historyItems;
 	};
 
-	
+	console.log(history, 'history');
 
 	const test = [
-		{author: "Jakob Schwichtenberg",
-dateCreated: 1605287543429.3152,
-img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD",
-productTitle: "↵Physics from Finance: A ge",}, {author: "www Schwichtenberg",
-dateCreated: 1605287543429.3152,
-img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD",
-productTitle: "↵Physics from Finance: A ge",}
-	]
+		{
+			author: 'Jakob Schwichtenberg',
+			dateCreated: 1605287543429.3152,
+			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
+			productTitle: 'b5Physics from Finance: A ge',
+		},
+		{
+			author: 'www Schwichtenberg',
+			dateCreated: 1605287543429.3152,
+			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
+			productTitle: 'b5Physics from Finance: A ge',
+		},
+	];
 </script>
 
 <a href={link} download="data.json">Download my Data</a>
@@ -167,18 +192,19 @@ productTitle: "↵Physics from Finance: A ge",}
 	<button
 		on:click={() => {
 			bookCollection = getBooks();
-
 		}}>
-		Get Books!
+		Get My Books!
 	</button>
 	{#await bookCollection}
-	<p>...waiting</p>
+		<p>
+			{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
+	 Amazon pages searched` : '-'}
+		</p>
 	{:then bc}
 		<Table collection={bc} />
-		{:catch error}
+	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
-	
 	{#await collection}
 		<p>...waiting</p>
 	{:then coll}

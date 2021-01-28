@@ -1,15 +1,14 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { trimString } from './utils/utils';
-    import {head} from "ramda"
-    
-    
-    export let collection
+	import { head } from 'ramda';
 
-    // export let action //as propsAschildren??
-    const dispatch = createEventDispatcher();
+	export let collection;
 
+	// export let action //as propsAschildren??
+	const dispatch = createEventDispatcher();
 </script>
+
 <style>
 	/* ! needs bundle.css inside popup.html */
 	table,
@@ -24,38 +23,32 @@
 		min-width: 80vw;
 		text-align: center;
 	}
-
 </style>
+
 <table>
-    <thead>
-        <tr>
-            <th>Add Books</th>
-            {#each Object.keys(head(collection)) as k}
-            <th>{k}</th>
-            {/each}
-            <!-- <th on:click={sort("val")}>val</th> -->
-        </tr>
-    </thead>
-    <tbody>
-        {#each collection as row}
-            <tr>
-                <td>
-                    <button
-                    on:click={() => dispatch('message', row)}
-                    style={`background: ${true ? "green" : "red"}; color: white; font-weight: bold"`}>
-                    
-                    {`++`}
-                </button>
-
-
-                </td>
-                {#each Object.entries(row) as [k, v]}
-                <td>
-                    Wobble
-                </td>
-            
-                {/each}
-            </tr>
-        {/each}
-    </tbody>
+	<thead>
+		<tr>
+			<th>Add Books</th>
+			{#each Object.keys(head(collection)) as k}
+				<th>{k}</th>
+			{/each}
+			<!-- <th on:click={sort("val")}>val</th> -->
+		</tr>
+	</thead>
+	<tbody>
+		{#each collection as row}
+			<tr>
+				<td>
+					<button
+						on:click={() => dispatch('message', row)}
+						style={`background: ${true ? 'green' : 'red'}; color: white; font-weight: bold"`}>
+						{`+`}
+					</button>
+				</td>
+				{#each Object.entries(row) as [k, v]}
+					<td>{@html v}</td>
+				{/each}
+			</tr>
+		{/each}
+	</tbody>
 </table>
