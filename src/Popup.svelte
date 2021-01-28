@@ -204,10 +204,28 @@
 		<p>...waiting</p>
 	{:then coll}
 		<!-- <p>The number is {coll}</p> -->
-		<Dashboard
-			collection={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
+		<Table
+			columns={[
+				{
+				key:null,
+				title: "Remove",
+				value: v => " X ",
+			},
+
+			{
+				key: "title",
+    			title: "Title",
+				value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>`, //transforms
+			},
+			{
+				key: "dateCreated",
+				title: "Date",
+				value: v => new Date(v.dateCreated).toDateString()
+			}
+			]}
+			data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
 			on:message={onRemove}
-			addAction={false} />
+			/>
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
