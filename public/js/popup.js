@@ -14270,7 +14270,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (34:3) {#each Object.keys(head(collection)) as k}
+    // (33:3) {#each Object    .keys(head(     collection.map(r => omit(excludeColumns, r))     )) as k}
     function create_each_block_2(ctx) {
     	var th, t_value = ctx.k, t;
 
@@ -14279,7 +14279,7 @@ var app = (function () {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 34, 4, 679);
+    			add_location(th, file$1, 36, 4, 668);
     		},
 
     		m: function mount(target, anchor) {
@@ -14301,7 +14301,7 @@ var app = (function () {
     	};
     }
 
-    // (50:4) {#each Object.entries(row) as [k, v]}
+    // (52:4) {#each Object.entries(omit(excludeColumns, row)) as [k, v]}
     function create_each_block_1(ctx) {
     	var td, raw_value = ctx.v;
 
@@ -14309,7 +14309,7 @@ var app = (function () {
     		c: function create() {
     			td = element("td");
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 50, 5, 1057);
+    			add_location(td, file$1, 52, 5, 1068);
     		},
 
     		m: function mount(target, anchor) {
@@ -14318,7 +14318,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.collection) && raw_value !== (raw_value = ctx.v)) {
+    			if ((changed.excludeColumns || changed.collection) && raw_value !== (raw_value = ctx.v)) {
     				td.innerHTML = raw_value;
     			}
     		},
@@ -14331,7 +14331,7 @@ var app = (function () {
     	};
     }
 
-    // (41:2) {#each collection as row}
+    // (43:2) {#each collection as row}
     function create_each_block$1(ctx) {
     	var tr, td, button, t0_value = `+`, t0, t1, t2, dispose;
 
@@ -14339,7 +14339,7 @@ var app = (function () {
     		return ctx.click_handler(ctx);
     	}
 
-    	var each_value_1 = Object.entries(ctx.row);
+    	var each_value_1 = Object.entries(omit(ctx.excludeColumns, ctx.row));
 
     	var each_blocks = [];
 
@@ -14361,10 +14361,10 @@ var app = (function () {
 
     			t2 = space();
     			attr(button, "style", `background: ${ 'green' }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 43, 5, 828);
+    			add_location(button, file$1, 45, 5, 817);
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 42, 4, 818);
-    			add_location(tr, file$1, 41, 3, 809);
+    			add_location(td, file$1, 44, 4, 807);
+    			add_location(tr, file$1, 43, 3, 798);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14384,8 +14384,8 @@ var app = (function () {
 
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
-    			if (changed.collection) {
-    				each_value_1 = Object.entries(ctx.row);
+    			if (changed.omit || changed.excludeColumns || changed.collection) {
+    				each_value_1 = Object.entries(omit(ctx.excludeColumns, ctx.row));
 
     				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1(ctx, each_value_1, i);
@@ -14421,7 +14421,10 @@ var app = (function () {
     function create_fragment$1(ctx) {
     	var table, thead, tr, th, t1, t2, tbody;
 
-    	var each_value_2 = Object.keys(head(ctx.collection));
+    	var each_value_2 = Object
+    			.keys(head(
+    				ctx.collection.map(ctx.func)
+    				));
 
     	var each_blocks_1 = [];
 
@@ -14457,12 +14460,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 32, 3, 610);
-    			add_location(tr, file$1, 31, 2, 602);
-    			add_location(thead, file$1, 30, 1, 592);
-    			add_location(tbody, file$1, 39, 1, 770);
+    			add_location(th, file$1, 31, 3, 551);
+    			add_location(tr, file$1, 30, 2, 543);
+    			add_location(thead, file$1, 29, 1, 533);
+    			add_location(tbody, file$1, 41, 1, 759);
     			attr(table, "class", "svelte-1llhbd6");
-    			add_location(table, file$1, 29, 0, 583);
+    			add_location(table, file$1, 28, 0, 524);
     		},
 
     		l: function claim(nodes) {
@@ -14490,7 +14493,10 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if (changed.head || changed.collection) {
-    				each_value_2 = Object.keys(head(ctx.collection));
+    				each_value_2 = Object
+    			.keys(head(
+    				ctx.collection.map(ctx.func)
+    				));
 
     				for (var i = 0; i < each_value_2.length; i += 1) {
     					const child_ctx = get_each_context_2(ctx, each_value_2, i);
@@ -14510,7 +14516,7 @@ var app = (function () {
     				each_blocks_1.length = each_value_2.length;
     			}
 
-    			if (changed.collection) {
+    			if (changed.omit || changed.excludeColumns || changed.collection) {
     				each_value = ctx.collection;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -14552,7 +14558,6 @@ var app = (function () {
 
     	let { collection, excludeColumns } = $$props;
 
-    	$$invalidate('collection', collection = collection.map(d => omit(excludeColumns, d)));
     	// export let action //as propsAschildren??
     	const dispatch = createEventDispatcher();
 
@@ -14560,6 +14565,10 @@ var app = (function () {
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Table> was created with unknown prop '${key}'`);
     	});
+
+    	function func(r) {
+    		return omit(excludeColumns, r);
+    	}
 
     	function click_handler({ row }) {
     		return dispatch('message', row);
@@ -14574,6 +14583,7 @@ var app = (function () {
     		collection,
     		excludeColumns,
     		dispatch,
+    		func,
     		click_handler
     	};
     }
@@ -14614,9 +14624,9 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (224:31) 
+    // (216:31) 
     function create_if_block_2(ctx) {
-    	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
+    	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
 
     	let info = {
     		ctx,
@@ -14624,95 +14634,6 @@ var app = (function () {
     		pending: create_pending_block_2,
     		then: create_then_block_2,
     		catch: create_catch_block_2,
-    		value: 'his',
-    		error: 'error',
-    		blocks: Array(3)
-    	};
-
-    	handle_promise(promise = ctx.history, info);
-
-    	return {
-    		c: function create() {
-    			h1 = element("h1");
-    			h1.textContent = "Bootstrap your STREAM";
-    			t1 = space();
-    			button = element("button");
-    			button.textContent = "Scan history for articles (last 30 days)";
-    			t3 = space();
-    			await_block_anchor = empty();
-
-    			info.block.c();
-    			add_location(h1, file$2, 224, 1, 6221);
-    			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 225, 1, 6253);
-    			dispose = listen(button, "click", ctx.click_handler_3);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, h1, anchor);
-    			insert(target, t1, anchor);
-    			insert(target, button, anchor);
-    			insert(target, t3, anchor);
-    			insert(target, await_block_anchor, anchor);
-
-    			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => await_block_anchor.parentNode;
-    			info.anchor = await_block_anchor;
-
-    			current = true;
-    		},
-
-    		p: function update(changed, new_ctx) {
-    			ctx = new_ctx;
-    			info.ctx = ctx;
-
-    			if (('history' in changed) && promise !== (promise = ctx.history) && handle_promise(promise, info)) ; else {
-    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
-    			}
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(info.block);
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			for (let i = 0; i < 3; i += 1) {
-    				const block = info.blocks[i];
-    				transition_out(block);
-    			}
-
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(h1);
-    				detach(t1);
-    				detach(button);
-    				detach(t3);
-    				detach(await_block_anchor);
-    			}
-
-    			info.block.d(detaching);
-    			info = null;
-
-    			dispose();
-    		}
-    	};
-    }
-
-    // (192:31) 
-    function create_if_block_1(ctx) {
-    	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, promise, t7, await_block1_anchor, promise_1, current, dispose;
-
-    	let info = {
-    		ctx,
-    		current: null,
-    		pending: create_pending_block_1,
-    		then: create_then_block_1,
-    		catch: create_catch_block_1,
     		value: 'bc',
     		error: 'error',
     		blocks: Array(3)
@@ -14723,72 +14644,59 @@ var app = (function () {
     	let info_1 = {
     		ctx,
     		current: null,
-    		pending: create_pending_block,
-    		then: create_then_block,
-    		catch: create_catch_block,
-    		value: 'coll',
+    		pending: create_pending_block_1,
+    		then: create_then_block_1,
+    		catch: create_catch_block_1,
+    		value: 'his',
     		error: 'error',
     		blocks: Array(3)
     	};
 
-    	handle_promise(promise_1 = ctx.collection, info_1);
+    	handle_promise(promise_1 = ctx.history, info_1);
 
     	return {
     		c: function create() {
-    			input = element("input");
-    			t0 = space();
+    			h1 = element("h1");
+    			h1.textContent = "Bootstrap your STREAM";
+    			t1 = space();
     			button0 = element("button");
-    			button0.textContent = "DELETE ALL";
-    			t2 = space();
-    			br0 = element("br");
+    			button0.textContent = "Get Book from History!";
     			t3 = space();
-    			br1 = element("br");
-    			t4 = space();
-    			button1 = element("button");
-    			button1.textContent = "Get My Books!";
-    			t6 = space();
 
     			info.block.c();
 
-    			t7 = space();
+    			t4 = space();
+    			button1 = element("button");
+    			button1.textContent = "Scan history for articles (last 30 days)";
+    			t6 = space();
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			set_style(input, "min-width", "20vw");
-    			attr(input, "type", "text");
-    			add_location(input, file$2, 192, 1, 5349);
-    			add_location(button0, file$2, 193, 1, 5423);
-    			add_location(br0, file$2, 194, 1, 5476);
-    			add_location(br1, file$2, 195, 1, 5484);
-    			add_location(button1, file$2, 196, 1, 5492);
+    			add_location(h1, file$2, 216, 1, 5922);
+    			attr(button0, "class", "yellow-btn");
+    			add_location(button0, file$2, 218, 1, 5955);
+    			attr(button1, "class", "yellow-btn");
+    			add_location(button1, file$2, 237, 1, 6496);
 
     			dispose = [
-    				listen(input, "input", ctx.input_input_handler),
-    				listen(button0, "click", ctx.clearStorage),
-    				listen(button1, "click", ctx.click_handler_2)
+    				listen(button0, "click", ctx.click_handler_2),
+    				listen(button1, "click", ctx.click_handler_3)
     			];
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, input, anchor);
-
-    			input.value = ctx.deleteConfirm;
-
-    			insert(target, t0, anchor);
+    			insert(target, h1, anchor);
+    			insert(target, t1, anchor);
     			insert(target, button0, anchor);
-    			insert(target, t2, anchor);
-    			insert(target, br0, anchor);
     			insert(target, t3, anchor);
-    			insert(target, br1, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => t4.parentNode;
+    			info.anchor = t4;
+
     			insert(target, t4, anchor);
     			insert(target, button1, anchor);
     			insert(target, t6, anchor);
-
-    			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => t7.parentNode;
-    			info.anchor = t7;
-
-    			insert(target, t7, anchor);
     			insert(target, await_block1_anchor, anchor);
 
     			info_1.block.m(target, info_1.anchor = anchor);
@@ -14800,7 +14708,6 @@ var app = (function () {
 
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
-    			if (changed.deleteConfirm && (input.value !== ctx.deleteConfirm)) input.value = ctx.deleteConfirm;
     			info.ctx = ctx;
 
     			if (('bookCollection' in changed) && promise !== (promise = ctx.bookCollection) && handle_promise(promise, info)) ; else {
@@ -14809,7 +14716,7 @@ var app = (function () {
 
     			info_1.ctx = ctx;
 
-    			if (('collection' in changed) && promise_1 !== (promise_1 = ctx.collection) && handle_promise(promise_1, info_1)) ; else {
+    			if (('history' in changed) && promise_1 !== (promise_1 = ctx.history) && handle_promise(promise_1, info_1)) ; else {
     				info_1.block.p(changed, assign(assign({}, ctx), info_1.resolved));
     			}
     		},
@@ -14837,23 +14744,19 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(input);
-    				detach(t0);
+    				detach(h1);
+    				detach(t1);
     				detach(button0);
-    				detach(t2);
-    				detach(br0);
     				detach(t3);
-    				detach(br1);
-    				detach(t4);
-    				detach(button1);
-    				detach(t6);
     			}
 
     			info.block.d(detaching);
     			info = null;
 
     			if (detaching) {
-    				detach(t7);
+    				detach(t4);
+    				detach(button1);
+    				detach(t6);
     				detach(await_block1_anchor);
     			}
 
@@ -14865,7 +14768,118 @@ var app = (function () {
     	};
     }
 
-    // (189:0) {#if isEmpty(hash)}
+    // (199:31) 
+    function create_if_block_1(ctx) {
+    	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
+
+    	let info = {
+    		ctx,
+    		current: null,
+    		pending: create_pending_block,
+    		then: create_then_block,
+    		catch: create_catch_block,
+    		value: 'coll',
+    		error: 'error',
+    		blocks: Array(3)
+    	};
+
+    	handle_promise(promise = ctx.collection, info);
+
+    	return {
+    		c: function create() {
+    			input = element("input");
+    			t0 = space();
+    			button = element("button");
+    			button.textContent = "DELETE ALL";
+    			t2 = space();
+    			br0 = element("br");
+    			t3 = space();
+    			br1 = element("br");
+    			t4 = space();
+    			await_block_anchor = empty();
+
+    			info.block.c();
+    			set_style(input, "min-width", "20vw");
+    			attr(input, "type", "text");
+    			add_location(input, file$2, 199, 1, 5453);
+    			add_location(button, file$2, 200, 1, 5527);
+    			add_location(br0, file$2, 201, 1, 5580);
+    			add_location(br1, file$2, 202, 1, 5588);
+
+    			dispose = [
+    				listen(input, "input", ctx.input_input_handler),
+    				listen(button, "click", ctx.clearStorage)
+    			];
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, input, anchor);
+
+    			input.value = ctx.deleteConfirm;
+
+    			insert(target, t0, anchor);
+    			insert(target, button, anchor);
+    			insert(target, t2, anchor);
+    			insert(target, br0, anchor);
+    			insert(target, t3, anchor);
+    			insert(target, br1, anchor);
+    			insert(target, t4, anchor);
+    			insert(target, await_block_anchor, anchor);
+
+    			info.block.m(target, info.anchor = anchor);
+    			info.mount = () => await_block_anchor.parentNode;
+    			info.anchor = await_block_anchor;
+
+    			current = true;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if (changed.deleteConfirm && (input.value !== ctx.deleteConfirm)) input.value = ctx.deleteConfirm;
+    			info.ctx = ctx;
+
+    			if (('collection' in changed) && promise !== (promise = ctx.collection) && handle_promise(promise, info)) ; else {
+    				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(info.block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info.blocks[i];
+    				transition_out(block);
+    			}
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(input);
+    				detach(t0);
+    				detach(button);
+    				detach(t2);
+    				detach(br0);
+    				detach(t3);
+    				detach(br1);
+    				detach(t4);
+    				detach(await_block_anchor);
+    			}
+
+    			info.block.d(detaching);
+    			info = null;
+
+    			run_all(dispose);
+    		}
+    	};
+    }
+
+    // (196:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14876,8 +14890,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 189, 1, 5168);
-    			add_location(button1, file$2, 190, 1, 5239);
+    			add_location(button0, file$2, 196, 1, 5272);
+    			add_location(button1, file$2, 197, 1, 5343);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14907,7 +14921,7 @@ var app = (function () {
     	};
     }
 
-    // (239:1) {:catch error}
+    // (234:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14916,7 +14930,123 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 239, 2, 6612);
+    			add_location(p, file$2, 234, 2, 6442);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			append(p, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.bookCollection) && t_value !== (t_value = ctx.error.message)) {
+    				set_data(t, t_value);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (232:1) {:then bc}
+    function create_then_block_2(ctx) {
+    	var current;
+
+    	var table = new Table({
+    		props: {
+    		collection: ctx.bc,
+    		excludeColumns: ['url', 'dateCreated']
+    	},
+    		$$inline: true
+    	});
+    	table.$on("message", ctx.onAdd);
+
+    	return {
+    		c: function create() {
+    			table.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(table, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var table_changes = {};
+    			if (changed.bookCollection) table_changes.collection = ctx.bc;
+    			table.$set(table_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(table.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(table.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(table, detaching);
+    		}
+    	};
+    }
+
+    // (227:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    function create_pending_block_2(ctx) {
+    	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
+ Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file$2, 227, 2, 6106);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			append(p, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.scrapeCount) && t_value !== (t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
+ Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-')) {
+    				set_data(t, t_value);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (251:1) {:catch error}
+    function create_catch_block_1(ctx) {
+    	var p, t_value = ctx.error.message, t;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			set_style(p, "color", "red");
+    			add_location(p, file$2, 251, 2, 6855);
     		},
 
     		m: function mount(target, anchor) {
@@ -14941,8 +15071,8 @@ var app = (function () {
     	};
     }
 
-    // (236:1) {:then his}
-    function create_then_block_2(ctx) {
+    // (248:1) {:then his}
+    function create_then_block_1(ctx) {
     	var current;
 
     	var dashboard = new Dashboard({
@@ -14988,15 +15118,15 @@ var app = (function () {
     	};
     }
 
-    // (234:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
-    function create_pending_block_2(ctx) {
+    // (246:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    function create_pending_block_1(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 234, 2, 6410);
+    			add_location(p, file$2, 246, 2, 6653);
     		},
 
     		m: function mount(target, anchor) {
@@ -15015,123 +15145,7 @@ var app = (function () {
     	};
     }
 
-    // (210:1) {:catch error}
-    function create_catch_block_1(ctx) {
-    	var p, t_value = ctx.error.message, t;
-
-    	return {
-    		c: function create() {
-    			p = element("p");
-    			t = text(t_value);
-    			set_style(p, "color", "red");
-    			add_location(p, file$2, 210, 2, 5843);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, p, anchor);
-    			append(p, t);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.bookCollection) && t_value !== (t_value = ctx.error.message)) {
-    				set_data(t, t_value);
-    			}
-    		},
-
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(p);
-    			}
-    		}
-    	};
-    }
-
-    // (208:1) {:then bc}
-    function create_then_block_1(ctx) {
-    	var current;
-
-    	var table = new Table({
-    		props: {
-    		collection: ctx.bc,
-    		excludeColumns: ["url"]
-    	},
-    		$$inline: true
-    	});
-    	table.$on("message", ctx.onAdd);
-
-    	return {
-    		c: function create() {
-    			table.$$.fragment.c();
-    		},
-
-    		m: function mount(target, anchor) {
-    			mount_component(table, target, anchor);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			var table_changes = {};
-    			if (changed.bookCollection) table_changes.collection = ctx.bc;
-    			table.$set(table_changes);
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(table.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(table.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			destroy_component(table, detaching);
-    		}
-    	};
-    }
-
-    // (203:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
-    function create_pending_block_1(ctx) {
-    	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
-	 Amazon pages searched` : '-', t;
-
-    	return {
-    		c: function create() {
-    			p = element("p");
-    			t = text(t_value);
-    			add_location(p, file$2, 203, 2, 5612);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, p, anchor);
-    			append(p, t);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.scrapeCount) && t_value !== (t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
-	 Amazon pages searched` : '-')) {
-    				set_data(t, t_value);
-    			}
-    		},
-
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(p);
-    			}
-    		}
-    	};
-    }
-
-    // (221:1) {:catch error}
+    // (213:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15140,7 +15154,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 221, 2, 6136);
+    			add_location(p, file$2, 213, 2, 5837);
     		},
 
     		m: function mount(target, anchor) {
@@ -15165,7 +15179,7 @@ var app = (function () {
     	};
     }
 
-    // (215:1) {:then coll}
+    // (207:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15212,7 +15226,7 @@ var app = (function () {
     	};
     }
 
-    // (213:20)    <p>...waiting</p>  {:then coll}
+    // (205:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15220,7 +15234,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 213, 2, 5918);
+    			add_location(p, file$2, 205, 2, 5619);
     		},
 
     		m: function mount(target, anchor) {
@@ -15277,11 +15291,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 181, 0, 4985);
-    			add_location(hr0, file$2, 182, 0, 5042);
+    			add_location(a0, file$2, 188, 0, 5089);
+    			add_location(hr0, file$2, 189, 0, 5146);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 183, 0, 5049);
-    			add_location(hr1, file$2, 184, 0, 5137);
+    			add_location(a1, file$2, 190, 0, 5153);
+    			add_location(hr1, file$2, 191, 0, 5241);
     		},
 
     		l: function claim(nodes) {
@@ -15384,6 +15398,7 @@ var app = (function () {
     		$$invalidate('collection', collection = Object.entries(storage)
     			.map(([url, node]) => assoc('url', url, node))
     			.filter(({ url }) => url != 'blacklist'));
+    		//TODO: schema verification
     		return collection;
     	};
 
@@ -15417,7 +15432,7 @@ var app = (function () {
     			scrapeCount[1] += 1; $$invalidate('scrapeCount', scrapeCount);
     			return {
     				...item,
-    				doc
+    				doc,
     			};
     		});
 
@@ -15427,9 +15442,10 @@ var app = (function () {
     			// return n
     			// })
     			.filter(n => path(['hasISBN'], n))
-    			.map(({ productTitle, author, img, url, dateCreated }) => ({
+    			.map(({ productTitle, author, img, url, title, dateCreated }) => ({
     				productTitle: `<a href=${url}>${productTitle}</a>`,
     				author,
+    				title,
     				// img: `<img src=${img}/>`,
     				dateCreated,
     				url,
@@ -15482,9 +15498,8 @@ var app = (function () {
     	const onAdd = async ({ detail }) => {
     		console.log(detail, 'yo');
     		//maybe have some ###hash scheme for adding to DB?
-    		const { url, title, dateCreated } = detail;
-    		await chromePromise$1.storage.sync.set({ [url]: detail });
-    		toastr.success(`${title} added to stream`);
+    		await chromePromise$1.storage.sync.set({ [detail.url]: detail });
+    		toastr.success(`${detail.title} added to stream`);
     	};
 
     	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
@@ -15504,7 +15519,13 @@ var app = (function () {
 
     		historyItems = await asyncFilter(historyItems, async item => {
     			const doc = await idiotSafe(UrlToDOM)(item['url']);
-    			return !!(doc && doc.querySelector('article'));
+    			try {
+    				return doc.querySelector('article')
+    			}
+    			catch (error) {
+    				console.log(error, "with doc: ", doc);
+    				return false
+    			}
     		});
 
     		console.log('history', historyItems, blacklist['blacklist']);

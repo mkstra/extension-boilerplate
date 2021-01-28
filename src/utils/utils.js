@@ -2,6 +2,21 @@ import { pickBy, assoc, head, pipe, map, filter, uniqBy } from 'ramda';
 import chromep from 'chrome-promise';
 import normalizeUrl from 'normalize-url';
 
+
+export const clearStorageOfNulls = () => {
+    chrome.storage.sync.get(null, 
+        node=> {
+            Object.entries(node).forEach(([k, v]) => {
+                if (k != "blacklist") {
+                    (!node[k]["title"] || !node[k]["url"]) && chrome.storage.sync.remove(k, console.log)
+
+                }
+            } )
+        }
+        )
+}
+
+
 export const historyPipe = blacklist => pipe(
     filter(item => !blacklist.some(term => item['url'].includes(term))),
     map(item => ({...item, url: normalizeUrl(item.url, {stripHash: true})})),

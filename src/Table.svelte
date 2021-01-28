@@ -6,7 +6,6 @@
 	export let collection;
 	export let excludeColumns;
 
-	collection = collection.map(d => omit(excludeColumns, d))
 	// export let action //as propsAschildren??
 	const dispatch = createEventDispatcher();
 </script>
@@ -31,7 +30,10 @@
 	<thead>
 		<tr>
 			<th>Add Books</th>
-			{#each Object.keys(head(collection)) as k}
+			{#each Object
+			.keys(head(
+				collection.map(r => omit(excludeColumns, r))
+				)) as k}
 				<th>{k}</th>
 			{/each}
 			<!-- <th on:click={sort("val")}>val</th> -->
@@ -47,7 +49,7 @@
 						{`+`}
 					</button>
 				</td>
-				{#each Object.entries(row) as [k, v]}
+				{#each Object.entries(omit(excludeColumns, row)) as [k, v]}
 					<td>{@html v}</td>
 				{/each}
 			</tr>

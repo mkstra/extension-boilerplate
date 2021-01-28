@@ -31,6 +31,7 @@
 		collection = Object.entries(storage)
 			.map(([url, node]) => assoc('url', url, node))
 			.filter(({ url }) => url != 'blacklist');
+		//TODO: schema verification
 		return collection;
 	};
 
@@ -60,11 +61,11 @@
 
 		console.log(historyItems, 'd');
 		let nodes = await asyncMap(historyItems, async item => {
-			const doc = await idiotSafe(UrlToDOM)(item['url'])
+			const doc = await idiotSafe(UrlToDOM)(item['url']);
 			scrapeCount[1] += 1;
 			return {
 				...item,
-				doc
+				doc,
 			};
 		});
 
@@ -74,9 +75,10 @@
 			// return n
 			// })
 			.filter(n => path(['hasISBN'], n))
-			.map(({ productTitle, author, img, url, dateCreated }) => ({
+			.map(({ productTitle, author, img, url, title, dateCreated }) => ({
 				productTitle: `<a href=${url}>${productTitle}</a>`,
 				author,
+				title,
 				// img: `<img src=${img}/>`,
 				dateCreated,
 				url,
@@ -129,9 +131,8 @@
 	const onAdd = async ({ detail }) => {
 		console.log(detail, 'yo');
 		//maybe have some ###hash scheme for adding to DB?
-		const { url, title, dateCreated } = detail;
-		await chromep.storage.sync.set({ [url]: detail });
-		toastr.success(`${title} added to stream`);
+		await chromep.storage.sync.set({ [detail.url]: detail });
+		toastr.success(`${detail.title} added to stream`);
 	};
 
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
@@ -151,7 +152,13 @@
 
 		historyItems = await asyncFilter(historyItems, async item => {
 			const doc = await idiotSafe(UrlToDOM)(item['url']);
-			return !!(doc && doc.querySelector('article'));
+			try {
+				return doc.querySelector('article')
+			}
+			catch (error) {
+				console.log(error, "with doc: ", doc)
+				return false
+			}
 		});
 
 		console.log('history', historyItems, blacklist['blacklist']);
@@ -164,14 +171,14 @@
 	const test = [
 		{
 			author: 'Jakob Schwichtenberg',
-			url: "asda",
+			url: 'asda',
 			dateCreated: 1605287543429.3152,
 			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
 			productTitle: 'b5Physics from Finance: A ge',
 		},
 		{
 			author: 'www Schwichtenberg',
-			url: "asd/",
+			url: 'asd/',
 			dateCreated: 1605287543429.3152,
 			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
 			productTitle: 'b5Physics from Finance: A ge',
@@ -194,22 +201,7 @@
 	<button on:click={clearStorage}>DELETE ALL</button>
 	<br />
 	<br />
-	<button
-		on:click={() => {
-			bookCollection = getBooks();
-		}}>
-		Get My Books!
-	</button>
-	{#await bookCollection}
-		<p>
-			{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
-	 Amazon pages searched` : '-'}
-		</p>
-	{:then bc}
-		<Table collection={bc} on:message={onAdd} excludeColumns={["url"]} />
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
+
 	{#await collection}
 		<p>...waiting</p>
 	{:then coll}
@@ -223,6 +215,26 @@
 	{/await}
 {:else if hash == '#bootstrap'}
 	<h1>Bootstrap your STREAM</h1>
+
+	<button
+		class="yellow-btn"
+
+		on:click={() => {
+			bookCollection = getBooks();
+		}}>
+		Get Book from History!
+	</button>
+	{#await bookCollection}
+		<p>
+			{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
+ Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-'}
+		</p>
+	{:then bc}
+		<Table collection={bc} on:message={onAdd} excludeColumns={['url', 'dateCreated']} />
+	{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
+
 	<button
 		class="yellow-btn"
 		on:click={() => {
