@@ -2870,6 +2870,12 @@ var app = (function () {
     	}
     }
 
+    //->
+    //document.location.pathname.split("/")[1]
+    //->
+    //document.location.pathname.split("/")[1].split("-").every(s => s[0].toUpperCase() == s[0])
+
+
     const getISBNsfromAmazonPage = doc => //{ISBN-10: "1577315936", ISBN-13: "978-1577315933"} 
         {
             try {
@@ -2887,6 +2893,8 @@ var app = (function () {
                         return ({hasISBN: true})
                     }
                     // .map(e => ({hasISBN: true}))
+
+                    //! attention, the ISBNs have weird special characters in them sometimes
                     // .map(([a, b]) => ({ "ISBN": b })) //[ [], []]
                     // .reduce((acc, next) => ({ ...acc, ...next }), {})
             }
@@ -14624,7 +14632,7 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (216:31) 
+    // (214:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
 
@@ -14672,11 +14680,11 @@ var app = (function () {
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$2, 216, 1, 5922);
+    			add_location(h1, file$2, 214, 1, 5862);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$2, 218, 1, 5955);
+    			add_location(button0, file$2, 216, 1, 5895);
     			attr(button1, "class", "yellow-btn");
-    			add_location(button1, file$2, 237, 1, 6499);
+    			add_location(button1, file$2, 235, 1, 6439);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14768,7 +14776,7 @@ var app = (function () {
     	};
     }
 
-    // (199:31) 
+    // (197:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
@@ -14801,10 +14809,10 @@ var app = (function () {
     			info.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 199, 1, 5453);
-    			add_location(button, file$2, 200, 1, 5527);
-    			add_location(br0, file$2, 201, 1, 5580);
-    			add_location(br1, file$2, 202, 1, 5588);
+    			add_location(input, file$2, 197, 1, 5393);
+    			add_location(button, file$2, 198, 1, 5467);
+    			add_location(br0, file$2, 199, 1, 5520);
+    			add_location(br1, file$2, 200, 1, 5528);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14879,19 +14887,27 @@ var app = (function () {
     	};
     }
 
-    // (196:0) {#if isEmpty(hash)}
+    // (192:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
-    	var button0, t_1, button1, dispose;
+    	var hr0, t0, button0, t2, hr1, t3, button1, dispose;
 
     	return {
     		c: function create() {
+    			hr0 = element("hr");
+    			t0 = space();
     			button0 = element("button");
-    			button0.textContent = "View Dashboard";
-    			t_1 = space();
+    			button0.textContent = "💫 View Dashboard";
+    			t2 = space();
+    			hr1 = element("hr");
+    			t3 = space();
     			button1 = element("button");
-    			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 196, 1, 5272);
-    			add_location(button1, file$2, 197, 1, 5343);
+    			button1.textContent = "🥳 Bootstrap Stream";
+    			add_location(hr0, file$2, 192, 1, 5138);
+    			attr(button0, "class", "subtle-button");
+    			add_location(button0, file$2, 193, 1, 5146);
+    			add_location(hr1, file$2, 194, 1, 5243);
+    			attr(button1, "class", "subtle-button border-glow");
+    			add_location(button1, file$2, 195, 1, 5250);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14900,8 +14916,12 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
+    			insert(target, hr0, anchor);
+    			insert(target, t0, anchor);
     			insert(target, button0, anchor);
-    			insert(target, t_1, anchor);
+    			insert(target, t2, anchor);
+    			insert(target, hr1, anchor);
+    			insert(target, t3, anchor);
     			insert(target, button1, anchor);
     		},
 
@@ -14911,8 +14931,12 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
+    				detach(hr0);
+    				detach(t0);
     				detach(button0);
-    				detach(t_1);
+    				detach(t2);
+    				detach(hr1);
+    				detach(t3);
     				detach(button1);
     			}
 
@@ -14921,7 +14945,7 @@ var app = (function () {
     	};
     }
 
-    // (234:1) {:catch error}
+    // (232:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14930,7 +14954,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 234, 2, 6445);
+    			add_location(p, file$2, 232, 2, 6385);
     		},
 
     		m: function mount(target, anchor) {
@@ -14955,7 +14979,7 @@ var app = (function () {
     	};
     }
 
-    // (232:1) {:then bc}
+    // (230:1) {:then bc}
     function create_then_block_2(ctx) {
     	var current;
 
@@ -15002,7 +15026,7 @@ var app = (function () {
     	};
     }
 
-    // (227:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (225:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_2(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
@@ -15011,7 +15035,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$2, 227, 2, 6109);
+    			add_location(p, file$2, 225, 2, 6049);
     		},
 
     		m: function mount(target, anchor) {
@@ -15037,7 +15061,7 @@ var app = (function () {
     	};
     }
 
-    // (251:1) {:catch error}
+    // (249:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15046,7 +15070,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 251, 2, 6858);
+    			add_location(p, file$2, 249, 2, 6798);
     		},
 
     		m: function mount(target, anchor) {
@@ -15071,7 +15095,7 @@ var app = (function () {
     	};
     }
 
-    // (248:1) {:then his}
+    // (246:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -15118,7 +15142,7 @@ var app = (function () {
     	};
     }
 
-    // (246:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (244:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -15126,7 +15150,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 246, 2, 6656);
+    			add_location(p, file$2, 244, 2, 6596);
     		},
 
     		m: function mount(target, anchor) {
@@ -15145,7 +15169,7 @@ var app = (function () {
     	};
     }
 
-    // (213:1) {:catch error}
+    // (211:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15154,7 +15178,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 213, 2, 5837);
+    			add_location(p, file$2, 211, 2, 5777);
     		},
 
     		m: function mount(target, anchor) {
@@ -15179,7 +15203,7 @@ var app = (function () {
     	};
     }
 
-    // (207:1) {:then coll}
+    // (205:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15226,7 +15250,7 @@ var app = (function () {
     	};
     }
 
-    // (205:20)    <p>...waiting</p>  {:then coll}
+    // (203:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15234,7 +15258,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 205, 2, 5619);
+    			add_location(p, file$2, 203, 2, 5559);
     		},
 
     		m: function mount(target, anchor) {
@@ -15254,7 +15278,7 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	var a0, t0, t1, hr0, t2, a1, t4, hr1, t5, current_block_type_index, if_block, if_block_anchor, current;
+    	var div, current_block_type_index, if_block, t0, hr0, t1, a0, t2, t3, hr1, t4, a1, t6, hr2, current;
 
     	var if_block_creators = [
     		create_if_block,
@@ -15277,25 +15301,30 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			a0 = element("a");
-    			t0 = text("Download my Data");
-    			t1 = space();
-    			hr0 = element("hr");
-    			t2 = space();
-    			a1 = element("a");
-    			a1.textContent = "Publish my Data";
-    			t4 = space();
-    			hr1 = element("hr");
-    			t5 = space();
+    			div = element("div");
     			if (if_block) if_block.c();
-    			if_block_anchor = empty();
+    			t0 = space();
+    			hr0 = element("hr");
+    			t1 = space();
+    			a0 = element("a");
+    			t2 = text("↓ Download my Data");
+    			t3 = space();
+    			hr1 = element("hr");
+    			t4 = space();
+    			a1 = element("a");
+    			a1.textContent = "⤴ Publish my Data";
+    			t6 = space();
+    			hr2 = element("hr");
+    			add_location(hr0, file$2, 252, 0, 6856);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 188, 0, 5089);
-    			add_location(hr0, file$2, 189, 0, 5146);
+    			add_location(a0, file$2, 253, 0, 6863);
+    			add_location(hr1, file$2, 254, 0, 6923);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 190, 0, 5153);
-    			add_location(hr1, file$2, 191, 0, 5241);
+    			add_location(a1, file$2, 255, 0, 6930);
+    			add_location(hr2, file$2, 256, 0, 7021);
+    			attr(div, "class", "border-glow");
+    			add_location(div, file$2, 188, 0, 5089);
     		},
 
     		l: function claim(nodes) {
@@ -15303,25 +15332,23 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, a0, anchor);
-    			append(a0, t0);
-    			insert(target, t1, anchor);
-    			insert(target, hr0, anchor);
-    			insert(target, t2, anchor);
-    			insert(target, a1, anchor);
-    			insert(target, t4, anchor);
-    			insert(target, hr1, anchor);
-    			insert(target, t5, anchor);
-    			if (~current_block_type_index) if_blocks[current_block_type_index].m(target, anchor);
-    			insert(target, if_block_anchor, anchor);
+    			insert(target, div, anchor);
+    			if (~current_block_type_index) if_blocks[current_block_type_index].m(div, null);
+    			append(div, t0);
+    			append(div, hr0);
+    			append(div, t1);
+    			append(div, a0);
+    			append(a0, t2);
+    			append(div, t3);
+    			append(div, hr1);
+    			append(div, t4);
+    			append(div, a1);
+    			append(div, t6);
+    			append(div, hr2);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (!current || changed.link) {
-    				attr(a0, "href", ctx.link);
-    			}
-
     			var previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
     			if (current_block_type_index === previous_block_index) {
@@ -15342,10 +15369,14 @@ var app = (function () {
     						if_block.c();
     					}
     					transition_in(if_block, 1);
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    					if_block.m(div, t0);
     				} else {
     					if_block = null;
     				}
+    			}
+
+    			if (!current || changed.link) {
+    				attr(a0, "href", ctx.link);
     			}
     		},
 
@@ -15362,21 +15393,10 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(a0);
-    				detach(t1);
-    				detach(hr0);
-    				detach(t2);
-    				detach(a1);
-    				detach(t4);
-    				detach(hr1);
-    				detach(t5);
+    				detach(div);
     			}
 
-    			if (~current_block_type_index) if_blocks[current_block_type_index].d(detaching);
-
-    			if (detaching) {
-    				detach(if_block_anchor);
-    			}
+    			if (~current_block_type_index) if_blocks[current_block_type_index].d();
     		}
     	};
     }

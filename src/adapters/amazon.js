@@ -2,6 +2,13 @@
 import {path} from "ramda"
 
 
+"https://amazon.com/Empires-Light-Edison-Westinghouse-Electrify-ebook-dp-B000FBJDA2/dp/B000FBJDA2/ref=mt_other?_encoding=UTF8&me=&qid="
+//->
+//document.location.pathname.split("/")[1]
+//->
+//document.location.pathname.split("/")[1].split("-").every(s => s[0].toUpperCase() == s[0])
+
+
 const getISBNsfromAmazonPage = doc => //{ISBN-10: "1577315936", ISBN-13: "978-1577315933"} 
     {
         try {
@@ -19,6 +26,8 @@ const getISBNsfromAmazonPage = doc => //{ISBN-10: "1577315936", ISBN-13: "978-15
                     return ({hasISBN: true})
                 }
                 // .map(e => ({hasISBN: true}))
+
+                //! attention, the ISBNs have weird special characters in them sometimes
                 // .map(([a, b]) => ({ "ISBN": b })) //[ [], []]
                 // .reduce((acc, next) => ({ ...acc, ...next }), {})
         }

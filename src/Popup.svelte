@@ -186,16 +186,14 @@
 	];
 </script>
 
-<a href={link} download="data.json">Download my Data</a>
-<hr />
-<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">Publish my Data</a>
-<hr />
-
+<div class="border-glow">
 
 
 {#if isEmpty(hash)}
-	<button on:click={() => openTab('dashboard')}>View Dashboard</button>
-	<button on:click={() => openTab('bootstrap')}>Bootstrap your Stream</button>
+	<hr />
+	<button class="subtle-button" on:click={() => openTab('dashboard')}> 💫 View Dashboard</button>
+	<hr/>
+	<button class="subtle-button border-glow" on:click={() => openTab('bootstrap')}> 🥳 Bootstrap Stream</button>
 {:else if hash == '#dashboard'}
 	<input style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 	<button on:click={clearStorage}>DELETE ALL</button>
@@ -252,3 +250,11 @@
 		<p style="color: red">{error.message}</p>
 	{/await}
 {/if}
+<hr />
+<a href={link} download="data.json"> ↓ Download my Data</a>
+<hr />
+<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi."> ⤴ Publish my Data</a>
+<hr />
+
+</div>
+
