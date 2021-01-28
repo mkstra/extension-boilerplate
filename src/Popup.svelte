@@ -60,10 +60,11 @@
 
 		console.log(historyItems, 'd');
 		let nodes = await asyncMap(historyItems, async item => {
+			const doc = await idiotSafe(UrlToDOM)(item['url'])
 			scrapeCount[1] += 1;
 			return {
 				...item,
-				doc: await idiotSafe(UrlToDOM)(item['url']),
+				doc
 			};
 		});
 
@@ -78,6 +79,7 @@
 				author,
 				// img: `<img src=${img}/>`,
 				dateCreated,
+				url,
 			}));
 		console.log(bookColl, 'books!');
 		return bookColl;
@@ -126,8 +128,9 @@
 
 	const onAdd = async ({ detail }) => {
 		console.log(detail, 'yo');
+		//maybe have some ###hash scheme for adding to DB?
 		const { url, title, dateCreated } = detail;
-		await chromep.storage.sync.set({ [url]: Node(url, title, dateCreated) });
+		await chromep.storage.sync.set({ [url]: detail });
 		toastr.success(`${title} added to stream`);
 	};
 
@@ -161,12 +164,14 @@
 	const test = [
 		{
 			author: 'Jakob Schwichtenberg',
+			url: "asda",
 			dateCreated: 1605287543429.3152,
 			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
 			productTitle: 'b5Physics from Finance: A ge',
 		},
 		{
 			author: 'www Schwichtenberg',
+			url: "asd/",
 			dateCreated: 1605287543429.3152,
 			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
 			productTitle: 'b5Physics from Finance: A ge',
@@ -201,7 +206,7 @@
 	 Amazon pages searched` : '-'}
 		</p>
 	{:then bc}
-		<Table collection={bc} />
+		<Table collection={bc} on:message={onAdd} excludeColumns={["url"]} />
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}

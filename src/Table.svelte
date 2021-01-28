@@ -1,10 +1,12 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import { trimString } from './utils/utils';
-	import { head } from 'ramda';
+	import { head, omit} from 'ramda';
 
 	export let collection;
+	export let excludeColumns;
 
+	collection = collection.map(d => omit(excludeColumns, d))
 	// export let action //as propsAschildren??
 	const dispatch = createEventDispatcher();
 </script>

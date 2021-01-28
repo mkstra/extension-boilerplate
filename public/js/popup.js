@@ -2298,6 +2298,45 @@ var app = (function () {
       return x != null && equals(x, empty$1(x));
     });
 
+    /**
+     * Returns a partial copy of an object omitting the keys specified.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Object
+     * @sig [String] -> {String: *} -> {String: *}
+     * @param {Array} names an array of String property names to omit from the new object
+     * @param {Object} obj The object to copy from
+     * @return {Object} A new object with properties from `names` not on it.
+     * @see R.pick
+     * @example
+     *
+     *      R.omit(['a', 'd'], {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, c: 3}
+     */
+
+    var omit =
+    /*#__PURE__*/
+    _curry2(function omit(names, obj) {
+      var result = {};
+      var index = {};
+      var idx = 0;
+      var len = names.length;
+
+      while (idx < len) {
+        index[names[idx]] = 1;
+        idx += 1;
+      }
+
+      for (var prop in obj) {
+        if (!index.hasOwnProperty(prop)) {
+          result[prop] = obj[prop];
+        }
+      }
+
+      return result;
+    });
+
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
     const DATA_URL_DEFAULT_MIME_TYPE = 'text/plain';
     const DATA_URL_DEFAULT_CHARSET = 'us-ascii';
@@ -2521,14 +2560,6 @@ var app = (function () {
     const JSONDownloadable = data => `data:
     'text/json;charset=utf-8,' 
     ${encodeURIComponent(JSON.stringify(data))}`;
-
-    const Node = (url, title, dateCreated=Date.now()) => ({
-        dateCreated,
-        // marked: false,
-        // blocked: false,
-        title: title || "",
-        url,
-    });
 
     const asyncMap = async (arr, predicate) => Promise.all(arr.map(predicate));
     const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
@@ -14239,7 +14270,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (32:3) {#each Object.keys(head(collection)) as k}
+    // (34:3) {#each Object.keys(head(collection)) as k}
     function create_each_block_2(ctx) {
     	var th, t_value = ctx.k, t;
 
@@ -14248,7 +14279,7 @@ var app = (function () {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 32, 4, 587);
+    			add_location(th, file$1, 34, 4, 679);
     		},
 
     		m: function mount(target, anchor) {
@@ -14270,7 +14301,7 @@ var app = (function () {
     	};
     }
 
-    // (48:4) {#each Object.entries(row) as [k, v]}
+    // (50:4) {#each Object.entries(row) as [k, v]}
     function create_each_block_1(ctx) {
     	var td, raw_value = ctx.v;
 
@@ -14278,7 +14309,7 @@ var app = (function () {
     		c: function create() {
     			td = element("td");
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 48, 5, 965);
+    			add_location(td, file$1, 50, 5, 1057);
     		},
 
     		m: function mount(target, anchor) {
@@ -14300,7 +14331,7 @@ var app = (function () {
     	};
     }
 
-    // (39:2) {#each collection as row}
+    // (41:2) {#each collection as row}
     function create_each_block$1(ctx) {
     	var tr, td, button, t0_value = `+`, t0, t1, t2, dispose;
 
@@ -14330,10 +14361,10 @@ var app = (function () {
 
     			t2 = space();
     			attr(button, "style", `background: ${ 'green' }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 41, 5, 736);
+    			add_location(button, file$1, 43, 5, 828);
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 40, 4, 726);
-    			add_location(tr, file$1, 39, 3, 717);
+    			add_location(td, file$1, 42, 4, 818);
+    			add_location(tr, file$1, 41, 3, 809);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14426,12 +14457,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 30, 3, 518);
-    			add_location(tr, file$1, 29, 2, 510);
-    			add_location(thead, file$1, 28, 1, 500);
-    			add_location(tbody, file$1, 37, 1, 678);
+    			add_location(th, file$1, 32, 3, 610);
+    			add_location(tr, file$1, 31, 2, 602);
+    			add_location(thead, file$1, 30, 1, 592);
+    			add_location(tbody, file$1, 39, 1, 770);
     			attr(table, "class", "svelte-1llhbd6");
-    			add_location(table, file$1, 27, 0, 491);
+    			add_location(table, file$1, 29, 0, 583);
     		},
 
     		l: function claim(nodes) {
@@ -14519,12 +14550,13 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	
 
-    	let { collection } = $$props;
+    	let { collection, excludeColumns } = $$props;
 
+    	$$invalidate('collection', collection = collection.map(d => omit(excludeColumns, d)));
     	// export let action //as propsAschildren??
     	const dispatch = createEventDispatcher();
 
-    	const writable_props = ['collection'];
+    	const writable_props = ['collection', 'excludeColumns'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Table> was created with unknown prop '${key}'`);
     	});
@@ -14535,20 +14567,29 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ('collection' in $$props) $$invalidate('collection', collection = $$props.collection);
+    		if ('excludeColumns' in $$props) $$invalidate('excludeColumns', excludeColumns = $$props.excludeColumns);
     	};
 
-    	return { collection, dispatch, click_handler };
+    	return {
+    		collection,
+    		excludeColumns,
+    		dispatch,
+    		click_handler
+    	};
     }
 
     class Table extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["collection"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["collection", "excludeColumns"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
     		if (ctx.collection === undefined && !('collection' in props)) {
     			console.warn("<Table> was created without expected prop 'collection'");
+    		}
+    		if (ctx.excludeColumns === undefined && !('excludeColumns' in props)) {
+    			console.warn("<Table> was created without expected prop 'excludeColumns'");
     		}
     	}
 
@@ -14559,13 +14600,21 @@ var app = (function () {
     	set collection(value) {
     		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get excludeColumns() {
+    		throw new Error("<Table>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set excludeColumns(value) {
+    		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Popup.svelte generated by Svelte v3.5.4 */
 
     const file$2 = "src/Popup.svelte";
 
-    // (219:31) 
+    // (224:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
@@ -14593,9 +14642,9 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 219, 1, 6093);
+    			add_location(h1, file$2, 224, 1, 6221);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 220, 1, 6125);
+    			add_location(button, file$2, 225, 1, 6253);
     			dispose = listen(button, "click", ctx.click_handler_3);
     		},
 
@@ -14654,7 +14703,7 @@ var app = (function () {
     	};
     }
 
-    // (187:31) 
+    // (192:31) 
     function create_if_block_1(ctx) {
     	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, promise, t7, await_block1_anchor, promise_1, current, dispose;
 
@@ -14707,11 +14756,11 @@ var app = (function () {
     			info_1.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 187, 1, 5265);
-    			add_location(button0, file$2, 188, 1, 5339);
-    			add_location(br0, file$2, 189, 1, 5392);
-    			add_location(br1, file$2, 190, 1, 5400);
-    			add_location(button1, file$2, 191, 1, 5408);
+    			add_location(input, file$2, 192, 1, 5349);
+    			add_location(button0, file$2, 193, 1, 5423);
+    			add_location(br0, file$2, 194, 1, 5476);
+    			add_location(br1, file$2, 195, 1, 5484);
+    			add_location(button1, file$2, 196, 1, 5492);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14816,7 +14865,7 @@ var app = (function () {
     	};
     }
 
-    // (184:0) {#if isEmpty(hash)}
+    // (189:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14827,8 +14876,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 184, 1, 5084);
-    			add_location(button1, file$2, 185, 1, 5155);
+    			add_location(button0, file$2, 189, 1, 5168);
+    			add_location(button1, file$2, 190, 1, 5239);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14858,7 +14907,7 @@ var app = (function () {
     	};
     }
 
-    // (234:1) {:catch error}
+    // (239:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14867,7 +14916,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 234, 2, 6484);
+    			add_location(p, file$2, 239, 2, 6612);
     		},
 
     		m: function mount(target, anchor) {
@@ -14892,7 +14941,7 @@ var app = (function () {
     	};
     }
 
-    // (231:1) {:then his}
+    // (236:1) {:then his}
     function create_then_block_2(ctx) {
     	var current;
 
@@ -14939,7 +14988,7 @@ var app = (function () {
     	};
     }
 
-    // (229:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (234:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_2(ctx) {
     	var p;
 
@@ -14947,7 +14996,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 229, 2, 6282);
+    			add_location(p, file$2, 234, 2, 6410);
     		},
 
     		m: function mount(target, anchor) {
@@ -14966,7 +15015,7 @@ var app = (function () {
     	};
     }
 
-    // (205:1) {:catch error}
+    // (210:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14975,7 +15024,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 205, 2, 5715);
+    			add_location(p, file$2, 210, 2, 5843);
     		},
 
     		m: function mount(target, anchor) {
@@ -15000,14 +15049,18 @@ var app = (function () {
     	};
     }
 
-    // (203:1) {:then bc}
+    // (208:1) {:then bc}
     function create_then_block_1(ctx) {
     	var current;
 
     	var table = new Table({
-    		props: { collection: ctx.bc },
+    		props: {
+    		collection: ctx.bc,
+    		excludeColumns: ["url"]
+    	},
     		$$inline: true
     	});
+    	table.$on("message", ctx.onAdd);
 
     	return {
     		c: function create() {
@@ -15043,7 +15096,7 @@ var app = (function () {
     	};
     }
 
-    // (198:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (203:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_1(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
 	 Amazon pages searched` : '-', t;
@@ -15052,7 +15105,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$2, 198, 2, 5528);
+    			add_location(p, file$2, 203, 2, 5612);
     		},
 
     		m: function mount(target, anchor) {
@@ -15078,7 +15131,7 @@ var app = (function () {
     	};
     }
 
-    // (216:1) {:catch error}
+    // (221:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15087,7 +15140,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 216, 2, 6008);
+    			add_location(p, file$2, 221, 2, 6136);
     		},
 
     		m: function mount(target, anchor) {
@@ -15112,7 +15165,7 @@ var app = (function () {
     	};
     }
 
-    // (210:1) {:then coll}
+    // (215:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15159,7 +15212,7 @@ var app = (function () {
     	};
     }
 
-    // (208:20)    <p>...waiting</p>  {:then coll}
+    // (213:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15167,7 +15220,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 208, 2, 5790);
+    			add_location(p, file$2, 213, 2, 5918);
     		},
 
     		m: function mount(target, anchor) {
@@ -15224,11 +15277,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 176, 0, 4901);
-    			add_location(hr0, file$2, 177, 0, 4958);
+    			add_location(a0, file$2, 181, 0, 4985);
+    			add_location(hr0, file$2, 182, 0, 5042);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 178, 0, 4965);
-    			add_location(hr1, file$2, 179, 0, 5053);
+    			add_location(a1, file$2, 183, 0, 5049);
+    			add_location(hr1, file$2, 184, 0, 5137);
     		},
 
     		l: function claim(nodes) {
@@ -15360,10 +15413,11 @@ var app = (function () {
 
     		console.log(historyItems, 'd');
     		let nodes = await asyncMap(historyItems, async item => {
+    			const doc = await idiotSafe(UrlToDOM)(item['url']);
     			scrapeCount[1] += 1; $$invalidate('scrapeCount', scrapeCount);
     			return {
     				...item,
-    				doc: await idiotSafe(UrlToDOM)(item['url']),
+    				doc
     			};
     		});
 
@@ -15378,6 +15432,7 @@ var app = (function () {
     				author,
     				// img: `<img src=${img}/>`,
     				dateCreated,
+    				url,
     			}));
     		console.log(bookColl, 'books!');
     		return bookColl;
@@ -15426,8 +15481,9 @@ var app = (function () {
 
     	const onAdd = async ({ detail }) => {
     		console.log(detail, 'yo');
+    		//maybe have some ###hash scheme for adding to DB?
     		const { url, title, dateCreated } = detail;
-    		await chromePromise$1.storage.sync.set({ [url]: Node(url, title, dateCreated) });
+    		await chromePromise$1.storage.sync.set({ [url]: detail });
     		toastr.success(`${title} added to stream`);
     	};
 
