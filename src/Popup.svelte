@@ -13,7 +13,6 @@
 		asyncMap,
 	} from './utils/utils';
 	import { assoc, isEmpty, path, uniqBy, pipe, map, filter } from 'ramda';
-	import Dashboard from './Dashboard.svelte';
 	import normalizeUrl from 'normalize-url';
 	import { AmazonBookPageInfo } from './adapters/amazon';
 	import toastr from 'toastr';
@@ -76,7 +75,7 @@
 			// })
 			.filter(n => path(['hasISBN'], n))
 			.map(({ productTitle, author, img, url, title, dateCreated }) => ({
-				productTitle: `<a href=${url}>${productTitle}</a>`,
+				productTitle: productTitle,
 				author,
 				title,
 				// img: `<img src=${img}/>`,
@@ -153,11 +152,10 @@
 		historyItems = await asyncFilter(historyItems, async item => {
 			const doc = await idiotSafe(UrlToDOM)(item['url']);
 			try {
-				return doc.querySelector('article')
-			}
-			catch (error) {
-				console.log(error, "with doc: ", doc)
-				return false
+				return doc.querySelector('article');
+			} catch (error) {
+				console.log(error, 'with doc: ', doc);
+				return false;
 			}
 		});
 
@@ -167,160 +165,78 @@
 	};
 
 	console.log(history, 'history');
-
-	const test = [
-		{
-			author: 'Jakob Schwichtenberg',
-			url: 'asda',
-			dateCreated: 1605287543429.3152,
-			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
-			productTitle: 'Physics from Finance: A ge',
-		},
-		{
-			author: 'www Schwichtenberg',
-			url: 'asd/',
-			dateCreated: 1605287543429.3152,
-			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
-			productTitle: 'b5Physics from Finance: A ge',
-		},
-	];
 </script>
 
 <div class="border-glow">
 
+	{#if isEmpty(hash)}
+		<button class="subtle-button" on:click={() => openTab('dashboard')}>💫 View Dashboard</button>
+		<hr />
+		<button class="subtle-button border-glow" on:click={() => openTab('bootstrap')}>
+			🥳 Bootstrap Stream
+		</button>
+	{:else if hash == '#dashboard'}
+		<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
+		<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
+		<br />
 
-{#if isEmpty(hash)}
-	<hr />
-	<button class="subtle-button" on:click={() => openTab('dashboard')}> 💫 View Dashboard</button>
-	<hr/>
-	<button class="subtle-button border-glow" on:click={() => openTab('bootstrap')}> 🥳 Bootstrap Stream</button>
-{:else if hash == '#dashboard'}
-	<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
-	<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
-	<br />
-	<br />
+		{#await collection}
+			<p>...waiting</p>
+		{:then coll}
+			<!-- <p>The number is {coll}</p> -->
+			<Table
+				columns={[{ key: null, title: 'Remove', value: v => ' X ' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
+				on:message={onRemove} />
+		{:catch error}
+			<p style="color: red">{error.message}</p>
+		{/await}
+	{:else if hash == '#bootstrap'}
+		<h1>Bootstrap your STREAM</h1>
 
-	{#await collection}
-		<p>...waiting</p>
-	{:then coll}
-		<!-- <p>The number is {coll}</p> -->
-		<Table
-			columns={[
-				{
-				key:null,
-				title: "Remove",
-				value: v => " X ",
-			},
-
-			{
-				key: "title",
-    			title: "Title",
-				value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>`, //transforms
-			},
-			{
-				key: "dateCreated",
-				title: "Date",
-				value: v => new Date(v.dateCreated).toDateString()
-			}
-			]}
-			data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
-			on:message={onRemove}
-			/>
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
-{:else if hash == '#bootstrap'}
-	<h1>Bootstrap your STREAM</h1>
-
-	<button
-		class="glow-on-hover"
-
-		on:click={() => {
-			bookCollection = getBooks();
-		}}>
-		Get Book from History!
-	</button>
-	{#await bookCollection}
-		<p>
-			{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
+		<button
+			class="glow-on-hover"
+			on:click={() => {
+				bookCollection = getBooks();
+			}}>
+			Get Book from History!
+		</button>
+		{#await bookCollection}
+			<p>
+				{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-'}
-		</p>
-	{:then bc}
-	<!-- on:message={onAdd} -->
+			</p>
+		{:then bc}
+			<Table
+				data={bc}
+				on:message={onAdd}
+				columns={[{ key: null, title: 'Add', value: v => ' + ', klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: v => `<a href=${v.url}> ${v.productTitle}</a>`, styling: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]} />
+		{:catch error}
+			<p style="color: red">{error.message}</p>
+		{/await}
 
+		<button
+			class="glow-on-hover"
+			on:click={() => {
+				history = getHistory();
+			}}>
+			Scan history for articles (last 30 days)
+		</button>
 
-		<Table data={bc} on:message={onAdd}
-		columns={[ //*optional -- otherwise just map
-			{
-				key: null,
-				title: "Add",
-				value: v => " + ",
-				klass:"green-button"
-				// styling: ""
-			},
-			
-			{
-				key: "productTitle",
-    			title: "Book",
-				value: v => `<a href=${v.url}> ${v.productTitle}</a>`, //transforms
-				styling: "min-width: 20vw",
-			},
-			{
-				key: "dateCreated",
-				title: "Date",
-				value: v => new Date(v.dateCreated).toDateString()
-			}
-		]}
-	 />
-
-
-
-
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
-
-	<button
-		class="glow-on-hover"
-		on:click={() => {
-			history = getHistory();
-		}}>
-		Scan history for articles (last 30 days)
-	</button>
-
-	{#await history}
-		<p>...running **Article?** classifier on history documents</p>
-	{:then hist}
-		<!-- <p>The number is {coll}</p> -->
-		<Table data={hist}
-		columns={[
-			{
-				key:null,
-				title: "Add",
-				value: v => " + ",
-			},
-
-			{
-				key: "title",
-    			title: "Title",
-				value: v => `<a href=${v.url}> ${v.title}</a>`, //transforms
-			},
-			{
-				key: "dateCreated",
-				title: "Date",
-				value: v => new Date(v.dateCreated).toDateString()
-			}
-		]}
-		on:message={onAdd} />
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
-{/if}
-<hr />
-<a href={link} download="data.json"> ↓ Download my Data</a>
-<hr />
-<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi."> ⤴ Publish my Data</a>
-<hr />
-
+		{#await history}
+			<p>...running **Article?** classifier on history documents</p>
+		{:then hist}
+			<!-- <p>The number is {coll}</p> -->
+			<Table
+				data={hist}
+				columns={[{ key: null, title: 'Add', value: v => ' + ' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				on:message={onAdd} />
+		{:catch error}
+			<p style="color: red">{error.message}</p>
+		{/await}
+	{/if}
+	<hr />
+	<a href={link} download="data.json">↓ Download my Data</a>
+	<hr />
+	<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">⤴ Publish my Data</a>
 </div>
-

@@ -2493,9 +2493,7 @@ var app = (function () {
          //no homepages, only if has path aka something.com//superfancy
     );
 
-    const JSONDownloadable = data => `data:
-    'text/json;charset=utf-8,' 
-    ${encodeURIComponent(JSON.stringify(data))}`;
+    const JSONDownloadable = data => "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
 
     const asyncMap = async (arr, predicate) => Promise.all(arr.map(predicate));
     const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
@@ -14339,7 +14337,7 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (232:31) 
+    // (194:32) 
     function create_if_block_2(ctx) {
     	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
 
@@ -14387,11 +14385,11 @@ var app = (function () {
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$1, 232, 1, 6208);
+    			add_location(h1, file$1, 194, 2, 5636);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$1, 234, 1, 6241);
+    			add_location(button0, file$1, 196, 2, 5670);
     			attr(button1, "class", "glow-on-hover");
-    			add_location(button1, file$1, 282, 1, 7213);
+    			add_location(button1, file$1, 217, 2, 6491);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14483,9 +14481,9 @@ var app = (function () {
     	};
     }
 
-    // (197:31) 
+    // (178:32) 
     function create_if_block_1(ctx) {
-    	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
+    	var input, t0, button, t2, br, t3, await_block_anchor, promise, current, dispose;
 
     	let info = {
     		ctx,
@@ -14507,21 +14505,18 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "DELETE ALL";
     			t2 = space();
-    			br0 = element("br");
+    			br = element("br");
     			t3 = space();
-    			br1 = element("br");
-    			t4 = space();
     			await_block_anchor = empty();
 
     			info.block.c();
     			attr(input, "class", "subtle-input");
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 197, 1, 5390);
+    			add_location(input, file$1, 178, 2, 4892);
     			attr(button, "class", "danger-button");
-    			add_location(button, file$1, 198, 1, 5485);
-    			add_location(br0, file$1, 199, 1, 5560);
-    			add_location(br1, file$1, 200, 1, 5568);
+    			add_location(button, file$1, 179, 2, 4988);
+    			add_location(br, file$1, 180, 2, 5064);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14537,10 +14532,8 @@ var app = (function () {
     			insert(target, t0, anchor);
     			insert(target, button, anchor);
     			insert(target, t2, anchor);
-    			insert(target, br0, anchor);
+    			insert(target, br, anchor);
     			insert(target, t3, anchor);
-    			insert(target, br1, anchor);
-    			insert(target, t4, anchor);
     			insert(target, await_block_anchor, anchor);
 
     			info.block.m(target, info.anchor = anchor);
@@ -14581,10 +14574,8 @@ var app = (function () {
     				detach(t0);
     				detach(button);
     				detach(t2);
-    				detach(br0);
+    				detach(br);
     				detach(t3);
-    				detach(br1);
-    				detach(t4);
     				detach(await_block_anchor);
     			}
 
@@ -14596,27 +14587,24 @@ var app = (function () {
     	};
     }
 
-    // (192:0) {#if isEmpty(hash)}
+    // (172:1) {#if isEmpty(hash)}
     function create_if_block$1(ctx) {
-    	var hr0, t0, button0, t2, hr1, t3, button1, dispose;
+    	var button0, t1, hr, t2, button1, dispose;
 
     	return {
     		c: function create() {
-    			hr0 = element("hr");
-    			t0 = space();
     			button0 = element("button");
     			button0.textContent = "💫 View Dashboard";
+    			t1 = space();
+    			hr = element("hr");
     			t2 = space();
-    			hr1 = element("hr");
-    			t3 = space();
     			button1 = element("button");
     			button1.textContent = "🥳 Bootstrap Stream";
-    			add_location(hr0, file$1, 192, 1, 5135);
     			attr(button0, "class", "subtle-button");
-    			add_location(button0, file$1, 193, 1, 5143);
-    			add_location(hr1, file$1, 194, 1, 5240);
+    			add_location(button0, file$1, 172, 2, 4635);
+    			add_location(hr, file$1, 173, 2, 4732);
     			attr(button1, "class", "subtle-button border-glow");
-    			add_location(button1, file$1, 195, 1, 5247);
+    			add_location(button1, file$1, 174, 2, 4741);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14625,12 +14613,10 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, hr0, anchor);
-    			insert(target, t0, anchor);
     			insert(target, button0, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, hr, anchor);
     			insert(target, t2, anchor);
-    			insert(target, hr1, anchor);
-    			insert(target, t3, anchor);
     			insert(target, button1, anchor);
     		},
 
@@ -14640,12 +14626,10 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(hr0);
-    				detach(t0);
     				detach(button0);
+    				detach(t1);
+    				detach(hr);
     				detach(t2);
-    				detach(hr1);
-    				detach(t3);
     				detach(button1);
     			}
 
@@ -14654,7 +14638,7 @@ var app = (function () {
     	};
     }
 
-    // (279:1) {:catch error}
+    // (214:2) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14663,7 +14647,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 279, 2, 7159);
+    			add_location(p, file$1, 214, 3, 6435);
     		},
 
     		m: function mount(target, anchor) {
@@ -14688,34 +14672,14 @@ var app = (function () {
     	};
     }
 
-    // (248:1) {:then bc}
+    // (209:2) {:then bc}
     function create_then_block_2(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
     		data: ctx.bc,
-    		columns: [ //*optional -- otherwise just map
-    			{
-    				key: null,
-    				title: "Add",
-    				value: func_4,
-    				klass:"green-button"
-    				// styling: ""
-    			},
-    			
-    			{
-    				key: "productTitle",
-        			title: "Book",
-    				value: func_5, //transforms
-    				styling: "min-width: 20vw",
-    			},
-    			{
-    				key: "dateCreated",
-    				title: "Date",
-    				value: ctx.func_6
-    			}
-    		]
+    		columns: [{ key: null, title: 'Add', value: func_4, klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: func_5, styling: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: ctx.func_6 }]
     	},
     		$$inline: true
     	});
@@ -14755,7 +14719,7 @@ var app = (function () {
     	};
     }
 
-    // (243:24)    <p>    {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (204:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_2(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
@@ -14764,7 +14728,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$1, 243, 2, 6395);
+    			add_location(p, file$1, 204, 3, 5831);
     		},
 
     		m: function mount(target, anchor) {
@@ -14790,7 +14754,7 @@ var app = (function () {
     	};
     }
 
-    // (315:1) {:catch error}
+    // (234:2) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14799,7 +14763,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 315, 2, 7862);
+    			add_location(p, file$1, 234, 3, 7085);
     		},
 
     		m: function mount(target, anchor) {
@@ -14824,31 +14788,14 @@ var app = (function () {
     	};
     }
 
-    // (293:1) {:then hist}
+    // (228:2) {:then hist}
     function create_then_block_1(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
     		data: ctx.hist,
-    		columns: [
-    			{
-    				key:null,
-    				title: "Add",
-    				value: func_7,
-    			},
-
-    			{
-    				key: "title",
-        			title: "Title",
-    				value: func_8, //transforms
-    			},
-    			{
-    				key: "dateCreated",
-    				title: "Date",
-    				value: ctx.func_9
-    			}
-    		]
+    		columns: [{ key: null, title: 'Add', value: func_7 }, { key: 'title', title: 'Title', value: func_8 }, { key: 'dateCreated', title: 'Date', value: ctx.func_9 }]
     	},
     		$$inline: true
     	});
@@ -14888,7 +14835,7 @@ var app = (function () {
     	};
     }
 
-    // (291:17)    <p>...running **Article?** classifier on history documents</p>  {:then hist}
+    // (226:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14896,7 +14843,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$1, 291, 2, 7373);
+    			add_location(p, file$1, 226, 3, 6659);
     		},
 
     		m: function mount(target, anchor) {
@@ -14915,7 +14862,7 @@ var app = (function () {
     	};
     }
 
-    // (229:1) {:catch error}
+    // (191:2) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14924,7 +14871,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 229, 2, 6123);
+    			add_location(p, file$1, 191, 3, 5548);
     		},
 
     		m: function mount(target, anchor) {
@@ -14949,30 +14896,13 @@ var app = (function () {
     	};
     }
 
-    // (205:1) {:then coll}
+    // (185:2) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
-    		columns: [
-    				{
-    				key:null,
-    				title: "Remove",
-    				value: func,
-    			},
-
-    			{
-    				key: "title",
-        			title: "Title",
-    				value: func_1, //transforms
-    			},
-    			{
-    				key: "dateCreated",
-    				title: "Date",
-    				value: ctx.func_2
-    			}
-    			],
+    		columns: [{ key: null, title: 'Remove', value: func }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }],
     		data: ctx.coll.sort(func_3)
     	},
     		$$inline: true
@@ -15013,7 +14943,7 @@ var app = (function () {
     	};
     }
 
-    // (203:20)    <p>...waiting</p>  {:then coll}
+    // (183:21)     <p>...waiting</p>   {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15021,7 +14951,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 203, 2, 5599);
+    			add_location(p, file$1, 183, 3, 5097);
     		},
 
     		m: function mount(target, anchor) {
@@ -15041,7 +14971,7 @@ var app = (function () {
     }
 
     function create_fragment$1(ctx) {
-    	var div, current_block_type_index, if_block, t0, hr0, t1, a0, t2, t3, hr1, t4, a1, t6, hr2, current;
+    	var div, current_block_type_index, if_block, t0, hr0, t1, a0, t2, t3, hr1, t4, a1, current;
 
     	var if_block_creators = [
     		create_if_block$1,
@@ -15076,18 +15006,15 @@ var app = (function () {
     			t4 = space();
     			a1 = element("a");
     			a1.textContent = "⤴ Publish my Data";
-    			t6 = space();
-    			hr2 = element("hr");
-    			add_location(hr0, file$1, 318, 0, 7920);
+    			add_location(hr0, file$1, 237, 1, 7146);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 319, 0, 7927);
-    			add_location(hr1, file$1, 320, 0, 7987);
+    			add_location(a0, file$1, 238, 1, 7154);
+    			add_location(hr1, file$1, 239, 1, 7214);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 321, 0, 7994);
-    			add_location(hr2, file$1, 322, 0, 8085);
+    			add_location(a1, file$1, 240, 1, 7222);
     			attr(div, "class", "border-glow");
-    			add_location(div, file$1, 188, 0, 5086);
+    			add_location(div, file$1, 169, 0, 4585);
     		},
 
     		l: function claim(nodes) {
@@ -15106,8 +15033,6 @@ var app = (function () {
     			append(div, hr1);
     			append(div, t4);
     			append(div, a1);
-    			append(div, t6);
-    			append(div, hr2);
     			current = true;
     		},
 
@@ -15165,7 +15090,7 @@ var app = (function () {
     }
 
     function func(v) {
-    	return " X ";
+    	return ' X ';
     }
 
     function func_1(v) {
@@ -15177,7 +15102,7 @@ var app = (function () {
     }
 
     function func_4(v) {
-    	return " + ";
+    	return ' + ';
     }
 
     function func_5(v) {
@@ -15185,7 +15110,7 @@ var app = (function () {
     }
 
     function func_7(v) {
-    	return " + ";
+    	return ' + ';
     }
 
     function func_8(v) {
@@ -15250,7 +15175,7 @@ var app = (function () {
     			// })
     			.filter(n => path(['hasISBN'], n))
     			.map(({ productTitle, author, img, url, title, dateCreated }) => ({
-    				productTitle: `<a href=${url}>${productTitle}</a>`,
+    				productTitle: productTitle,
     				author,
     				title,
     				// img: `<img src=${img}/>`,
@@ -15327,11 +15252,10 @@ var app = (function () {
     		historyItems = await asyncFilter(historyItems, async item => {
     			const doc = await idiotSafe(UrlToDOM)(item['url']);
     			try {
-    				return doc.querySelector('article')
-    			}
-    			catch (error) {
-    				console.log(error, "with doc: ", doc);
-    				return false
+    				return doc.querySelector('article');
+    			} catch (error) {
+    				console.log(error, 'with doc: ', doc);
+    				return false;
     			}
     		});
 
@@ -15360,16 +15284,16 @@ var app = (function () {
     	}
 
     	function click_handler_2() {
-    				bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
-    			}
+    					bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
+    				}
 
     	function func_6(v) {
     		return new Date(v.dateCreated).toDateString();
     	}
 
     	function click_handler_3() {
-    				history = getHistory(); $$invalidate('history', history);
-    			}
+    					history = getHistory(); $$invalidate('history', history);
+    				}
 
     	function func_9(v) {
     		return new Date(v.dateCreated).toDateString();

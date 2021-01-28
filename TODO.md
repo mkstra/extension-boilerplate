@@ -1,12 +1,22 @@
-## Technical /now
+## Abstractions needed::
+- [ ] SCHEMAS, above all!
+- [ ] Wrappers for chrome.storage (which is basically a store...)
+- [ ] Async Prop Component
+- [ ] /slot pass children
+- [ ] less Svelte primitives (easier to port to CLJS later...)
+- [ ] <Fetch /> component with async and trial info?
+- [ ] Buttons buttons buttons (with scoped CSS?)
 
+## Technical /now
 - [x] Keypresses like Shift+R
 - [x] add to "marks" 
 - [x] separate YOUDB storage from TEMP-session
 - [x] don't auto-add; just have reminder toast display!
 - [ ] Regex and rules to trim URL names; 
-- [ ] remove duplicates in history
+- [ ] JSONDownload injects a random ' character at beginning
+- [x] remove duplicates in history
 - [ ] UI: fold similar candidates
+- [ ]
 - [x] todo and display message (change css)
 - [ ] black and white list always on
 - [ ] implement reframe in Svelte ..... lol

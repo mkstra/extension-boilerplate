@@ -29,9 +29,7 @@ export const trimString = (s, l = 50) => s.length > l
     ? s.substring(0, l) + "..."
     : s
 
-export const JSONDownloadable = data => `data:
-    'text/json;charset=utf-8,' 
-    ${encodeURIComponent(JSON.stringify(data))}`
+export const JSONDownloadable = data => "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data))
 
 export const Node = (url, title, dateCreated=Date.now()) => ({
     dateCreated,
