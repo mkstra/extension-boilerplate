@@ -2,6 +2,8 @@
     import { createEventDispatcher } from 'svelte';
 	import { trimString } from './utils/utils';
     import {head} from "ramda"
+    
+    
     export let collection
 
     // export let action //as propsAschildren??

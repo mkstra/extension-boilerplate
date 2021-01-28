@@ -2842,15 +2842,22 @@ var app = (function () {
     const getISBNsfromAmazonPage = doc => //{ISBN-10: "1577315936", ISBN-13: "978-1577315933"} 
         {
             try {
-                return Array.from(doc
+                const isbns = Array.from(doc
                     .getElementById("detailBulletsWrapper_feature_div")
                     .querySelectorAll("span"))
+
+                    //Array
                     .map(span => span.innerText)
                     .filter(text => text.includes("ISBN-10") || text.includes("ISBN-13"))
-                    .filter(e => e.length > 15)
-                    .map(e => e.split(" : "))
-                    .map(([a, b]) => ({ [a]: b })) //[ [], []]
-                    .reduce((acc, next) => ({ ...acc, ...next }), {})
+                    .filter(e => e.length > 15);
+                    // .map(e => e.split(" : "))
+                    
+                    if (isbns.length > 0) {
+                        return ({hasISBN: true})
+                    }
+                    // .map(e => ({hasISBN: true}))
+                    // .map(([a, b]) => ({ "ISBN": b })) //[ [], []]
+                    // .reduce((acc, next) => ({ ...acc, ...next }), {})
             }
             catch (err) {
                 console.log(err, "error ISBN");
@@ -14232,7 +14239,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (31:12) {#each Object.keys(head(collection)) as k}
+    // (33:12) {#each Object.keys(head(collection)) as k}
     function create_each_block_2(ctx) {
     	var th, t_value = ctx.k, t;
 
@@ -14241,7 +14248,7 @@ var app = (function () {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 31, 12, 632);
+    			add_location(th, file$1, 33, 12, 642);
     		},
 
     		m: function mount(target, anchor) {
@@ -14263,7 +14270,7 @@ var app = (function () {
     	};
     }
 
-    // (50:16) {#each Object.entries(row) as [k, v]}
+    // (52:16) {#each Object.entries(row) as [k, v]}
     function create_each_block_1(ctx) {
     	var td;
 
@@ -14272,7 +14279,7 @@ var app = (function () {
     			td = element("td");
     			td.textContent = "Wobble";
     			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 50, 16, 1194);
+    			add_location(td, file$1, 52, 16, 1204);
     		},
 
     		m: function mount(target, anchor) {
@@ -14287,7 +14294,7 @@ var app = (function () {
     	};
     }
 
-    // (38:8) {#each collection as row}
+    // (40:8) {#each collection as row}
     function create_each_block$1(ctx) {
     	var tr, td, button, t0_value = `++`, t0, t1, t2, dispose;
 
@@ -14317,10 +14324,10 @@ var app = (function () {
 
     			t2 = space();
     			attr(button, "style", `background: ${ "green" }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 40, 20, 853);
+    			add_location(button, file$1, 42, 20, 863);
     			attr(td, "class", "svelte-o60a6m");
-    			add_location(td, file$1, 39, 16, 828);
-    			add_location(tr, file$1, 38, 12, 807);
+    			add_location(td, file$1, 41, 16, 838);
+    			add_location(tr, file$1, 40, 12, 817);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14409,12 +14416,12 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(th, "class", "svelte-o60a6m");
-    			add_location(th, file$1, 29, 12, 546);
-    			add_location(tr, file$1, 28, 8, 529);
-    			add_location(thead, file$1, 27, 4, 513);
-    			add_location(tbody, file$1, 36, 4, 753);
+    			add_location(th, file$1, 31, 12, 556);
+    			add_location(tr, file$1, 30, 8, 539);
+    			add_location(thead, file$1, 29, 4, 523);
+    			add_location(tbody, file$1, 38, 4, 763);
     			attr(table, "class", "svelte-o60a6m");
-    			add_location(table, file$1, 26, 0, 501);
+    			add_location(table, file$1, 28, 0, 511);
     		},
 
     		l: function claim(nodes) {
@@ -14501,6 +14508,8 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	
+        
+        
         let { collection } = $$props;
 
         // export let action //as propsAschildren??
@@ -14547,16 +14556,16 @@ var app = (function () {
 
     const file$2 = "src/Popup.svelte";
 
-    // (171:31) 
+    // (193:31) 
     function create_if_block_2(ctx) {
     	var h1, t1, button, t3, await_block_anchor, promise, current, dispose;
 
     	let info = {
     		ctx,
     		current: null,
-    		pending: create_pending_block_1,
-    		then: create_then_block_1,
-    		catch: create_catch_block_1,
+    		pending: create_pending_block_2,
+    		then: create_then_block_2,
+    		catch: create_catch_block_2,
     		value: 'his',
     		error: 'error',
     		blocks: Array(3)
@@ -14575,9 +14584,9 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
-    			add_location(h1, file$2, 171, 1, 4908);
+    			add_location(h1, file$2, 193, 1, 5417);
     			attr(button, "class", "yellow-btn");
-    			add_location(button, file$2, 172, 1, 4940);
+    			add_location(button, file$2, 194, 1, 5449);
     			dispose = listen(button, "click", ctx.click_handler_3);
     		},
 
@@ -14636,16 +14645,24 @@ var app = (function () {
     	};
     }
 
-    // (146:31) 
+    // (162:31) 
     function create_if_block_1(ctx) {
-    	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, t7, await_block_anchor, promise, current, dispose;
-
-    	var table = new Table({
-    		props: { collection: [{a:5, b:2}, {a:3, b:1}] },
-    		$$inline: true
-    	});
+    	var input, t0, button0, t2, br0, t3, br1, t4, button1, t6, promise, t7, await_block1_anchor, promise_1, current, dispose;
 
     	let info = {
+    		ctx,
+    		current: null,
+    		pending: create_pending_block_1,
+    		then: create_then_block_1,
+    		catch: create_catch_block_1,
+    		value: 'bc',
+    		error: 'error',
+    		blocks: Array(3)
+    	};
+
+    	handle_promise(promise = ctx.bookCollection, info);
+
+    	let info_1 = {
     		ctx,
     		current: null,
     		pending: create_pending_block,
@@ -14656,7 +14673,7 @@ var app = (function () {
     		blocks: Array(3)
     	};
 
-    	handle_promise(promise = ctx.collection, info);
+    	handle_promise(promise_1 = ctx.collection, info_1);
 
     	return {
     		c: function create() {
@@ -14672,18 +14689,20 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Get Books!";
     			t6 = space();
-    			table.$$.fragment.c();
-    			t7 = space();
-    			await_block_anchor = empty();
 
     			info.block.c();
+
+    			t7 = space();
+    			await_block1_anchor = empty();
+
+    			info_1.block.c();
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 146, 1, 4295);
-    			add_location(button0, file$2, 147, 1, 4369);
-    			add_location(br0, file$2, 148, 1, 4422);
-    			add_location(br1, file$2, 149, 1, 4430);
-    			add_location(button1, file$2, 150, 1, 4438);
+    			add_location(input, file$2, 162, 1, 4700);
+    			add_location(button0, file$2, 163, 1, 4774);
+    			add_location(br0, file$2, 164, 1, 4827);
+    			add_location(br1, file$2, 165, 1, 4835);
+    			add_location(button1, file$2, 166, 1, 4843);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14706,13 +14725,17 @@ var app = (function () {
     			insert(target, t4, anchor);
     			insert(target, button1, anchor);
     			insert(target, t6, anchor);
-    			mount_component(table, target, anchor);
-    			insert(target, t7, anchor);
-    			insert(target, await_block_anchor, anchor);
 
     			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => await_block_anchor.parentNode;
-    			info.anchor = await_block_anchor;
+    			info.mount = () => t7.parentNode;
+    			info.anchor = t7;
+
+    			insert(target, t7, anchor);
+    			insert(target, await_block1_anchor, anchor);
+
+    			info_1.block.m(target, info_1.anchor = anchor);
+    			info_1.mount = () => await_block1_anchor.parentNode;
+    			info_1.anchor = await_block1_anchor;
 
     			current = true;
     		},
@@ -14722,24 +14745,32 @@ var app = (function () {
     			if (changed.deleteConfirm && (input.value !== ctx.deleteConfirm)) input.value = ctx.deleteConfirm;
     			info.ctx = ctx;
 
-    			if (('collection' in changed) && promise !== (promise = ctx.collection) && handle_promise(promise, info)) ; else {
+    			if (('bookCollection' in changed) && promise !== (promise = ctx.bookCollection) && handle_promise(promise, info)) ; else {
     				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+
+    			info_1.ctx = ctx;
+
+    			if (('collection' in changed) && promise_1 !== (promise_1 = ctx.collection) && handle_promise(promise_1, info_1)) ; else {
+    				info_1.block.p(changed, assign(assign({}, ctx), info_1.resolved));
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(table.$$.fragment, local);
-
     			transition_in(info.block);
+    			transition_in(info_1.block);
     			current = true;
     		},
 
     		o: function outro(local) {
-    			transition_out(table.$$.fragment, local);
-
     			for (let i = 0; i < 3; i += 1) {
     				const block = info.blocks[i];
+    				transition_out(block);
+    			}
+
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info_1.blocks[i];
     				transition_out(block);
     			}
 
@@ -14760,22 +14791,23 @@ var app = (function () {
     				detach(t6);
     			}
 
-    			destroy_component(table, detaching);
+    			info.block.d(detaching);
+    			info = null;
 
     			if (detaching) {
     				detach(t7);
-    				detach(await_block_anchor);
+    				detach(await_block1_anchor);
     			}
 
-    			info.block.d(detaching);
-    			info = null;
+    			info_1.block.d(detaching);
+    			info_1 = null;
 
     			run_all(dispose);
     		}
     	};
     }
 
-    // (143:0) {#if isEmpty(hash)}
+    // (159:0) {#if isEmpty(hash)}
     function create_if_block(ctx) {
     	var button0, t_1, button1, dispose;
 
@@ -14786,8 +14818,8 @@ var app = (function () {
     			t_1 = space();
     			button1 = element("button");
     			button1.textContent = "Bootstrap your Stream";
-    			add_location(button0, file$2, 143, 1, 4114);
-    			add_location(button1, file$2, 144, 1, 4185);
+    			add_location(button0, file$2, 159, 1, 4519);
+    			add_location(button1, file$2, 160, 1, 4590);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14817,8 +14849,8 @@ var app = (function () {
     	};
     }
 
-    // (186:1) {:catch error}
-    function create_catch_block_1(ctx) {
+    // (208:1) {:catch error}
+    function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
     	return {
@@ -14826,7 +14858,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 186, 2, 5299);
+    			add_location(p, file$2, 208, 2, 5808);
     		},
 
     		m: function mount(target, anchor) {
@@ -14851,8 +14883,8 @@ var app = (function () {
     	};
     }
 
-    // (183:1) {:then his}
-    function create_then_block_1(ctx) {
+    // (205:1) {:then his}
+    function create_then_block_2(ctx) {
     	var current;
 
     	var dashboard = new Dashboard({
@@ -14898,15 +14930,15 @@ var app = (function () {
     	};
     }
 
-    // (181:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
-    function create_pending_block_1(ctx) {
+    // (203:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    function create_pending_block_2(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 181, 2, 5097);
+    			add_location(p, file$2, 203, 2, 5606);
     		},
 
     		m: function mount(target, anchor) {
@@ -14925,7 +14957,111 @@ var app = (function () {
     	};
     }
 
-    // (168:1) {:catch error}
+    // (178:2) {:catch error}
+    function create_catch_block_1(ctx) {
+    	var p, t_value = ctx.error.message, t;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			set_style(p, "color", "red");
+    			add_location(p, file$2, 178, 2, 5037);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			append(p, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.bookCollection) && t_value !== (t_value = ctx.error.message)) {
+    				set_data(t, t_value);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (176:1) {:then bc}
+    function create_then_block_1(ctx) {
+    	var current;
+
+    	var table = new Table({
+    		props: { collection: ctx.bc },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			table.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(table, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var table_changes = {};
+    			if (changed.bookCollection) table_changes.collection = ctx.bc;
+    			table.$set(table_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(table.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(table.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(table, detaching);
+    		}
+    	};
+    }
+
+    // (174:24)   <p>...waiting</p>  {:then bc}
+    function create_pending_block_1(ctx) {
+    	var p;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "...waiting";
+    			add_location(p, file$2, 174, 1, 4960);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (190:1) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14934,7 +15070,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 168, 2, 4823);
+    			add_location(p, file$2, 190, 2, 5332);
     		},
 
     		m: function mount(target, anchor) {
@@ -14959,7 +15095,7 @@ var app = (function () {
     	};
     }
 
-    // (162:1) {:then coll}
+    // (184:1) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15006,7 +15142,7 @@ var app = (function () {
     	};
     }
 
-    // (160:20)    <p>...waiting</p>  {:then coll}
+    // (182:20)    <p>...waiting</p>  {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15014,7 +15150,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 160, 2, 4605);
+    			add_location(p, file$2, 182, 2, 5114);
     		},
 
     		m: function mount(target, anchor) {
@@ -15071,11 +15207,11 @@ var app = (function () {
     			if_block_anchor = empty();
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 136, 0, 3932);
-    			add_location(hr0, file$2, 137, 0, 3989);
+    			add_location(a0, file$2, 151, 0, 4336);
+    			add_location(hr0, file$2, 152, 0, 4393);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 138, 0, 3996);
-    			add_location(hr1, file$2, 139, 0, 4084);
+    			add_location(a1, file$2, 153, 0, 4400);
+    			add_location(hr1, file$2, 154, 0, 4488);
     		},
 
     		l: function claim(nodes) {
@@ -15180,6 +15316,38 @@ var app = (function () {
     		return collection;
     	};
 
+    	const getBooks = async () => {
+    		let historyItems = await chromePromise$1.history.search({
+    			text: '', // Return every history item....
+    			startTime: 0,
+    			maxResults: 20000,
+    			// that was accessed less than one week ago.
+    		});
+    		historyItems = historyPipe([])(historyItems).filter(
+    			e => e.url.includes('amazon.') && !e.url.includes('aws')
+    		);
+    		console.log(historyItems, 'd');
+    		let nodes = await asyncMap(historyItems.slice(-80), async item => ({
+    			...item,
+    			doc: await idiotSafe(UrlToDOM)(item['url']),
+    		}));
+
+    		const bookColl = nodes
+    			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
+    			// .map(n=>{console.log(n);
+    			// return n
+    			// })
+    			.filter(n => path(['hasISBN'], n))
+    			.map(({ productTitle, author, img, dateCreated }) => ({
+    				productTitle,
+    				author,
+    				img,
+    				dateCreated,
+    			}));
+    		console.log(bookColl, 'books!');
+    		return bookColl;
+    	};
+
     	let link = '';
     	let collection = getStorage().then(c => {
     		$$invalidate('link', link = JSONDownloadable(c));
@@ -15188,7 +15356,7 @@ var app = (function () {
     	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
     	let hash = window.location.hash;
     	let history = [];
-    	let bookCollection = [];
+    	let bookCollection = getBooks();
 
     	// fetch('https://dacapo.io/hacking-scientific-text')
     	// 	.then(res => res)
@@ -15251,35 +15419,6 @@ var app = (function () {
     		return historyItems;
     	};
 
-    	const getBooks = async () => {
-    		let historyItems = await chromePromise$1.history.search({
-    			text: '', // Return every history item....
-    			startTime: 0,
-    			maxResults: 20000,
-    			// that was accessed less than one week ago.
-    		});
-    		historyItems = historyPipe([])(historyItems).filter(
-    			e => e.url.includes('amazon.') && !e.url.includes('aws')
-    		);
-    		console.log(historyItems, 'd');
-    		let nodes = await asyncMap(historyItems.slice(-200), async item => ({
-    			...item,
-    			doc: await idiotSafe(UrlToDOM)(item['url']),
-    		}));
-
-    		const bookColl = nodes
-    			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
-    			.filter(n => path(['ISBN-10'], n) || path(['ISBN-13'], n))
-    			.map(({ productTitle, author, img, dateCreated }) => ({
-    				productTitle,
-    				author,
-    				img,
-    				dateCreated,
-    			}));
-    		console.log(bookColl, 'books!');
-    		return bookColl;
-    	};
-
     	function click_handler() {
     		return openTab('dashboard');
     	}
@@ -15295,6 +15434,7 @@ var app = (function () {
 
     	function click_handler_2() {
     				bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
+
     			}
 
     	function click_handler_3() {
@@ -15302,6 +15442,7 @@ var app = (function () {
     			}
 
     	return {
+    		getBooks,
     		link,
     		collection,
     		deleteConfirm,
@@ -15313,7 +15454,6 @@ var app = (function () {
     		onRemove,
     		onAdd,
     		getHistory,
-    		getBooks,
     		click_handler,
     		click_handler_1,
     		input_input_handler,

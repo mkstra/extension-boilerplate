@@ -33,6 +33,38 @@
 		return collection;
 	};
 
+	const getBooks = async () => {
+		let historyItems = await chromep.history.search({
+			text: '', // Return every history item....
+			startTime: 0,
+			maxResults: 20000,
+			// that was accessed less than one week ago.
+		});
+		historyItems = historyPipe([])(historyItems).filter(
+			e => e.url.includes('amazon.') && !e.url.includes('aws')
+		);
+		console.log(historyItems, 'd');
+		let nodes = await asyncMap(historyItems.slice(-80), async item => ({
+			...item,
+			doc: await idiotSafe(UrlToDOM)(item['url']),
+		}));
+
+		const bookColl = nodes
+			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
+			// .map(n=>{console.log(n);
+			// return n
+			// })
+			.filter(n => path(['hasISBN'], n))
+			.map(({ productTitle, author, img, dateCreated }) => ({
+				productTitle,
+				author,
+				img,
+				dateCreated,
+			}));
+		console.log(bookColl, 'books!');
+		return bookColl;
+	};
+
 	let link = '';
 	let collection = getStorage().then(c => {
 		link = JSONDownloadable(c);
@@ -41,7 +73,7 @@
 	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
-	let bookCollection = [];
+	let bookCollection = getBooks();
 
 	// fetch('https://dacapo.io/hacking-scientific-text')
 	// 	.then(res => res)
@@ -104,40 +136,24 @@
 		return historyItems;
 	};
 
-	const getBooks = async () => {
-		let historyItems = await chromep.history.search({
-			text: '', // Return every history item....
-			startTime: 0,
-			maxResults: 20000,
-			// that was accessed less than one week ago.
-		});
-		historyItems = historyPipe([])(historyItems).filter(
-			e => e.url.includes('amazon.') && !e.url.includes('aws')
-		);
-		console.log(historyItems, 'd');
-		let nodes = await asyncMap(historyItems.slice(-200), async item => ({
-			...item,
-			doc: await idiotSafe(UrlToDOM)(item['url']),
-		}));
+	
 
-		const bookColl = nodes
-			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
-			.filter(n => path(['ISBN-10'], n) || path(['ISBN-13'], n))
-			.map(({ productTitle, author, img, dateCreated }) => ({
-				productTitle,
-				author,
-				img,
-				dateCreated,
-			}));
-		console.log(bookColl, 'books!');
-		return bookColl;
-	};
+	const test = [
+		{author: "Jakob Schwichtenberg",
+dateCreated: 1605287543429.3152,
+img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD",
+productTitle: "↵Physics from Finance: A ge",}, {author: "www Schwichtenberg",
+dateCreated: 1605287543429.3152,
+img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD",
+productTitle: "↵Physics from Finance: A ge",}
+	]
 </script>
 
 <a href={link} download="data.json">Download my Data</a>
 <hr />
 <a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">Publish my Data</a>
 <hr />
+
 
 
 {#if isEmpty(hash)}
@@ -151,11 +167,17 @@
 	<button
 		on:click={() => {
 			bookCollection = getBooks();
+
 		}}>
 		Get Books!
 	</button>
-	
-		<Table collection={[{a:5, b:2}, {a:3, b:1}]} />
+	{#await bookCollection}
+	<p>...waiting</p>
+	{:then bc}
+		<Table collection={bc} />
+		{:catch error}
+		<p style="color: red">{error.message}</p>
+	{/await}
 	
 	{#await collection}
 		<p>...waiting</p>
