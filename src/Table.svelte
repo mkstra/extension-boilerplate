@@ -3,8 +3,9 @@
 	import { trimString } from './utils/utils';
 	import { head, omit} from 'ramda';
 
-	export let collection;
-	export let excludeColumns;
+	export let data;
+	export let columns;
+	// export let excludeColumns;
 
 	// export let action //as propsAschildren??
 	const dispatch = createEventDispatcher();
@@ -29,29 +30,26 @@
 <table>
 	<thead>
 		<tr>
-			<th>Add Books</th>
-			{#each Object
-			.keys(head(
-				collection.map(r => omit(excludeColumns, r))
-				)) as k}
-				<th>{k}</th>
+			
+			{#each columns as config}
+			<th>{config.title}</th>
 			{/each}
-			<!-- <th on:click={sort("val")}>val</th> -->
+		
 		</tr>
 	</thead>
 	<tbody>
-		{#each collection as row}
-			<tr>
-				<td class="glow-on-hover">
-					<button
-						on:click={() => dispatch('message', row)}
-						style={`background: ${true ? 'green' : 'red'}; color: white; font-weight: bold"`}>
-						{`+`}
-					</button>
-				</td>
-				{#each Object.entries(omit(excludeColumns, row)) as [k, v]}
-					<td>{@html v}</td>
-				{/each}
+
+		{#each data as row}
+		<tr>
+			{#each columns as config}
+			<td styling={config.styling}>
+				{#if !config.key}
+				<button class={config.klass} on:click={() => dispatch('message', row)}>
+					{@html config.value(row)}</button>
+				{:else}
+				{@html config.value(row)}
+				{/if}
+			</td>{/each}
 			</tr>
 		{/each}
 	</tbody>

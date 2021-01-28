@@ -43,6 +43,11 @@ var app = (function () {
     function detach(node) {
         node.parentNode.removeChild(node);
     }
+    function detach_between(before, after) {
+        while (before.nextSibling && before.nextSibling !== after) {
+            before.parentNode.removeChild(before.nextSibling);
+        }
+    }
     function destroy_each(iterations, detaching) {
         for (let i = 0; i < iterations.length; i += 1) {
             if (iterations[i])
@@ -1576,32 +1581,6 @@ var app = (function () {
       return _arity(arguments[0].length, reduce(_pipe, arguments[0], tail(arguments)));
     }
 
-    /**
-     * Returns the first element of the given list or string. In some libraries
-     * this function is named `first`.
-     *
-     * @func
-     * @memberOf R
-     * @since v0.1.0
-     * @category List
-     * @sig [a] -> a | Undefined
-     * @sig String -> String
-     * @param {Array|String} list
-     * @return {*}
-     * @see R.tail, R.init, R.last
-     * @example
-     *
-     *      R.head(['fi', 'fo', 'fum']); //=> 'fi'
-     *      R.head([]); //=> undefined
-     *
-     *      R.head('abc'); //=> 'a'
-     *      R.head(''); //=> ''
-     */
-
-    var head =
-    /*#__PURE__*/
-    nth(0);
-
     function _arrayFromIterator(iter) {
       var list = [];
       var next;
@@ -2296,45 +2275,6 @@ var app = (function () {
     /*#__PURE__*/
     _curry1(function isEmpty(x) {
       return x != null && equals(x, empty$1(x));
-    });
-
-    /**
-     * Returns a partial copy of an object omitting the keys specified.
-     *
-     * @func
-     * @memberOf R
-     * @since v0.1.0
-     * @category Object
-     * @sig [String] -> {String: *} -> {String: *}
-     * @param {Array} names an array of String property names to omit from the new object
-     * @param {Object} obj The object to copy from
-     * @return {Object} A new object with properties from `names` not on it.
-     * @see R.pick
-     * @example
-     *
-     *      R.omit(['a', 'd'], {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, c: 3}
-     */
-
-    var omit =
-    /*#__PURE__*/
-    _curry2(function omit(names, obj) {
-      var result = {};
-      var index = {};
-      var idx = 0;
-      var len = names.length;
-
-      while (idx < len) {
-        index[names[idx]] = 1;
-        idx += 1;
-      }
-
-      for (var prop in obj) {
-        if (!index.hasOwnProperty(prop)) {
-          result[prop] = obj[prop];
-        }
-      }
-
-      return result;
     });
 
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
@@ -14261,8 +14201,7 @@ var app = (function () {
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
-    	child_ctx.k = list[i][0];
-    	child_ctx.v = list[i][1];
+    	child_ctx.config = list[i];
     	return child_ctx;
     }
 
@@ -14274,20 +14213,20 @@ var app = (function () {
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
-    	child_ctx.k = list[i];
+    	child_ctx.config = list[i];
     	return child_ctx;
     }
 
-    // (33:3) {#each Object    .keys(head(     collection.map(r => omit(excludeColumns, r))     )) as k}
+    // (34:3) {#each columns as config}
     function create_each_block_2(ctx) {
-    	var th, t_value = ctx.k, t;
+    	var th, t_value = ctx.config.title, t;
 
     	return {
     		c: function create() {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 36, 4, 668);
+    			add_location(th, file$1, 34, 3, 602);
     		},
 
     		m: function mount(target, anchor) {
@@ -14296,7 +14235,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.collection) && t_value !== (t_value = ctx.k)) {
+    			if ((changed.columns) && t_value !== (t_value = ctx.config.title)) {
     				set_data(t, t_value);
     			}
     		},
@@ -14309,25 +14248,121 @@ var app = (function () {
     	};
     }
 
-    // (52:4) {#each Object.entries(omit(excludeColumns, row)) as [k, v]}
+    // (49:4) {:else}
+    function create_else_block(ctx) {
+    	var raw_value = ctx.config.value(ctx.row), raw_before, raw_after;
+
+    	return {
+    		c: function create() {
+    			raw_before = element('noscript');
+    			raw_after = element('noscript');
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, raw_before, anchor);
+    			raw_before.insertAdjacentHTML("afterend", raw_value);
+    			insert(target, raw_after, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
+    				detach_between(raw_before, raw_after);
+    				raw_before.insertAdjacentHTML("afterend", raw_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_between(raw_before, raw_after);
+    				detach(raw_before);
+    				detach(raw_after);
+    			}
+    		}
+    	};
+    }
+
+    // (46:4) {#if !config.key}
+    function create_if_block(ctx) {
+    	var button, raw_value = ctx.config.value(ctx.row), button_class_value, dispose;
+
+    	function click_handler() {
+    		return ctx.click_handler(ctx);
+    	}
+
+    	return {
+    		c: function create() {
+    			button = element("button");
+    			attr(button, "class", button_class_value = ctx.config.klass);
+    			add_location(button, file$1, 46, 4, 785);
+    			dispose = listen(button, "click", click_handler);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, button, anchor);
+    			button.innerHTML = raw_value;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
+    				button.innerHTML = raw_value;
+    			}
+
+    			if ((changed.columns) && button_class_value !== (button_class_value = ctx.config.klass)) {
+    				attr(button, "class", button_class_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(button);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    // (44:3) {#each columns as config}
     function create_each_block_1(ctx) {
-    	var td, raw_value = ctx.v;
+    	var td, td_styling_value;
+
+    	function select_block_type(ctx) {
+    		if (!ctx.config.key) return create_if_block;
+    		return create_else_block;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
 
     	return {
     		c: function create() {
     			td = element("td");
+    			if_block.c();
+    			attr(td, "styling", td_styling_value = ctx.config.styling);
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 52, 5, 1090);
+    			add_location(td, file$1, 44, 3, 729);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, td, anchor);
-    			td.innerHTML = raw_value;
+    			if_block.m(td, null);
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.excludeColumns || changed.collection) && raw_value !== (raw_value = ctx.v)) {
-    				td.innerHTML = raw_value;
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(changed, ctx);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(td, null);
+    				}
+    			}
+
+    			if ((changed.columns) && td_styling_value !== (td_styling_value = ctx.config.styling)) {
+    				attr(td, "styling", td_styling_value);
     			}
     		},
 
@@ -14335,19 +14370,17 @@ var app = (function () {
     			if (detaching) {
     				detach(td);
     			}
+
+    			if_block.d();
     		}
     	};
     }
 
-    // (43:2) {#each collection as row}
+    // (42:2) {#each data as row}
     function create_each_block$1(ctx) {
-    	var tr, td, button, t0_value = `+`, t0, t1, t2, dispose;
+    	var tr, t;
 
-    	function click_handler() {
-    		return ctx.click_handler(ctx);
-    	}
-
-    	var each_value_1 = Object.entries(omit(ctx.excludeColumns, ctx.row));
+    	var each_value_1 = ctx.columns;
 
     	var each_blocks = [];
 
@@ -14358,42 +14391,28 @@ var app = (function () {
     	return {
     		c: function create() {
     			tr = element("tr");
-    			td = element("td");
-    			button = element("button");
-    			t0 = text(t0_value);
-    			t1 = space();
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t2 = space();
-    			attr(button, "style", `background: ${ 'green' }; color: white; font-weight: bold"`);
-    			add_location(button, file$1, 45, 5, 839);
-    			attr(td, "class", "glow-on-hover svelte-1llhbd6");
-    			add_location(td, file$1, 44, 4, 807);
-    			add_location(tr, file$1, 43, 3, 798);
-    			dispose = listen(button, "click", click_handler);
+    			t = space();
+    			add_location(tr, file$1, 42, 2, 692);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, tr, anchor);
-    			append(tr, td);
-    			append(td, button);
-    			append(button, t0);
-    			append(tr, t1);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(tr, null);
     			}
 
-    			append(tr, t2);
+    			append(tr, t);
     		},
 
-    		p: function update(changed, new_ctx) {
-    			ctx = new_ctx;
-    			if (changed.omit || changed.excludeColumns || changed.collection) {
-    				each_value_1 = Object.entries(omit(ctx.excludeColumns, ctx.row));
+    		p: function update(changed, ctx) {
+    			if (changed.columns || changed.data) {
+    				each_value_1 = ctx.columns;
 
     				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1(ctx, each_value_1, i);
@@ -14403,7 +14422,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(tr, t2);
+    						each_blocks[i].m(tr, t);
     					}
     				}
 
@@ -14420,19 +14439,14 @@ var app = (function () {
     			}
 
     			destroy_each(each_blocks, detaching);
-
-    			dispose();
     		}
     	};
     }
 
     function create_fragment$1(ctx) {
-    	var table, thead, tr, th, t1, t2, tbody;
+    	var table, thead, tr, t, tbody;
 
-    	var each_value_2 = Object
-    			.keys(head(
-    				ctx.collection.map(ctx.func)
-    				));
+    	var each_value_2 = ctx.columns;
 
     	var each_blocks_1 = [];
 
@@ -14440,7 +14454,7 @@ var app = (function () {
     		each_blocks_1[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	var each_value = ctx.collection;
+    	var each_value = ctx.data;
 
     	var each_blocks = [];
 
@@ -14453,27 +14467,22 @@ var app = (function () {
     			table = element("table");
     			thead = element("thead");
     			tr = element("tr");
-    			th = element("th");
-    			th.textContent = "Add Books";
-    			t1 = space();
 
     			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].c();
     			}
 
-    			t2 = space();
+    			t = space();
     			tbody = element("tbody");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 31, 3, 551);
-    			add_location(tr, file$1, 30, 2, 543);
-    			add_location(thead, file$1, 29, 1, 533);
-    			add_location(tbody, file$1, 41, 1, 759);
+    			add_location(tr, file$1, 31, 2, 561);
+    			add_location(thead, file$1, 30, 1, 551);
+    			add_location(tbody, file$1, 39, 1, 659);
     			attr(table, "class", "svelte-1llhbd6");
-    			add_location(table, file$1, 28, 0, 524);
+    			add_location(table, file$1, 29, 0, 542);
     		},
 
     		l: function claim(nodes) {
@@ -14484,14 +14493,12 @@ var app = (function () {
     			insert(target, table, anchor);
     			append(table, thead);
     			append(thead, tr);
-    			append(tr, th);
-    			append(tr, t1);
 
     			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].m(tr, null);
     			}
 
-    			append(table, t2);
+    			append(table, t);
     			append(table, tbody);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -14500,11 +14507,8 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.head || changed.collection) {
-    				each_value_2 = Object
-    			.keys(head(
-    				ctx.collection.map(ctx.func)
-    				));
+    			if (changed.columns) {
+    				each_value_2 = ctx.columns;
 
     				for (var i = 0; i < each_value_2.length; i += 1) {
     					const child_ctx = get_each_context_2(ctx, each_value_2, i);
@@ -14524,8 +14528,8 @@ var app = (function () {
     				each_blocks_1.length = each_value_2.length;
     			}
 
-    			if (changed.omit || changed.excludeColumns || changed.collection) {
-    				each_value = ctx.collection;
+    			if (changed.columns || changed.data) {
+    				each_value = ctx.data;
 
     				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context$1(ctx, each_value, i);
@@ -14564,66 +14568,57 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	
 
-    	let { collection, excludeColumns } = $$props;
+    	let { data, columns } = $$props;
+    	// export let excludeColumns;
 
     	// export let action //as propsAschildren??
     	const dispatch = createEventDispatcher();
 
-    	const writable_props = ['collection', 'excludeColumns'];
+    	const writable_props = ['data', 'columns'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Table> was created with unknown prop '${key}'`);
     	});
-
-    	function func(r) {
-    		return omit(excludeColumns, r);
-    	}
 
     	function click_handler({ row }) {
     		return dispatch('message', row);
     	}
 
     	$$self.$set = $$props => {
-    		if ('collection' in $$props) $$invalidate('collection', collection = $$props.collection);
-    		if ('excludeColumns' in $$props) $$invalidate('excludeColumns', excludeColumns = $$props.excludeColumns);
+    		if ('data' in $$props) $$invalidate('data', data = $$props.data);
+    		if ('columns' in $$props) $$invalidate('columns', columns = $$props.columns);
     	};
 
-    	return {
-    		collection,
-    		excludeColumns,
-    		dispatch,
-    		func,
-    		click_handler
-    	};
+    	return { data, columns, dispatch, click_handler };
     }
 
     class Table extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["collection", "excludeColumns"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["data", "columns"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
-    		if (ctx.collection === undefined && !('collection' in props)) {
-    			console.warn("<Table> was created without expected prop 'collection'");
+    		if (ctx.data === undefined && !('data' in props)) {
+    			console.warn("<Table> was created without expected prop 'data'");
     		}
-    		if (ctx.excludeColumns === undefined && !('excludeColumns' in props)) {
-    			console.warn("<Table> was created without expected prop 'excludeColumns'");
+    		if (ctx.columns === undefined && !('columns' in props)) {
+    			console.warn("<Table> was created without expected prop 'columns'");
     		}
     	}
 
-    	get collection() {
+    	get data() {
     		throw new Error("<Table>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set collection(value) {
+    	set data(value) {
     		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get excludeColumns() {
+    	get columns() {
     		throw new Error("<Table>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set excludeColumns(value) {
+    	set columns(value) {
     		throw new Error("<Table>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -14680,11 +14675,11 @@ var app = (function () {
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$2, 214, 1, 5862);
+    			add_location(h1, file$2, 214, 1, 5902);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$2, 216, 1, 5895);
+    			add_location(button0, file$2, 216, 1, 5935);
     			attr(button1, "class", "yellow-btn");
-    			add_location(button1, file$2, 235, 1, 6439);
+    			add_location(button1, file$2, 263, 1, 6882);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14807,12 +14802,14 @@ var app = (function () {
     			await_block_anchor = empty();
 
     			info.block.c();
+    			attr(input, "class", "subtle-input");
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$2, 197, 1, 5393);
-    			add_location(button, file$2, 198, 1, 5467);
-    			add_location(br0, file$2, 199, 1, 5520);
-    			add_location(br1, file$2, 200, 1, 5528);
+    			add_location(input, file$2, 197, 1, 5390);
+    			attr(button, "class", "danger-button");
+    			add_location(button, file$2, 198, 1, 5485);
+    			add_location(br0, file$2, 199, 1, 5560);
+    			add_location(br1, file$2, 200, 1, 5568);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14888,7 +14885,7 @@ var app = (function () {
     }
 
     // (192:0) {#if isEmpty(hash)}
-    function create_if_block(ctx) {
+    function create_if_block$1(ctx) {
     	var hr0, t0, button0, t2, hr1, t3, button1, dispose;
 
     	return {
@@ -14902,12 +14899,12 @@ var app = (function () {
     			t3 = space();
     			button1 = element("button");
     			button1.textContent = "🥳 Bootstrap Stream";
-    			add_location(hr0, file$2, 192, 1, 5138);
+    			add_location(hr0, file$2, 192, 1, 5135);
     			attr(button0, "class", "subtle-button");
-    			add_location(button0, file$2, 193, 1, 5146);
-    			add_location(hr1, file$2, 194, 1, 5243);
+    			add_location(button0, file$2, 193, 1, 5143);
+    			add_location(hr1, file$2, 194, 1, 5240);
     			attr(button1, "class", "subtle-button border-glow");
-    			add_location(button1, file$2, 195, 1, 5250);
+    			add_location(button1, file$2, 195, 1, 5247);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14945,7 +14942,7 @@ var app = (function () {
     	};
     }
 
-    // (232:1) {:catch error}
+    // (260:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14954,7 +14951,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 232, 2, 6385);
+    			add_location(p, file$2, 260, 2, 6828);
     		},
 
     		m: function mount(target, anchor) {
@@ -14985,8 +14982,27 @@ var app = (function () {
 
     	var table = new Table({
     		props: {
-    		collection: ctx.bc,
-    		excludeColumns: ['url', 'dateCreated']
+    		data: ctx.bc,
+    		columns: [ //*optional -- otherwise just map
+    			{
+    				key: null,
+    				title: "Add",
+    				value: func_1,
+    				// styling: ""
+    			},
+    			
+    			{
+    				key: "productTitle",
+        			title: "Book",
+    				value: func_2, //transforms
+    				styling: "min-width: 20vw",
+    			},
+    			{
+    				key: "dateCreated",
+    				title: "Date",
+    				value: ctx.func_3
+    			}
+    		]
     	},
     		$$inline: true
     	});
@@ -15004,7 +15020,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			var table_changes = {};
-    			if (changed.bookCollection) table_changes.collection = ctx.bc;
+    			if (changed.bookCollection) table_changes.data = ctx.bc;
     			table.$set(table_changes);
     		},
 
@@ -15035,7 +15051,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$2, 225, 2, 6049);
+    			add_location(p, file$2, 225, 2, 6089);
     		},
 
     		m: function mount(target, anchor) {
@@ -15061,7 +15077,7 @@ var app = (function () {
     	};
     }
 
-    // (249:1) {:catch error}
+    // (277:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15070,7 +15086,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 249, 2, 6798);
+    			add_location(p, file$2, 277, 2, 7241);
     		},
 
     		m: function mount(target, anchor) {
@@ -15095,7 +15111,7 @@ var app = (function () {
     	};
     }
 
-    // (246:1) {:then his}
+    // (274:1) {:then his}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -15142,7 +15158,7 @@ var app = (function () {
     	};
     }
 
-    // (244:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (272:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -15150,7 +15166,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 244, 2, 6596);
+    			add_location(p, file$2, 272, 2, 7039);
     		},
 
     		m: function mount(target, anchor) {
@@ -15178,7 +15194,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 211, 2, 5777);
+    			add_location(p, file$2, 211, 2, 5817);
     		},
 
     		m: function mount(target, anchor) {
@@ -15258,7 +15274,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$2, 203, 2, 5559);
+    			add_location(p, file$2, 203, 2, 5599);
     		},
 
     		m: function mount(target, anchor) {
@@ -15281,7 +15297,7 @@ var app = (function () {
     	var div, current_block_type_index, if_block, t0, hr0, t1, a0, t2, t3, hr1, t4, a1, t6, hr2, current;
 
     	var if_block_creators = [
-    		create_if_block,
+    		create_if_block$1,
     		create_if_block_1,
     		create_if_block_2
     	];
@@ -15315,16 +15331,16 @@ var app = (function () {
     			a1.textContent = "⤴ Publish my Data";
     			t6 = space();
     			hr2 = element("hr");
-    			add_location(hr0, file$2, 252, 0, 6856);
+    			add_location(hr0, file$2, 280, 0, 7299);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 253, 0, 6863);
-    			add_location(hr1, file$2, 254, 0, 6923);
+    			add_location(a0, file$2, 281, 0, 7306);
+    			add_location(hr1, file$2, 282, 0, 7366);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 255, 0, 6930);
-    			add_location(hr2, file$2, 256, 0, 7021);
+    			add_location(a1, file$2, 283, 0, 7373);
+    			add_location(hr2, file$2, 284, 0, 7464);
     			attr(div, "class", "border-glow");
-    			add_location(div, file$2, 188, 0, 5089);
+    			add_location(div, file$2, 188, 0, 5086);
     		},
 
     		l: function claim(nodes) {
@@ -15403,6 +15419,14 @@ var app = (function () {
 
     function func(a, b) {
     	return b.dateCreated - a.dateCreated;
+    }
+
+    function func_1(v) {
+    	return " X ";
+    }
+
+    function func_2(v) {
+    	return `<a href=${v.url}> ${v.productTitle}</a>`;
     }
 
     function instance$2($$self, $$props, $$invalidate) {
@@ -15572,6 +15596,10 @@ var app = (function () {
     				bookCollection = getBooks(); $$invalidate('bookCollection', bookCollection);
     			}
 
+    	function func_3(v) {
+    		return new Date(v.dateCreated).toDateString();
+    	}
+
     	function click_handler_3() {
     				history = getHistory(); $$invalidate('history', history);
     			}
@@ -15590,10 +15618,12 @@ var app = (function () {
     		onRemove,
     		onAdd,
     		getHistory,
+    		Date,
     		click_handler,
     		click_handler_1,
     		input_input_handler,
     		click_handler_2,
+    		func_3,
     		click_handler_3
     	};
     }

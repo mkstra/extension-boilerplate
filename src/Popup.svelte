@@ -174,7 +174,7 @@
 			url: 'asda',
 			dateCreated: 1605287543429.3152,
 			img: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD',
-			productTitle: 'b5Physics from Finance: A ge',
+			productTitle: 'Physics from Finance: A ge',
 		},
 		{
 			author: 'www Schwichtenberg',
@@ -195,8 +195,8 @@
 	<hr/>
 	<button class="subtle-button border-glow" on:click={() => openTab('bootstrap')}> 🥳 Bootstrap Stream</button>
 {:else if hash == '#dashboard'}
-	<input style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
-	<button on:click={clearStorage}>DELETE ALL</button>
+	<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
+	<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
 	<br />
 	<br />
 
@@ -228,7 +228,35 @@
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-'}
 		</p>
 	{:then bc}
-		<Table collection={bc} on:message={onAdd} excludeColumns={['url', 'dateCreated']} />
+	<!-- on:message={onAdd} -->
+
+
+		<Table data={bc} on:message={onAdd}
+		columns={[ //*optional -- otherwise just map
+			{
+				key: null,
+				title: "Add",
+				value: v => " X ",
+				// styling: ""
+			},
+			
+			{
+				key: "productTitle",
+    			title: "Book",
+				value: v => `<a href=${v.url}> ${v.productTitle}</a>`, //transforms
+				styling: "min-width: 20vw",
+			},
+			{
+				key: "dateCreated",
+				title: "Date",
+				value: v => new Date(v.dateCreated).toDateString()
+			}
+		]}
+	 />
+
+
+
+
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}
