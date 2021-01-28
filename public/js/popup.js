@@ -14217,7 +14217,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (34:3) {#each columns as config}
+    // (31:3) {#each columns as config}
     function create_each_block_2(ctx) {
     	var th, t_value = ctx.config.title, t;
 
@@ -14226,7 +14226,7 @@ var app = (function () {
     			th = element("th");
     			t = text(t_value);
     			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file$1, 34, 3, 602);
+    			add_location(th, file$1, 31, 3, 525);
     		},
 
     		m: function mount(target, anchor) {
@@ -14248,7 +14248,7 @@ var app = (function () {
     	};
     }
 
-    // (49:4) {:else}
+    // (46:4) {:else}
     function create_else_block(ctx) {
     	var raw_value = ctx.config.value(ctx.row), raw_before, raw_after;
 
@@ -14281,7 +14281,7 @@ var app = (function () {
     	};
     }
 
-    // (46:4) {#if !config.key}
+    // (43:4) {#if !config.key}
     function create_if_block(ctx) {
     	var button, raw_value = ctx.config.value(ctx.row), button_class_value, dispose;
 
@@ -14293,7 +14293,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			attr(button, "class", button_class_value = ctx.config.klass);
-    			add_location(button, file$1, 46, 4, 785);
+    			add_location(button, file$1, 43, 4, 708);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14323,7 +14323,7 @@ var app = (function () {
     	};
     }
 
-    // (44:3) {#each columns as config}
+    // (41:3) {#each columns as config}
     function create_each_block_1(ctx) {
     	var td, td_styling_value;
 
@@ -14341,7 +14341,7 @@ var app = (function () {
     			if_block.c();
     			attr(td, "styling", td_styling_value = ctx.config.styling);
     			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file$1, 44, 3, 729);
+    			add_location(td, file$1, 41, 3, 652);
     		},
 
     		m: function mount(target, anchor) {
@@ -14376,7 +14376,7 @@ var app = (function () {
     	};
     }
 
-    // (42:2) {#each data as row}
+    // (39:2) {#each data as row}
     function create_each_block$1(ctx) {
     	var tr, t;
 
@@ -14397,7 +14397,7 @@ var app = (function () {
     			}
 
     			t = space();
-    			add_location(tr, file$1, 42, 2, 692);
+    			add_location(tr, file$1, 39, 2, 615);
     		},
 
     		m: function mount(target, anchor) {
@@ -14478,11 +14478,11 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(tr, file$1, 31, 2, 561);
-    			add_location(thead, file$1, 30, 1, 551);
-    			add_location(tbody, file$1, 39, 1, 659);
+    			add_location(tr, file$1, 28, 2, 484);
+    			add_location(thead, file$1, 27, 1, 474);
+    			add_location(tbody, file$1, 36, 1, 582);
     			attr(table, "class", "svelte-1llhbd6");
-    			add_location(table, file$1, 29, 0, 542);
+    			add_location(table, file$1, 26, 0, 465);
     		},
 
     		l: function claim(nodes) {
@@ -14569,9 +14569,6 @@ var app = (function () {
     	
 
     	let { data, columns } = $$props;
-    	// export let excludeColumns;
-
-    	// export let action //as propsAschildren??
     	const dispatch = createEventDispatcher();
 
     	const writable_props = ['data', 'columns'];
@@ -14650,7 +14647,7 @@ var app = (function () {
     		pending: create_pending_block_1,
     		then: create_then_block_1,
     		catch: create_catch_block_1,
-    		value: 'his',
+    		value: 'hist',
     		error: 'error',
     		blocks: Array(3)
     	};
@@ -14678,8 +14675,8 @@ var app = (function () {
     			add_location(h1, file$2, 214, 1, 5902);
     			attr(button0, "class", "glow-on-hover");
     			add_location(button0, file$2, 216, 1, 5935);
-    			attr(button1, "class", "yellow-btn");
-    			add_location(button1, file$2, 263, 1, 6882);
+    			attr(button1, "class", "glow-on-hover");
+    			add_location(button1, file$2, 264, 1, 6907);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14942,7 +14939,7 @@ var app = (function () {
     	};
     }
 
-    // (260:1) {:catch error}
+    // (261:1) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14951,7 +14948,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 260, 2, 6828);
+    			add_location(p, file$2, 261, 2, 6853);
     		},
 
     		m: function mount(target, anchor) {
@@ -14988,6 +14985,7 @@ var app = (function () {
     				key: null,
     				title: "Add",
     				value: func_1,
+    				klass:"green-button"
     				// styling: ""
     			},
     			
@@ -15077,7 +15075,7 @@ var app = (function () {
     	};
     }
 
-    // (277:1) {:catch error}
+    // (297:1) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15086,7 +15084,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$2, 277, 2, 7241);
+    			add_location(p, file$2, 297, 2, 7556);
     		},
 
     		m: function mount(target, anchor) {
@@ -15111,54 +15109,71 @@ var app = (function () {
     	};
     }
 
-    // (274:1) {:then his}
+    // (275:1) {:then hist}
     function create_then_block_1(ctx) {
     	var current;
 
-    	var dashboard = new Dashboard({
+    	var table = new Table({
     		props: {
-    		collection: ctx.his,
-    		addAction: true
+    		data: ctx.hist,
+    		columns: [
+    			{
+    				key:null,
+    				title: "Add",
+    				value: func_4,
+    			},
+
+    			{
+    				key: "title",
+        			title: "Title",
+    				value: func_5, //transforms
+    			},
+    			{
+    				key: "dateCreated",
+    				title: "Date",
+    				value: ctx.func_6
+    			}
+    		]
     	},
     		$$inline: true
     	});
-    	dashboard.$on("message", ctx.onAdd);
+    	table.$on("message", ctx.onAdd);
 
     	return {
     		c: function create() {
-    			dashboard.$$.fragment.c();
+    			table.$$.fragment.c();
     		},
 
     		m: function mount(target, anchor) {
-    			mount_component(dashboard, target, anchor);
+    			mount_component(table, target, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			var dashboard_changes = {};
-    			if (changed.history) dashboard_changes.collection = ctx.his;
-    			dashboard.$set(dashboard_changes);
+    			var table_changes = {};
+    			if (changed.history) table_changes.data = ctx.hist;
+    			table.$set(table_changes);
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(dashboard.$$.fragment, local);
+    			transition_in(table.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			transition_out(dashboard.$$.fragment, local);
+    			transition_out(table.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			destroy_component(dashboard, detaching);
+    			destroy_component(table, detaching);
     		}
     	};
     }
 
-    // (272:17)    <p>...running **Article?** classifier on history documents</p>  {:then his}
+    // (273:17)    <p>...running **Article?** classifier on history documents</p>  {:then hist}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -15166,7 +15181,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$2, 272, 2, 7039);
+    			add_location(p, file$2, 273, 2, 7067);
     		},
 
     		m: function mount(target, anchor) {
@@ -15331,14 +15346,14 @@ var app = (function () {
     			a1.textContent = "⤴ Publish my Data";
     			t6 = space();
     			hr2 = element("hr");
-    			add_location(hr0, file$2, 280, 0, 7299);
+    			add_location(hr0, file$2, 300, 0, 7614);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$2, 281, 0, 7306);
-    			add_location(hr1, file$2, 282, 0, 7366);
+    			add_location(a0, file$2, 301, 0, 7621);
+    			add_location(hr1, file$2, 302, 0, 7681);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$2, 283, 0, 7373);
-    			add_location(hr2, file$2, 284, 0, 7464);
+    			add_location(a1, file$2, 303, 0, 7688);
+    			add_location(hr2, file$2, 304, 0, 7779);
     			attr(div, "class", "border-glow");
     			add_location(div, file$2, 188, 0, 5086);
     		},
@@ -15422,11 +15437,19 @@ var app = (function () {
     }
 
     function func_1(v) {
-    	return " X ";
+    	return " + ";
     }
 
     function func_2(v) {
     	return `<a href=${v.url}> ${v.productTitle}</a>`;
+    }
+
+    function func_4(v) {
+    	return " + ";
+    }
+
+    function func_5(v) {
+    	return `<a href=${v.url}> ${v.title}</a>`;
     }
 
     function instance$2($$self, $$props, $$invalidate) {
@@ -15604,6 +15627,10 @@ var app = (function () {
     				history = getHistory(); $$invalidate('history', history);
     			}
 
+    	function func_6(v) {
+    		return new Date(v.dateCreated).toDateString();
+    	}
+
     	return {
     		scrapeCount,
     		getBooks,
@@ -15624,7 +15651,8 @@ var app = (function () {
     		input_input_handler,
     		click_handler_2,
     		func_3,
-    		click_handler_3
+    		click_handler_3,
+    		func_6
     	};
     }
 

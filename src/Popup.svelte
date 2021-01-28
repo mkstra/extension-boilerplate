@@ -236,7 +236,8 @@
 			{
 				key: null,
 				title: "Add",
-				value: v => " X ",
+				value: v => " + ",
+				klass:"green-button"
 				// styling: ""
 			},
 			
@@ -262,7 +263,7 @@
 	{/await}
 
 	<button
-		class="yellow-btn"
+		class="glow-on-hover"
 		on:click={() => {
 			history = getHistory();
 		}}>
@@ -271,9 +272,28 @@
 
 	{#await history}
 		<p>...running **Article?** classifier on history documents</p>
-	{:then his}
+	{:then hist}
 		<!-- <p>The number is {coll}</p> -->
-		<Dashboard collection={his} on:message={onAdd} addAction={true} />
+		<Table data={hist}
+		columns={[
+			{
+				key:null,
+				title: "Add",
+				value: v => " + ",
+			},
+
+			{
+				key: "title",
+    			title: "Title",
+				value: v => `<a href=${v.url}> ${v.title}</a>`, //transforms
+			},
+			{
+				key: "dateCreated",
+				title: "Date",
+				value: v => new Date(v.dateCreated).toDateString()
+			}
+		]}
+		on:message={onAdd} />
 	{:catch error}
 		<p style="color: red">{error.message}</p>
 	{/await}

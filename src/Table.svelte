@@ -5,9 +5,6 @@
 
 	export let data;
 	export let columns;
-	// export let excludeColumns;
-
-	// export let action //as propsAschildren??
 	const dispatch = createEventDispatcher();
 </script>
 
