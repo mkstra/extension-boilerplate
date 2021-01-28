@@ -14337,7 +14337,7 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (194:32) 
+    // (201:32) 
     function create_if_block_2(ctx) {
     	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
 
@@ -14385,11 +14385,11 @@ var app = (function () {
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$1, 194, 2, 5636);
+    			add_location(h1, file$1, 201, 2, 5922);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$1, 196, 2, 5670);
+    			add_location(button0, file$1, 203, 2, 5956);
     			attr(button1, "class", "glow-on-hover");
-    			add_location(button1, file$1, 217, 2, 6491);
+    			add_location(button1, file$1, 224, 2, 6777);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14481,7 +14481,7 @@ var app = (function () {
     	};
     }
 
-    // (178:32) 
+    // (185:32) 
     function create_if_block_1(ctx) {
     	var input, t0, button, t2, br, t3, await_block_anchor, promise, current, dispose;
 
@@ -14513,10 +14513,10 @@ var app = (function () {
     			attr(input, "class", "subtle-input");
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 178, 2, 4892);
+    			add_location(input, file$1, 185, 2, 5155);
     			attr(button, "class", "danger-button");
-    			add_location(button, file$1, 179, 2, 4988);
-    			add_location(br, file$1, 180, 2, 5064);
+    			add_location(button, file$1, 186, 2, 5251);
+    			add_location(br, file$1, 187, 2, 5327);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14587,24 +14587,41 @@ var app = (function () {
     	};
     }
 
-    // (172:1) {#if isEmpty(hash)}
+    // (174:1) {#if isEmpty(hash)}
     function create_if_block$1(ctx) {
-    	var button0, t1, hr, t2, button1, dispose;
+    	var button0, t1, hr0, t2, button1, t4, hr1, t5, a0, t6, t7, hr2, t8, a1, dispose;
 
     	return {
     		c: function create() {
     			button0 = element("button");
     			button0.textContent = "💫 View Dashboard";
     			t1 = space();
-    			hr = element("hr");
+    			hr0 = element("hr");
     			t2 = space();
     			button1 = element("button");
     			button1.textContent = "🥳 Bootstrap Stream";
+    			t4 = space();
+    			hr1 = element("hr");
+    			t5 = space();
+    			a0 = element("a");
+    			t6 = text("↓ Download my Data");
+    			t7 = space();
+    			hr2 = element("hr");
+    			t8 = space();
+    			a1 = element("a");
+    			a1.textContent = "⤴ Publish my Data";
     			attr(button0, "class", "subtle-button");
-    			add_location(button0, file$1, 172, 2, 4635);
-    			add_location(hr, file$1, 173, 2, 4732);
+    			add_location(button0, file$1, 174, 2, 4726);
+    			add_location(hr0, file$1, 175, 2, 4823);
     			attr(button1, "class", "subtle-button border-glow");
-    			add_location(button1, file$1, 174, 2, 4741);
+    			add_location(button1, file$1, 176, 2, 4832);
+    			add_location(hr1, file$1, 180, 2, 4951);
+    			attr(a0, "href", ctx.link);
+    			attr(a0, "download", "data.json");
+    			add_location(a0, file$1, 181, 2, 4960);
+    			add_location(hr2, file$1, 182, 2, 5021);
+    			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
+    			add_location(a1, file$1, 183, 2, 5030);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14615,12 +14632,26 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert(target, button0, anchor);
     			insert(target, t1, anchor);
-    			insert(target, hr, anchor);
+    			insert(target, hr0, anchor);
     			insert(target, t2, anchor);
     			insert(target, button1, anchor);
+    			insert(target, t4, anchor);
+    			insert(target, hr1, anchor);
+    			insert(target, t5, anchor);
+    			insert(target, a0, anchor);
+    			append(a0, t6);
+    			insert(target, t7, anchor);
+    			insert(target, hr2, anchor);
+    			insert(target, t8, anchor);
+    			insert(target, a1, anchor);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.link) {
+    				attr(a0, "href", ctx.link);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -14628,9 +14659,17 @@ var app = (function () {
     			if (detaching) {
     				detach(button0);
     				detach(t1);
-    				detach(hr);
+    				detach(hr0);
     				detach(t2);
     				detach(button1);
+    				detach(t4);
+    				detach(hr1);
+    				detach(t5);
+    				detach(a0);
+    				detach(t7);
+    				detach(hr2);
+    				detach(t8);
+    				detach(a1);
     			}
 
     			run_all(dispose);
@@ -14638,7 +14677,7 @@ var app = (function () {
     	};
     }
 
-    // (214:2) {:catch error}
+    // (221:2) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14647,7 +14686,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 214, 3, 6435);
+    			add_location(p, file$1, 221, 3, 6721);
     		},
 
     		m: function mount(target, anchor) {
@@ -14672,7 +14711,7 @@ var app = (function () {
     	};
     }
 
-    // (209:2) {:then bc}
+    // (216:2) {:then bc}
     function create_then_block_2(ctx) {
     	var current;
 
@@ -14719,7 +14758,7 @@ var app = (function () {
     	};
     }
 
-    // (204:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (211:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_2(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
@@ -14728,7 +14767,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$1, 204, 3, 5831);
+    			add_location(p, file$1, 211, 3, 6117);
     		},
 
     		m: function mount(target, anchor) {
@@ -14754,7 +14793,7 @@ var app = (function () {
     	};
     }
 
-    // (234:2) {:catch error}
+    // (241:2) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14763,7 +14802,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 234, 3, 7085);
+    			add_location(p, file$1, 241, 3, 7371);
     		},
 
     		m: function mount(target, anchor) {
@@ -14788,7 +14827,7 @@ var app = (function () {
     	};
     }
 
-    // (228:2) {:then hist}
+    // (235:2) {:then hist}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14835,7 +14874,7 @@ var app = (function () {
     	};
     }
 
-    // (226:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
+    // (233:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14843,7 +14882,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$1, 226, 3, 6659);
+    			add_location(p, file$1, 233, 3, 6945);
     		},
 
     		m: function mount(target, anchor) {
@@ -14862,7 +14901,7 @@ var app = (function () {
     	};
     }
 
-    // (191:2) {:catch error}
+    // (198:2) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14871,7 +14910,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 191, 3, 5548);
+    			add_location(p, file$1, 198, 3, 5834);
     		},
 
     		m: function mount(target, anchor) {
@@ -14896,13 +14935,13 @@ var app = (function () {
     	};
     }
 
-    // (185:2) {:then coll}
+    // (192:2) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
-    		columns: [{ key: null, title: 'Remove', value: func }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }],
+    		columns: [{ key: null, title: 'Remove', value: func, klass:"danger-button" }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }],
     		data: ctx.coll.sort(func_3)
     	},
     		$$inline: true
@@ -14943,7 +14982,7 @@ var app = (function () {
     	};
     }
 
-    // (183:21)     <p>...waiting</p>   {:then coll}
+    // (190:21)     <p>...waiting</p>   {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -14951,7 +14990,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 183, 3, 5097);
+    			add_location(p, file$1, 190, 3, 5360);
     		},
 
     		m: function mount(target, anchor) {
@@ -14971,7 +15010,7 @@ var app = (function () {
     }
 
     function create_fragment$1(ctx) {
-    	var div, current_block_type_index, if_block, t0, hr0, t1, a0, t2, t3, hr1, t4, a1, current;
+    	var div, current_block_type_index, if_block, current;
 
     	var if_block_creators = [
     		create_if_block$1,
@@ -14996,25 +15035,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			if (if_block) if_block.c();
-    			t0 = space();
-    			hr0 = element("hr");
-    			t1 = space();
-    			a0 = element("a");
-    			t2 = text("↓ Download my Data");
-    			t3 = space();
-    			hr1 = element("hr");
-    			t4 = space();
-    			a1 = element("a");
-    			a1.textContent = "⤴ Publish my Data";
-    			add_location(hr0, file$1, 237, 1, 7146);
-    			attr(a0, "href", ctx.link);
-    			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 238, 1, 7154);
-    			add_location(hr1, file$1, 239, 1, 7214);
-    			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 240, 1, 7222);
     			attr(div, "class", "border-glow");
-    			add_location(div, file$1, 169, 0, 4585);
+    			add_location(div, file$1, 171, 0, 4676);
     		},
 
     		l: function claim(nodes) {
@@ -15024,15 +15046,6 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert(target, div, anchor);
     			if (~current_block_type_index) if_blocks[current_block_type_index].m(div, null);
-    			append(div, t0);
-    			append(div, hr0);
-    			append(div, t1);
-    			append(div, a0);
-    			append(a0, t2);
-    			append(div, t3);
-    			append(div, hr1);
-    			append(div, t4);
-    			append(div, a1);
     			current = true;
     		},
 
@@ -15057,14 +15070,10 @@ var app = (function () {
     						if_block.c();
     					}
     					transition_in(if_block, 1);
-    					if_block.m(div, t0);
+    					if_block.m(div, null);
     				} else {
     					if_block = null;
     				}
-    			}
-
-    			if (!current || changed.link) {
-    				attr(a0, "href", ctx.link);
     			}
     		},
 
@@ -15127,6 +15136,8 @@ var app = (function () {
     	const getStorage = async () => {
     		const storage = await chromePromise$1.storage.sync.get(null);
 
+
+    		//TODO: schemas should ensure this anyways; no need to transform inside component logic
     		$$invalidate('collection', collection = Object.entries(storage)
     			.map(([url, node]) => assoc('url', url, node))
     			.filter(({ url }) => url != 'blacklist'));

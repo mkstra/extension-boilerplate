@@ -17,7 +17,7 @@
 	import { AmazonBookPageInfo } from './adapters/amazon';
 	import toastr from 'toastr';
 	import { toastrOptions } from './utils/params';
-	import Table from './Table.svelte';
+	import Table from './components/Table.svelte';
 
 	toastr.options = toastrOptions;
 	let scrapeCount = [0, 0];
@@ -27,6 +27,8 @@
 	const getStorage = async () => {
 		const storage = await chromep.storage.sync.get(null);
 
+
+		//TODO: schemas should ensure this anyways; no need to transform inside component logic
 		collection = Object.entries(storage)
 			.map(([url, node]) => assoc('url', url, node))
 			.filter(({ url }) => url != 'blacklist');
@@ -175,7 +177,13 @@
 		<button class="subtle-button border-glow" on:click={() => openTab('bootstrap')}>
 			🥳 Bootstrap Stream
 		</button>
-	{:else if hash == '#dashboard'}
+
+		<hr />
+		<a href={link} download="data.json">↓ Download my Data</a>
+		<hr />
+		<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">⤴ Publish my Data</a>
+	
+		{:else if hash == '#dashboard'}
 		<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 		<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
 		<br />
@@ -185,7 +193,7 @@
 		{:then coll}
 			<!-- <p>The number is {coll}</p> -->
 			<Table
-				columns={[{ key: null, title: 'Remove', value: v => ' X ' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				columns={[{ key: null, title: 'Remove', value: v => ' X ', klass:"danger-button" }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
 				data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
 				on:message={onRemove} />
 		{:catch error}
@@ -235,8 +243,5 @@
 			<p style="color: red">{error.message}</p>
 		{/await}
 	{/if}
-	<hr />
-	<a href={link} download="data.json">↓ Download my Data</a>
-	<hr />
-	<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">⤴ Publish my Data</a>
+
 </div>

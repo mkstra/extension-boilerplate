@@ -83,7 +83,21 @@
     100% { background-position: 0 0; }
 }
 
+.subtle-input {
+    min-width: 20vw;
+    color: grey;
+    border: 1px solid grey;
+    background: #eaeaea47;
+    padding: 0.4rem;
+}
 
+.danger-button {
+    background: red;
+    color: white;
+    border: white;
+    padding: 0.4rem;
+    font-weight: 700;
+}
 .subtle-button {
     background-color: rgba(255, 255, 255, 0.529);
     color: rgb(75, 75, 75);
