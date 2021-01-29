@@ -14453,9 +14453,9 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (216:32) 
+    // (207:32) 
     function create_if_block_2(ctx) {
-    	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
+    	var h1, t1, button0, t3, hr0, t4, promise, t5, hr1, t6, button1, t8, await_block1_anchor, promise_1, current, dispose;
 
     	let info = {
     		ctx,
@@ -14489,23 +14489,29 @@ var app = (function () {
     			h1.textContent = "Bootstrap your STREAM";
     			t1 = space();
     			button0 = element("button");
-    			button0.textContent = "Get Book from History!";
+    			button0.textContent = "📖 Find Books in History!";
     			t3 = space();
+    			hr0 = element("hr");
+    			t4 = space();
 
     			info.block.c();
 
-    			t4 = space();
+    			t5 = space();
+    			hr1 = element("hr");
+    			t6 = space();
     			button1 = element("button");
     			button1.textContent = "📝 Find essays in History (last 30 days)";
-    			t6 = space();
+    			t8 = space();
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$1, 216, 2, 6484);
+    			add_location(h1, file$1, 207, 2, 6150);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$1, 218, 2, 6518);
+    			add_location(button0, file$1, 209, 2, 6184);
+    			add_location(hr0, file$1, 217, 2, 6322);
+    			add_location(hr1, file$1, 232, 2, 7016);
     			attr(button1, "class", "glow-on-hover");
-    			add_location(button1, file$1, 239, 2, 7337);
+    			add_location(button1, file$1, 233, 2, 7025);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14518,14 +14524,18 @@ var app = (function () {
     			insert(target, t1, anchor);
     			insert(target, button0, anchor);
     			insert(target, t3, anchor);
+    			insert(target, hr0, anchor);
+    			insert(target, t4, anchor);
 
     			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => t4.parentNode;
-    			info.anchor = t4;
+    			info.mount = () => t5.parentNode;
+    			info.anchor = t5;
 
-    			insert(target, t4, anchor);
-    			insert(target, button1, anchor);
+    			insert(target, t5, anchor);
+    			insert(target, hr1, anchor);
     			insert(target, t6, anchor);
+    			insert(target, button1, anchor);
+    			insert(target, t8, anchor);
     			insert(target, await_block1_anchor, anchor);
 
     			info_1.block.m(target, info_1.anchor = anchor);
@@ -14577,15 +14587,19 @@ var app = (function () {
     				detach(t1);
     				detach(button0);
     				detach(t3);
+    				detach(hr0);
+    				detach(t4);
     			}
 
     			info.block.d(detaching);
     			info = null;
 
     			if (detaching) {
-    				detach(t4);
-    				detach(button1);
+    				detach(t5);
+    				detach(hr1);
     				detach(t6);
+    				detach(button1);
+    				detach(t8);
     				detach(await_block1_anchor);
     			}
 
@@ -14597,7 +14611,7 @@ var app = (function () {
     	};
     }
 
-    // (198:32) 
+    // (189:32) 
     function create_if_block_1$1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
@@ -14631,11 +14645,11 @@ var app = (function () {
     			attr(input, "class", "subtle-input");
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 198, 2, 5692);
+    			add_location(input, file$1, 189, 2, 5358);
     			attr(button, "class", "danger-button");
-    			add_location(button, file$1, 199, 2, 5788);
-    			add_location(br0, file$1, 200, 2, 5864);
-    			add_location(br1, file$1, 201, 2, 5871);
+    			add_location(button, file$1, 190, 2, 5454);
+    			add_location(br0, file$1, 191, 2, 5530);
+    			add_location(br1, file$1, 192, 2, 5537);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14710,7 +14724,7 @@ var app = (function () {
     	};
     }
 
-    // (187:1) {#if isEmpty(hash)}
+    // (178:1) {#if isEmpty(hash)}
     function create_if_block$1(ctx) {
     	var button0, t1, hr0, t2, button1, t4, hr1, t5, a0, t6, t7, hr2, t8, a1, dispose;
 
@@ -14734,17 +14748,17 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "⤴ Publish Dashboard";
     			attr(button0, "class", "subtle-button");
-    			add_location(button0, file$1, 187, 2, 5261);
-    			add_location(hr0, file$1, 188, 2, 5358);
+    			add_location(button0, file$1, 178, 2, 4927);
+    			add_location(hr0, file$1, 179, 2, 5024);
     			attr(button1, "class", "subtle-button border-glow");
-    			add_location(button1, file$1, 189, 2, 5367);
-    			add_location(hr1, file$1, 193, 2, 5486);
+    			add_location(button1, file$1, 180, 2, 5033);
+    			add_location(hr1, file$1, 184, 2, 5152);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 194, 2, 5495);
-    			add_location(hr2, file$1, 195, 2, 5556);
+    			add_location(a0, file$1, 185, 2, 5161);
+    			add_location(hr2, file$1, 186, 2, 5222);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 196, 2, 5565);
+    			add_location(a1, file$1, 187, 2, 5231);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14800,7 +14814,7 @@ var app = (function () {
     	};
     }
 
-    // (236:2) {:catch error}
+    // (229:2) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14809,7 +14823,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 236, 3, 7281);
+    			add_location(p, file$1, 229, 3, 6960);
     		},
 
     		m: function mount(target, anchor) {
@@ -14834,7 +14848,7 @@ var app = (function () {
     	};
     }
 
-    // (231:2) {:then bc}
+    // (224:2) {:then bc}
     function create_then_block_2(ctx) {
     	var current;
 
@@ -14881,7 +14895,7 @@ var app = (function () {
     	};
     }
 
-    // (226:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (219:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_2(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
@@ -14890,7 +14904,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$1, 226, 3, 6679);
+    			add_location(p, file$1, 219, 3, 6358);
     		},
 
     		m: function mount(target, anchor) {
@@ -14916,7 +14930,7 @@ var app = (function () {
     	};
     }
 
-    // (256:2) {:catch error}
+    // (253:2) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14925,7 +14939,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 256, 3, 7931);
+    			add_location(p, file$1, 253, 3, 7810);
     		},
 
     		m: function mount(target, anchor) {
@@ -14950,14 +14964,14 @@ var app = (function () {
     	};
     }
 
-    // (250:2) {:then hist}
+    // (247:2) {:then hist}
     function create_then_block_1(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
     		data: ctx.hist,
-    		columns: [{ key: null, title: 'Add', value: func_7 }, { key: 'title', title: 'Title', value: func_8 }, { key: 'dateCreated', title: 'Date', value: ctx.func_9 }]
+    		columns: [{ key: null, title: 'Add', value: func_7 , style:"green-button"}, { key: 'title', title: 'Title', value: func_8 }, { key: 'dateCreated', title: 'Date', value: ctx.func_9 }]
     	},
     		$$inline: true
     	});
@@ -14997,34 +15011,48 @@ var app = (function () {
     	};
     }
 
-    // (248:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
+    // (242:18)     <p>...running **Article?** classifier on history documents</p>    <p>     {essayCount[0] > 0 ? `Progress: ${essayCount[1]}
     function create_pending_block_1(ctx) {
-    	var p;
+    	var p0, t1, p1, t2_value = ctx.essayCount[0] > 0 ? `Progress: ${ctx.essayCount[1]} of ${ctx.essayCount[0]} pages searched for article/essay. Takes some time after done`: "processing ...", t2;
 
     	return {
     		c: function create() {
-    			p = element("p");
-    			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$1, 248, 3, 7505);
+    			p0 = element("p");
+    			p0.textContent = "...running **Article?** classifier on history documents";
+    			t1 = space();
+    			p1 = element("p");
+    			t2 = text(t2_value);
+    			add_location(p0, file$1, 242, 3, 7193);
+    			add_location(p1, file$1, 243, 3, 7259);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, p, anchor);
+    			insert(target, p0, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, p1, anchor);
+    			append(p1, t2);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if ((changed.essayCount) && t2_value !== (t2_value = ctx.essayCount[0] > 0 ? `Progress: ${ctx.essayCount[1]} of ${ctx.essayCount[0]} pages searched for article/essay. Takes some time after done`: "processing ...")) {
+    				set_data(t2, t2_value);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(p);
+    				detach(p0);
+    				detach(t1);
+    				detach(p1);
     			}
     		}
     	};
     }
 
-    // (213:2) {:catch error}
+    // (204:2) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -15033,7 +15061,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 213, 3, 6396);
+    			add_location(p, file$1, 204, 3, 6062);
     		},
 
     		m: function mount(target, anchor) {
@@ -15058,7 +15086,7 @@ var app = (function () {
     	};
     }
 
-    // (207:2) {:then coll}
+    // (198:2) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
@@ -15106,7 +15134,7 @@ var app = (function () {
     	};
     }
 
-    // (205:21)     <p>...waiting</p>   {:then coll}
+    // (196:21)     <p>...waiting</p>   {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15114,7 +15142,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 205, 3, 5903);
+    			add_location(p, file$1, 196, 3, 5569);
     		},
 
     		m: function mount(target, anchor) {
@@ -15160,7 +15188,7 @@ var app = (function () {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr(div, "class", "border-glow");
-    			add_location(div, file$1, 184, 0, 5211);
+    			add_location(div, file$1, 175, 0, 4877);
     		},
 
     		l: function claim(nodes) {
@@ -15257,6 +15285,8 @@ var app = (function () {
     	toastr.options = toastrOptions;
     	let scrapeCount = [0, 0];
 
+    	let essayCount = [0, 1];
+
     	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
     	const getStorage = async () => {
@@ -15274,8 +15304,7 @@ var app = (function () {
     		let historyItems = await chromePromise$1.history.search({
     			text: '', // Return every history item....
     			startTime: 0,
-    			maxResults: 20000,
-    			// that was accessed less than one week ago.
+    			maxResults: 5000,
     		});
     		historyItems = historyPipe([])(historyItems)
     			.filter(e => e.url.includes('amazon.') && !e.url.includes('aws'))
@@ -15294,44 +15323,30 @@ var app = (function () {
     		//for display during loading
     		$$invalidate('scrapeCount', scrapeCount = [historyItems.length, 0]);
     		
-    		let nodes = await splitEvery(5, historyItems) //avoid website denying fetches
-    		.reduce(async (acc, currentBatch) => {
-    			const batch = await asyncMap(currentBatch, async item => {
+    		let batches = splitEvery(4, historyItems); //avoid website denying fetches
+    		
+    		let nodes = [];
+    		for (let batch of batches){
+    			console.log(nodes, batch, "aaa");
+    			let resp = await asyncMap(batch, async item => {
     				const doc = await idiotSafe(UrlToDOM)(item['url']);
+    				//doc might return false
     				scrapeCount[1] += 1; $$invalidate('scrapeCount', scrapeCount);
     				return ({
     					...item,
     					doc,
     				})
     			});
-    			return acc.concat(batch)
-    		}, []);
+    			resp = resp.filter(i => i.doc);
+    			nodes = nodes.concat(resp);
+    		}
 
     		console.log(nodes, historyItems, 'd');
-    		// let nodes = await asyncMap(historyItems, async item => {
-    		// 	const doc = await idiotSafe(UrlToDOM)(item['url']);
-    		// 	scrapeCount[1] += 1;
-    		// 	return {
-    		// 		...item,
-    		// 		doc,
-    		// 	};
-    		// });
 
     		const bookColl = nodes
     			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
-    			// .map(n=>{console.log(n);
-    			// return n
-    			// })
     			.filter(n => path(['hasISBN'], n));
-    		// .map(({ productTitle, author, img, url, title, dateCreated }) => ({
-    		// 	productTitle: productTitle,
-    		// 	author,
-    		// 	title,
-    		// 	// img: `<img src=${img}/>`,
-    		// 	dateCreated,
-    		// 	url,
-    		// }));
-    		console.log(bookColl, 'books!');
+    		// console.log(bookColl, 'books!');
     		return bookColl;
     	};
 
@@ -15382,8 +15397,8 @@ var app = (function () {
     		toastr.success(`${node.productTitle || node.title} added to stream`);
     	};
 
-    	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
-    		const maxResults = 300;
+    	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 60) => {
+    		const maxResults = 5000;
     		let historyItems = await chromePromise$1.history.search({
     			text: '', // Return every history item....
     			startTime: new Date().getTime() - msSinceNow,
@@ -15395,11 +15410,15 @@ var app = (function () {
     		historyItems = historyPipe(blacklist['blacklist'])(historyItems).filter(
     			item => item.url.split('/').length - 1 > 2
     		);
+
+    		$$invalidate('essayCount', essayCount = [historyItems.length, 0]);
+
     		//no homepages, only if has path aka something.com//superfancy
 
     		historyItems = await asyncFilter(historyItems, async item => {
     			const doc = await idiotSafe(UrlToDOM)(item['url']);
     			try {
+    				essayCount[1] += 1; $$invalidate('essayCount', essayCount);
     				return doc.querySelector('article');
     			} catch (error) {
     				console.log(error, 'with doc: ', doc);
@@ -15454,6 +15473,7 @@ var app = (function () {
 
     	return {
     		scrapeCount,
+    		essayCount,
     		getBooks,
     		collection,
     		deleteConfirm,

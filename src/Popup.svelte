@@ -22,6 +22,8 @@
 	toastr.options = toastrOptions;
 	let scrapeCount = [0, 0];
 
+	let essayCount = [0, 1]
+
 	//TODO: put Storage in a temp subscription and only run "updateStorage" inside the reducer action
 
 	const getStorage = async () => {
@@ -39,8 +41,7 @@
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: 0,
-			maxResults: 20000,
-			// that was accessed less than one week ago.
+			maxResults: 5000,
 		});
 		historyItems = historyPipe([])(historyItems)
 			.filter(e => e.url.includes('amazon.') && !e.url.includes('aws'))
@@ -59,44 +60,30 @@
 		//for display during loading
 		scrapeCount = [historyItems.length, 0];
 		
-		let nodes = await splitEvery(5, historyItems) //avoid website denying fetches
-		.reduce(async (acc, currentBatch) => {
-			const batch = await asyncMap(currentBatch, async item => {
+		let batches = splitEvery(4, historyItems) //avoid website denying fetches
+		
+		let nodes = []
+		for (let batch of batches){
+			console.log(nodes, batch, "aaa")
+			let resp = await asyncMap(batch, async item => {
 				const doc = await idiotSafe(UrlToDOM)(item['url']);
+				//doc might return false
 				scrapeCount[1] += 1;
 				return ({
 					...item,
 					doc,
 				})
 			})
-			return acc.concat(batch)
-		}, [])
+			resp = resp.filter(i => i.doc)
+			nodes = nodes.concat(resp)
+		}
 
 		console.log(nodes, historyItems, 'd');
-		// let nodes = await asyncMap(historyItems, async item => {
-		// 	const doc = await idiotSafe(UrlToDOM)(item['url']);
-		// 	scrapeCount[1] += 1;
-		// 	return {
-		// 		...item,
-		// 		doc,
-		// 	};
-		// });
 
 		const bookColl = nodes
 			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
-			// .map(n=>{console.log(n);
-			// return n
-			// })
 			.filter(n => path(['hasISBN'], n));
-		// .map(({ productTitle, author, img, url, title, dateCreated }) => ({
-		// 	productTitle: productTitle,
-		// 	author,
-		// 	title,
-		// 	// img: `<img src=${img}/>`,
-		// 	dateCreated,
-		// 	url,
-		// }));
-		console.log(bookColl, 'books!');
+		// console.log(bookColl, 'books!');
 		return bookColl;
 	};
 
@@ -148,8 +135,8 @@
 		toastr.success(`${node.productTitle || node.title} added to stream`);
 	};
 
-	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
-		const maxResults = 300;
+	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 60) => {
+		const maxResults = 5000;
 		let historyItems = await chromep.history.search({
 			text: '', // Return every history item....
 			startTime: new Date().getTime() - msSinceNow,
@@ -161,11 +148,15 @@
 		historyItems = historyPipe(blacklist['blacklist'])(historyItems).filter(
 			item => item.url.split('/').length - 1 > 2
 		);
+
+		essayCount = [historyItems.length, 0];
+
 		//no homepages, only if has path aka something.com//superfancy
 
 		historyItems = await asyncFilter(historyItems, async item => {
 			const doc = await idiotSafe(UrlToDOM)(item['url']);
 			try {
+				essayCount[1] += 1
 				return doc.querySelector('article');
 			} catch (error) {
 				console.log(error, 'with doc: ', doc);
@@ -221,8 +212,10 @@
 			on:click={() => {
 				bookCollection = getBooks();
 			}}>
-			Get Book from History!
+			📖 Find Books in History!
 		</button>
+
+		<hr />
 		{#await bookCollection}
 			<p>
 				{scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]} of ${scrapeCount[0]} your pages
@@ -237,6 +230,7 @@
 			<p style="color: red">{error.message}</p>
 		{/await}
 
+		<hr />
 		<button
 			class="glow-on-hover"
 			on:click={() => {
@@ -247,11 +241,14 @@
 
 		{#await history}
 			<p>...running **Article?** classifier on history documents</p>
+			<p>
+				{essayCount[0] > 0 ? `Progress: ${essayCount[1]} of ${essayCount[0]} pages searched for article/essay. Takes some time after done`: "processing ..."}
+			</p>
 		{:then hist}
 			<!-- <p>The number is {coll}</p> -->
 			<Table
 				data={hist}
-				columns={[{ key: null, title: 'Add', value: v => ' + ' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				columns={[{ key: null, title: 'Add', value: v => ' + ' , style:"green-button"}, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
 				on:message={onAdd} />
 		{:catch error}
 			<p style="color: red">{error.message}</p>
