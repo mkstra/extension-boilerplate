@@ -5,11 +5,16 @@
     /* left: 50%; */
     bottom: -0.4rem;
     padding: 0.5rem;
-    left: 45%;
+    left: 65%;
 
     opacity: 0.75;
     border-radius: 5px;
     border: 1px solid grey;
+}
+
+.green-button {
+
+    background-color:lightgreen;
 }
 
 .border-glow {

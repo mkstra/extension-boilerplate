@@ -8,6 +8,7 @@
 - [ ] Buttons buttons buttons (with scoped CSS?)
 
 ## Technical /now
+- [ ] Writing tests for this fucking thing?
 - [x] Keypresses like Shift+R
 - [x] add to "marks" 
 - [x] separate YOUDB storage from TEMP-session

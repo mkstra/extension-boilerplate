@@ -12,7 +12,7 @@
 		historyPipe,
 		asyncMap,
 	} from './utils/utils';
-	import { assoc, isEmpty, path, uniqBy, pipe, map, filter } from 'ramda';
+	import { assoc, isEmpty, splitEvery, path, omit, uniqBy, pipe, map, filter } from 'ramda';
 	import normalizeUrl from 'normalize-url';
 	import { AmazonBookPageInfo } from './adapters/amazon';
 	import toastr from 'toastr';
@@ -26,7 +26,6 @@
 
 	const getStorage = async () => {
 		const storage = await chromep.storage.sync.get(null);
-
 
 		//TODO: schemas should ensure this anyways; no need to transform inside component logic
 		collection = Object.entries(storage)
@@ -59,46 +58,56 @@
 
 		//for display during loading
 		scrapeCount = [historyItems.length, 0];
+		
+		let nodes = await splitEvery(5, historyItems) //avoid website denying fetches
+		.reduce(async (acc, currentBatch) => {
+			const batch = await asyncMap(currentBatch, async item => {
+				const doc = await idiotSafe(UrlToDOM)(item['url']);
+				scrapeCount[1] += 1;
+				return ({
+					...item,
+					doc,
+				})
+			})
+			return acc.concat(batch)
+		}, [])
 
-		console.log(historyItems, 'd');
-		let nodes = await asyncMap(historyItems, async item => {
-			const doc = await idiotSafe(UrlToDOM)(item['url']);
-			scrapeCount[1] += 1;
-			return {
-				...item,
-				doc,
-			};
-		});
+		console.log(nodes, historyItems, 'd');
+		// let nodes = await asyncMap(historyItems, async item => {
+		// 	const doc = await idiotSafe(UrlToDOM)(item['url']);
+		// 	scrapeCount[1] += 1;
+		// 	return {
+		// 		...item,
+		// 		doc,
+		// 	};
+		// });
 
 		const bookColl = nodes
 			.map(n => ({ ...n, ...AmazonBookPageInfo(n.doc) }))
 			// .map(n=>{console.log(n);
 			// return n
 			// })
-			.filter(n => path(['hasISBN'], n))
-			.map(({ productTitle, author, img, url, title, dateCreated }) => ({
-				productTitle: productTitle,
-				author,
-				title,
-				// img: `<img src=${img}/>`,
-				dateCreated,
-				url,
-			}));
+			.filter(n => path(['hasISBN'], n));
+		// .map(({ productTitle, author, img, url, title, dateCreated }) => ({
+		// 	productTitle: productTitle,
+		// 	author,
+		// 	title,
+		// 	// img: `<img src=${img}/>`,
+		// 	dateCreated,
+		// 	url,
+		// }));
 		console.log(bookColl, 'books!');
 		return bookColl;
 	};
 
-	let link = '';
-	let collection = getStorage().then(c => {
-		link = JSONDownloadable(c);
-	});
+	// let link = '';
+	let collection = getStorage();
+	$: link = JSONDownloadable(collection);
 
-	let deleteConfirm = "type: 'IRREVERSIBLE' to confirm";
+	let deleteConfirm = "type 'IRREVERSIBLE' to confirm";
 	let hash = window.location.hash;
 	let history = [];
-	let bookCollection = new Promise((res, rej) => {
-		console.log('doing nothing');
-	});
+	let bookCollection = [];
 
 	// fetch('https://dacapo.io/hacking-scientific-text')
 	// 	.then(res => res)
@@ -111,9 +120,7 @@
 		chrome.tabs.create({ url: chrome.extension.getURL('popup.html#' + hash) });
 
 	chrome.storage.onChanged.addListener((_c, _ns) => {
-		getStorage().then(coll => {
-			link = JSONDownloadable(coll);
-		});
+		collection = getStorage();
 	});
 
 	const clearStorage = async () => {
@@ -124,16 +131,21 @@
 		}
 	};
 
-	const onRemove = async ({ detail }) => {
-		console.log(detail, 'detail');
-		await chromep.storage.sync.remove(detail.url);
-	};
+	const onRemove = async ({ detail }) => await chromep.storage.sync.remove(detail.url);
+
 
 	const onAdd = async ({ detail }) => {
-		console.log(detail, 'yo');
+
+		const node = filter(v=>v, omit(
+			//doc and img --> exceed QUOTA of storage
+			["doc", "img", "typedCount", "id", "visitCount", "lastVisitTime"], detail)
+		)
+		
+		console.log(node, '--> storage?');
+
 		//maybe have some ###hash scheme for adding to DB?
-		await chromep.storage.sync.set({ [detail.url]: detail });
-		toastr.success(`${detail.title} added to stream`);
+		await chromep.storage.sync.set({ [node.url]: node });
+		toastr.success(`${node.productTitle || node.title} added to stream`);
 	};
 
 	const getHistory = async (msSinceNow = 1000 * 60 * 60 * 24 * 30) => {
@@ -165,7 +177,6 @@
 
 		return historyItems;
 	};
-
 	console.log(history, 'history');
 </script>
 
@@ -181,9 +192,8 @@
 		<hr />
 		<a href={link} download="data.json">↓ Download my Data</a>
 		<hr />
-		<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">⤴ Publish my Data</a>
-	
-		{:else if hash == '#dashboard'}
+		<a href="mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.">⤴ Publish Dashboard</a>
+	{:else if hash == '#dashboard'}
 		<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 		<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
 		<br />
@@ -193,7 +203,7 @@
 		{:then coll}
 			<!-- <p>The number is {coll}</p> -->
 			<Table
-				columns={[{ key: null, title: 'Remove', value: v => ' X ', klass:"danger-button" }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				columns={[{ key: null, title: 'Remove', value: v => ' X ', klass: 'danger-button' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
 				data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
 				on:message={onRemove} />
 		{:catch error}
@@ -228,7 +238,7 @@
 			on:click={() => {
 				history = getHistory();
 			}}>
-			Scan history for articles (last 30 days)
+			📝 Find essays in History (last 30 days)
 		</button>
 
 		{#await history}
@@ -243,5 +253,4 @@
 			<p style="color: red">{error.message}</p>
 		{/await}
 	{/if}
-
 </div>

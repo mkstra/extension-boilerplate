@@ -1,7 +1,5 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { trimString } from './utils/utils';
-	import { head, omit} from 'ramda';
 
 	export let data;
 	export let columns;
@@ -27,7 +25,7 @@
 <table>
 	<thead>
 		<tr>
-			
+			<!-- TODO slot with blank column header -->
 			{#each columns as config}
 			<th>{config.title}</th>
 			{/each}
