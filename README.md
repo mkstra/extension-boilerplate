@@ -1,3 +1,7 @@
+# Why?
+
+Infrastructure for [future queries](https://dacapo.io/future-query/)
+
 ## To try out
 
 API source
