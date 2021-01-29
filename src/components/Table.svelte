@@ -11,14 +11,14 @@
 	table,
 	th,
 	td {
-		border: 1px solid black;
+		border: 1px solid darkgrey;
 		border-collapse: collapse;
-		padding: 0.5rem;
+		padding: 0.4rem;
 	}
 	table {
 		background: #eee;
-		min-width: 80vw;
-		text-align: center;
+		/* min-width: 80vw; */
+		/* text-align: center; */
 	}
 </style>
 
@@ -37,7 +37,7 @@
 		{#each data as row}
 		<tr>
 			{#each columns as config}
-			<td styling={config.styling}>
+			<td style={config.style}>
 				{#if !config.key}
 				<button class={config.klass} on:click={() => dispatch('message', row)}>
 					{@html config.value(row)}</button>

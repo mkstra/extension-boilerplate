@@ -14012,8 +14012,8 @@ var app = (function () {
     		c: function create() {
     			th = element("th");
     			t = text(t_value);
-    			attr(th, "class", "svelte-1llhbd6");
-    			add_location(th, file, 29, 3, 487);
+    			attr(th, "class", "svelte-115sffn");
+    			add_location(th, file, 29, 3, 502);
     		},
 
     		m: function mount(target, anchor) {
@@ -14080,7 +14080,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			attr(button, "class", button_class_value = ctx.config.klass);
-    			add_location(button, file, 41, 4, 670);
+    			add_location(button, file, 41, 4, 681);
     			dispose = listen(button, "click", click_handler);
     		},
 
@@ -14112,7 +14112,7 @@ var app = (function () {
 
     // (39:3) {#each columns as config}
     function create_each_block_1(ctx) {
-    	var td, td_styling_value;
+    	var td, td_style_value;
 
     	function select_block_type(ctx) {
     		if (!ctx.config.key) return create_if_block;
@@ -14126,9 +14126,9 @@ var app = (function () {
     		c: function create() {
     			td = element("td");
     			if_block.c();
-    			attr(td, "styling", td_styling_value = ctx.config.styling);
-    			attr(td, "class", "svelte-1llhbd6");
-    			add_location(td, file, 39, 3, 614);
+    			attr(td, "style", td_style_value = ctx.config.style);
+    			attr(td, "class", "svelte-115sffn");
+    			add_location(td, file, 39, 3, 629);
     		},
 
     		m: function mount(target, anchor) {
@@ -14148,8 +14148,8 @@ var app = (function () {
     				}
     			}
 
-    			if ((changed.columns) && td_styling_value !== (td_styling_value = ctx.config.styling)) {
-    				attr(td, "styling", td_styling_value);
+    			if ((changed.columns) && td_style_value !== (td_style_value = ctx.config.style)) {
+    				attr(td, "style", td_style_value);
     			}
     		},
 
@@ -14184,7 +14184,7 @@ var app = (function () {
     			}
 
     			t = space();
-    			add_location(tr, file, 37, 2, 577);
+    			add_location(tr, file, 37, 2, 592);
     		},
 
     		m: function mount(target, anchor) {
@@ -14265,11 +14265,11 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(tr, file, 26, 2, 403);
-    			add_location(thead, file, 25, 1, 393);
-    			add_location(tbody, file, 34, 1, 544);
-    			attr(table, "class", "svelte-1llhbd6");
-    			add_location(table, file, 24, 0, 384);
+    			add_location(tr, file, 26, 2, 418);
+    			add_location(thead, file, 25, 1, 408);
+    			add_location(tbody, file, 34, 1, 559);
+    			attr(table, "class", "svelte-115sffn");
+    			add_location(table, file, 24, 0, 399);
     		},
 
     		l: function claim(nodes) {
@@ -14409,7 +14409,7 @@ var app = (function () {
 
     const file$1 = "src/Popup.svelte";
 
-    // (212:32) 
+    // (216:32) 
     function create_if_block_2(ctx) {
     	var h1, t1, button0, t3, promise, t4, button1, t6, await_block1_anchor, promise_1, current, dispose;
 
@@ -14457,11 +14457,11 @@ var app = (function () {
     			await_block1_anchor = empty();
 
     			info_1.block.c();
-    			add_location(h1, file$1, 212, 2, 6399);
+    			add_location(h1, file$1, 216, 2, 6484);
     			attr(button0, "class", "glow-on-hover");
-    			add_location(button0, file$1, 214, 2, 6433);
+    			add_location(button0, file$1, 218, 2, 6518);
     			attr(button1, "class", "glow-on-hover");
-    			add_location(button1, file$1, 235, 2, 7254);
+    			add_location(button1, file$1, 239, 2, 7337);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler_2),
@@ -14553,9 +14553,9 @@ var app = (function () {
     	};
     }
 
-    // (196:32) 
+    // (198:32) 
     function create_if_block_1(ctx) {
-    	var input, t0, button, t2, br, t3, await_block_anchor, promise, current, dispose;
+    	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
     	let info = {
     		ctx,
@@ -14577,18 +14577,21 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "DELETE ALL";
     			t2 = space();
-    			br = element("br");
+    			br0 = element("br");
     			t3 = space();
+    			br1 = element("br");
+    			t4 = space();
     			await_block_anchor = empty();
 
     			info.block.c();
     			attr(input, "class", "subtle-input");
     			set_style(input, "min-width", "20vw");
     			attr(input, "type", "text");
-    			add_location(input, file$1, 196, 2, 5631);
+    			add_location(input, file$1, 198, 2, 5692);
     			attr(button, "class", "danger-button");
-    			add_location(button, file$1, 197, 2, 5727);
-    			add_location(br, file$1, 198, 2, 5803);
+    			add_location(button, file$1, 199, 2, 5788);
+    			add_location(br0, file$1, 200, 2, 5864);
+    			add_location(br1, file$1, 201, 2, 5871);
 
     			dispose = [
     				listen(input, "input", ctx.input_input_handler),
@@ -14604,8 +14607,10 @@ var app = (function () {
     			insert(target, t0, anchor);
     			insert(target, button, anchor);
     			insert(target, t2, anchor);
-    			insert(target, br, anchor);
+    			insert(target, br0, anchor);
     			insert(target, t3, anchor);
+    			insert(target, br1, anchor);
+    			insert(target, t4, anchor);
     			insert(target, await_block_anchor, anchor);
 
     			info.block.m(target, info.anchor = anchor);
@@ -14646,8 +14651,10 @@ var app = (function () {
     				detach(t0);
     				detach(button);
     				detach(t2);
-    				detach(br);
+    				detach(br0);
     				detach(t3);
+    				detach(br1);
+    				detach(t4);
     				detach(await_block_anchor);
     			}
 
@@ -14659,7 +14666,7 @@ var app = (function () {
     	};
     }
 
-    // (185:1) {#if isEmpty(hash)}
+    // (187:1) {#if isEmpty(hash)}
     function create_if_block$1(ctx) {
     	var button0, t1, hr0, t2, button1, t4, hr1, t5, a0, t6, t7, hr2, t8, a1, dispose;
 
@@ -14683,17 +14690,17 @@ var app = (function () {
     			a1 = element("a");
     			a1.textContent = "⤴ Publish Dashboard";
     			attr(button0, "class", "subtle-button");
-    			add_location(button0, file$1, 185, 2, 5200);
-    			add_location(hr0, file$1, 186, 2, 5297);
+    			add_location(button0, file$1, 187, 2, 5261);
+    			add_location(hr0, file$1, 188, 2, 5358);
     			attr(button1, "class", "subtle-button border-glow");
-    			add_location(button1, file$1, 187, 2, 5306);
-    			add_location(hr1, file$1, 191, 2, 5425);
+    			add_location(button1, file$1, 189, 2, 5367);
+    			add_location(hr1, file$1, 193, 2, 5486);
     			attr(a0, "href", ctx.link);
     			attr(a0, "download", "data.json");
-    			add_location(a0, file$1, 192, 2, 5434);
-    			add_location(hr2, file$1, 193, 2, 5495);
+    			add_location(a0, file$1, 194, 2, 5495);
+    			add_location(hr2, file$1, 195, 2, 5556);
     			attr(a1, "href", "mailto:strasser.ms@gmail.com?subject=streamdata!&body=Hi.");
-    			add_location(a1, file$1, 194, 2, 5504);
+    			add_location(a1, file$1, 196, 2, 5565);
 
     			dispose = [
     				listen(button0, "click", ctx.click_handler),
@@ -14749,7 +14756,7 @@ var app = (function () {
     	};
     }
 
-    // (232:2) {:catch error}
+    // (236:2) {:catch error}
     function create_catch_block_2(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14758,7 +14765,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 232, 3, 7198);
+    			add_location(p, file$1, 236, 3, 7281);
     		},
 
     		m: function mount(target, anchor) {
@@ -14783,14 +14790,14 @@ var app = (function () {
     	};
     }
 
-    // (227:2) {:then bc}
+    // (231:2) {:then bc}
     function create_then_block_2(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
     		data: ctx.bc,
-    		columns: [{ key: null, title: 'Add', value: func_4, klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: func_5, styling: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: ctx.func_6 }]
+    		columns: [{ key: null, title: 'Add', value: func_4, klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: func_5, style: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: ctx.func_6 }]
     	},
     		$$inline: true
     	});
@@ -14830,7 +14837,7 @@ var app = (function () {
     	};
     }
 
-    // (222:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
+    // (226:25)     <p>     {scrapeCount[0] > 0 ? `Progress: ${scrapeCount[1]}
     function create_pending_block_2(ctx) {
     	var p, t_value = ctx.scrapeCount[0] > 0 ? `Progress: ${ctx.scrapeCount[1]} of ${ctx.scrapeCount[0]} your pages
  Amazon pages searched. If nothing happens, it's because of too many fetch requests to Amazon (which denies then)` : '-', t;
@@ -14839,7 +14846,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			t = text(t_value);
-    			add_location(p, file$1, 222, 3, 6594);
+    			add_location(p, file$1, 226, 3, 6679);
     		},
 
     		m: function mount(target, anchor) {
@@ -14865,7 +14872,7 @@ var app = (function () {
     	};
     }
 
-    // (252:2) {:catch error}
+    // (256:2) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14874,7 +14881,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 252, 3, 7848);
+    			add_location(p, file$1, 256, 3, 7931);
     		},
 
     		m: function mount(target, anchor) {
@@ -14899,7 +14906,7 @@ var app = (function () {
     	};
     }
 
-    // (246:2) {:then hist}
+    // (250:2) {:then hist}
     function create_then_block_1(ctx) {
     	var current;
 
@@ -14946,7 +14953,7 @@ var app = (function () {
     	};
     }
 
-    // (244:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
+    // (248:18)     <p>...running **Article?** classifier on history documents</p>   {:then hist}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -14954,7 +14961,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...running **Article?** classifier on history documents";
-    			add_location(p, file$1, 244, 3, 7422);
+    			add_location(p, file$1, 248, 3, 7505);
     		},
 
     		m: function mount(target, anchor) {
@@ -14973,7 +14980,7 @@ var app = (function () {
     	};
     }
 
-    // (209:2) {:catch error}
+    // (213:2) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -14982,7 +14989,7 @@ var app = (function () {
     			p = element("p");
     			t = text(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$1, 209, 3, 6311);
+    			add_location(p, file$1, 213, 3, 6396);
     		},
 
     		m: function mount(target, anchor) {
@@ -15007,13 +15014,13 @@ var app = (function () {
     	};
     }
 
-    // (203:2) {:then coll}
+    // (207:2) {:then coll}
     function create_then_block(ctx) {
     	var current;
 
     	var table = new Table({
     		props: {
-    		columns: [{ key: null, title: 'Remove', value: func, klass: 'danger-button' }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }],
+    		columns: [{ key: null, title: 'Remove', value: func, klass: 'danger-button', style:centerFlex }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }],
     		data: ctx.coll.sort(func_3)
     	},
     		$$inline: true
@@ -15032,6 +15039,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			var table_changes = {};
+    			if (changed.centerFlex) table_changes.columns = [{ key: null, title: 'Remove', value: func, klass: 'danger-button', style:centerFlex }, { key: 'title', title: 'Title', value: func_1 }, { key: 'dateCreated', title: 'Date', value: ctx.func_2 }];
     			if (changed.collection) table_changes.data = ctx.coll.sort(func_3);
     			table.$set(table_changes);
     		},
@@ -15054,7 +15062,7 @@ var app = (function () {
     	};
     }
 
-    // (201:21)     <p>...waiting</p>   {:then coll}
+    // (205:21)     <p>...waiting</p>   {:then coll}
     function create_pending_block(ctx) {
     	var p;
 
@@ -15062,7 +15070,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$1, 201, 3, 5836);
+    			add_location(p, file$1, 205, 3, 5903);
     		},
 
     		m: function mount(target, anchor) {
@@ -15108,7 +15116,7 @@ var app = (function () {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr(div, "class", "border-glow");
-    			add_location(div, file$1, 182, 0, 5150);
+    			add_location(div, file$1, 184, 0, 5211);
     		},
 
     		l: function claim(nodes) {
@@ -15169,6 +15177,8 @@ var app = (function () {
     		}
     	};
     }
+
+    const centerFlex = "display:flex; justify-content: center";
 
     function func(v) {
     	return ' X ';

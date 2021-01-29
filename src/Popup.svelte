@@ -178,6 +178,8 @@
 		return historyItems;
 	};
 	console.log(history, 'history');
+
+	const centerFlex = "display:flex; justify-content: center"
 </script>
 
 <div class="border-glow">
@@ -196,14 +198,16 @@
 	{:else if hash == '#dashboard'}
 		<input class="subtle-input" style="min-width: 20vw" type="text" bind:value={deleteConfirm} />
 		<button class="danger-button" on:click={clearStorage}>DELETE ALL</button>
-		<br />
+		<br>
+		<br>
+
 
 		{#await collection}
 			<p>...waiting</p>
 		{:then coll}
 			<!-- <p>The number is {coll}</p> -->
 			<Table
-				columns={[{ key: null, title: 'Remove', value: v => ' X ', klass: 'danger-button' }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
+				columns={[{ key: null, title: 'Remove', value: v => ' X ', klass: 'danger-button', style:centerFlex }, { key: 'title', title: 'Title', value: v => `<a href=${v.url}> ${v.productTitle || v.title}</a>` }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]}
 				data={coll.sort((a, b) => b.dateCreated - a.dateCreated)}
 				on:message={onRemove} />
 		{:catch error}
@@ -228,7 +232,7 @@
 			<Table
 				data={bc}
 				on:message={onAdd}
-				columns={[{ key: null, title: 'Add', value: v => ' + ', klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: v => `<a href=${v.url}> ${v.productTitle}</a>`, styling: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]} />
+				columns={[{ key: null, title: 'Add', value: v => ' + ', klass: 'green-button' }, { key: 'productTitle', title: 'Book', value: v => `<a href=${v.url}> ${v.productTitle}</a>`, style: 'min-width: 20vw' }, { key: 'dateCreated', title: 'Date', value: v => new Date(v.dateCreated).toDateString() }]} />
 		{:catch error}
 			<p style="color: red">{error.message}</p>
 		{/await}
