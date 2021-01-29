@@ -34,9 +34,6 @@
 		"page": "options.html",
 		"chrome_style": false
 	},
-	"chrome_url_overrides" : {
-		"newtab": "index.html"
-	},
 	"content_security_policy": "script-src 'self' https://sdk.amazonaws.com/js/aws-sdk-2.831.0.min.js https://raw.githubusercontent.com/* https://github.com/* https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'",
 	"content_scripts": [
 		{
