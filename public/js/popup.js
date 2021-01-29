@@ -14004,233 +14004,8 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (29:3) {#each columns as config}
-    function create_each_block_2(ctx) {
-    	var th, t_value = ctx.config.title, t;
-
-    	return {
-    		c: function create() {
-    			th = element("th");
-    			t = text(t_value);
-    			attr(th, "class", "svelte-115sffn");
-    			add_location(th, file, 29, 3, 502);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, th, anchor);
-    			append(th, t);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.columns) && t_value !== (t_value = ctx.config.title)) {
-    				set_data(t, t_value);
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(th);
-    			}
-    		}
-    	};
-    }
-
-    // (44:4) {:else}
-    function create_else_block(ctx) {
-    	var raw_value = ctx.config.value(ctx.row), raw_before, raw_after;
-
-    	return {
-    		c: function create() {
-    			raw_before = element('noscript');
-    			raw_after = element('noscript');
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, raw_before, anchor);
-    			raw_before.insertAdjacentHTML("afterend", raw_value);
-    			insert(target, raw_after, anchor);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
-    				detach_between(raw_before, raw_after);
-    				raw_before.insertAdjacentHTML("afterend", raw_value);
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_between(raw_before, raw_after);
-    				detach(raw_before);
-    				detach(raw_after);
-    			}
-    		}
-    	};
-    }
-
-    // (41:4) {#if !config.key}
+    // (26:0) {#if (!isEmpty(data))}
     function create_if_block(ctx) {
-    	var button, raw_value = ctx.config.value(ctx.row), button_class_value, dispose;
-
-    	function click_handler() {
-    		return ctx.click_handler(ctx);
-    	}
-
-    	return {
-    		c: function create() {
-    			button = element("button");
-    			attr(button, "class", button_class_value = ctx.config.klass);
-    			add_location(button, file, 41, 4, 681);
-    			dispose = listen(button, "click", click_handler);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, button, anchor);
-    			button.innerHTML = raw_value;
-    		},
-
-    		p: function update(changed, new_ctx) {
-    			ctx = new_ctx;
-    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
-    				button.innerHTML = raw_value;
-    			}
-
-    			if ((changed.columns) && button_class_value !== (button_class_value = ctx.config.klass)) {
-    				attr(button, "class", button_class_value);
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(button);
-    			}
-
-    			dispose();
-    		}
-    	};
-    }
-
-    // (39:3) {#each columns as config}
-    function create_each_block_1(ctx) {
-    	var td, td_style_value;
-
-    	function select_block_type(ctx) {
-    		if (!ctx.config.key) return create_if_block;
-    		return create_else_block;
-    	}
-
-    	var current_block_type = select_block_type(ctx);
-    	var if_block = current_block_type(ctx);
-
-    	return {
-    		c: function create() {
-    			td = element("td");
-    			if_block.c();
-    			attr(td, "style", td_style_value = ctx.config.style);
-    			attr(td, "class", "svelte-115sffn");
-    			add_location(td, file, 39, 3, 629);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, td, anchor);
-    			if_block.m(td, null);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-    				if_block.p(changed, ctx);
-    			} else {
-    				if_block.d(1);
-    				if_block = current_block_type(ctx);
-    				if (if_block) {
-    					if_block.c();
-    					if_block.m(td, null);
-    				}
-    			}
-
-    			if ((changed.columns) && td_style_value !== (td_style_value = ctx.config.style)) {
-    				attr(td, "style", td_style_value);
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(td);
-    			}
-
-    			if_block.d();
-    		}
-    	};
-    }
-
-    // (37:2) {#each data as row}
-    function create_each_block(ctx) {
-    	var tr, t;
-
-    	var each_value_1 = ctx.columns;
-
-    	var each_blocks = [];
-
-    	for (var i = 0; i < each_value_1.length; i += 1) {
-    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
-    	}
-
-    	return {
-    		c: function create() {
-    			tr = element("tr");
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			t = space();
-    			add_location(tr, file, 37, 2, 592);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, tr, anchor);
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(tr, null);
-    			}
-
-    			append(tr, t);
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (changed.columns || changed.data) {
-    				each_value_1 = ctx.columns;
-
-    				for (var i = 0; i < each_value_1.length; i += 1) {
-    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
-    					} else {
-    						each_blocks[i] = create_each_block_1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(tr, t);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-    				each_blocks.length = each_value_1.length;
-    			}
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(tr);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-    		}
-    	};
-    }
-
-    function create_fragment(ctx) {
     	var table, thead, tr, t, tbody;
 
     	var each_value_2 = ctx.columns;
@@ -14265,15 +14040,11 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(tr, file, 26, 2, 418);
-    			add_location(thead, file, 25, 1, 408);
-    			add_location(tbody, file, 34, 1, 559);
+    			add_location(tr, file, 29, 2, 473);
+    			add_location(thead, file, 28, 1, 463);
+    			add_location(tbody, file, 37, 1, 614);
     			attr(table, "class", "svelte-115sffn");
-    			add_location(table, file, 24, 0, 399);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			add_location(table, file, 27, 0, 454);
     		},
 
     		m: function mount(target, anchor) {
@@ -14337,9 +14108,6 @@ var app = (function () {
     			}
     		},
 
-    		i: noop,
-    		o: noop,
-
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(table);
@@ -14352,7 +14120,283 @@ var app = (function () {
     	};
     }
 
+    // (32:3) {#each columns as config}
+    function create_each_block_2(ctx) {
+    	var th, t_value = ctx.config.title, t;
+
+    	return {
+    		c: function create() {
+    			th = element("th");
+    			t = text(t_value);
+    			attr(th, "class", "svelte-115sffn");
+    			add_location(th, file, 32, 3, 557);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, th, anchor);
+    			append(th, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.columns) && t_value !== (t_value = ctx.config.title)) {
+    				set_data(t, t_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(th);
+    			}
+    		}
+    	};
+    }
+
+    // (47:4) {:else}
+    function create_else_block(ctx) {
+    	var raw_value = ctx.config.value(ctx.row), raw_before, raw_after;
+
+    	return {
+    		c: function create() {
+    			raw_before = element('noscript');
+    			raw_after = element('noscript');
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, raw_before, anchor);
+    			raw_before.insertAdjacentHTML("afterend", raw_value);
+    			insert(target, raw_after, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
+    				detach_between(raw_before, raw_after);
+    				raw_before.insertAdjacentHTML("afterend", raw_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_between(raw_before, raw_after);
+    				detach(raw_before);
+    				detach(raw_after);
+    			}
+    		}
+    	};
+    }
+
+    // (44:4) {#if !config.key}
+    function create_if_block_1(ctx) {
+    	var button, raw_value = ctx.config.value(ctx.row), button_class_value, dispose;
+
+    	function click_handler() {
+    		return ctx.click_handler(ctx);
+    	}
+
+    	return {
+    		c: function create() {
+    			button = element("button");
+    			attr(button, "class", button_class_value = ctx.config.klass);
+    			add_location(button, file, 44, 4, 736);
+    			dispose = listen(button, "click", click_handler);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, button, anchor);
+    			button.innerHTML = raw_value;
+    		},
+
+    		p: function update(changed, new_ctx) {
+    			ctx = new_ctx;
+    			if ((changed.columns || changed.data) && raw_value !== (raw_value = ctx.config.value(ctx.row))) {
+    				button.innerHTML = raw_value;
+    			}
+
+    			if ((changed.columns) && button_class_value !== (button_class_value = ctx.config.klass)) {
+    				attr(button, "class", button_class_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(button);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    // (42:3) {#each columns as config}
+    function create_each_block_1(ctx) {
+    	var td, td_style_value;
+
+    	function select_block_type(ctx) {
+    		if (!ctx.config.key) return create_if_block_1;
+    		return create_else_block;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
+
+    	return {
+    		c: function create() {
+    			td = element("td");
+    			if_block.c();
+    			attr(td, "style", td_style_value = ctx.config.style);
+    			attr(td, "class", "svelte-115sffn");
+    			add_location(td, file, 42, 3, 684);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, td, anchor);
+    			if_block.m(td, null);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(changed, ctx);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(td, null);
+    				}
+    			}
+
+    			if ((changed.columns) && td_style_value !== (td_style_value = ctx.config.style)) {
+    				attr(td, "style", td_style_value);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(td);
+    			}
+
+    			if_block.d();
+    		}
+    	};
+    }
+
+    // (40:2) {#each data as row}
+    function create_each_block(ctx) {
+    	var tr, t;
+
+    	var each_value_1 = ctx.columns;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	return {
+    		c: function create() {
+    			tr = element("tr");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t = space();
+    			add_location(tr, file, 40, 2, 647);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, tr, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(tr, null);
+    			}
+
+    			append(tr, t);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.columns || changed.data) {
+    				each_value_1 = ctx.columns;
+
+    				for (var i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(tr, t);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(tr);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    function create_fragment(ctx) {
+    	var if_block_anchor;
+
+    	var if_block = ((!isEmpty(ctx.data))) && create_if_block(ctx);
+
+    	return {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((!isEmpty(ctx.data))) {
+    				if (if_block) {
+    					if_block.p(changed, ctx);
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+    		}
+    	};
+    }
+
     function instance($$self, $$props, $$invalidate) {
+    	
+
     	let { data, columns } = $$props;
     	const dispatch = createEventDispatcher();
 
@@ -14554,7 +14598,7 @@ var app = (function () {
     }
 
     // (198:32) 
-    function create_if_block_1(ctx) {
+    function create_if_block_1$1(ctx) {
     	var input, t0, button, t2, br0, t3, br1, t4, await_block_anchor, promise, current, dispose;
 
     	let info = {
@@ -15094,7 +15138,7 @@ var app = (function () {
 
     	var if_block_creators = [
     		create_if_block$1,
-    		create_if_block_1,
+    		create_if_block_1$1,
     		create_if_block_2
     	];
 

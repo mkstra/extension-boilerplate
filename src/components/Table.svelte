@@ -1,5 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import {isEmpty} from "ramda"
 
 	export let data;
 	export let columns;
@@ -21,6 +22,8 @@
 		/* text-align: center; */
 	}
 </style>
+
+{#if (!isEmpty(data))}
 
 <table>
 	<thead>
@@ -49,3 +52,4 @@
 		{/each}
 	</tbody>
 </table>
+{/if}
