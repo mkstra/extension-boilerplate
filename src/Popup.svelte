@@ -236,7 +236,7 @@
 			on:click={() => {
 				history = getHistory();
 			}}>
-			📝 Find essays in History (last 30 days)
+			📝 Find essays in History (last 60 days)
 		</button>
 
 		{#await history}

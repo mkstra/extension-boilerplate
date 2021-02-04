@@ -34,7 +34,8 @@
 		"page": "options.html",
 		"chrome_style": false
 	},
-	"content_security_policy": "script-src 'self' https://sdk.amazonaws.com/js/aws-sdk-2.831.0.min.js https://raw.githubusercontent.com/* https://github.com/* https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'",
+	
+	"content_security_policy": "script-src 'self' https://sdk.amazonaws.com/js/aws-sdk-2.831.0.min.js http://localhost:* https://raw.githubusercontent.com/* https://github.com/* https://www.googletagmanager.com https://firebaseinstallations.google https://apis.google.com https://www.gstatic.com/ https://cdn.firebase.com https://*.firebaseio.com https://together-7d90d.firebaseio.com; object-src 'self'",
 	"content_scripts": [
 		{
 		  "matches": [

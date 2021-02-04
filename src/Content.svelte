@@ -5,8 +5,11 @@
 	import { toastrOptions } from './utils/params';
 
 	import hotkeys from 'hotkeys-js';
-	import { path, isEmpty } from 'ramda';
+	import { path, isEmpty, uniq } from 'ramda';
 	import normalizeUrl from 'normalize-url';
+	// import {getSentences} from "./utils/api"
+
+	// getSentences("yolo matteeee")
 
 	// universal Web Extension
 	window.browser = window.chrome || window.msBrowser || window.browser;
@@ -67,6 +70,33 @@
 		event.preventDefault();
 	});
 
+
+	function getSelectionText() {
+		var text = "";
+		if (window.getSelection) {
+			text = window.getSelection().toString();
+		} else if (document.selection && document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+		}
+		return text;
+}
+	hotkeys('shift+f', function(event, handler) {
+		// Prevent the default refresh event under WINDOWS system
+		chrome.runtime.sendMessage(
+			{
+				action: 'get:sentences',
+				sample: getSelectionText()
+			},
+			res => {
+				
+				const sentences = res.map(r => r.sentence)
+				console.log(uniq(sentences))
+				alert(sentences.map(s => s +"\n \n"))
+			}
+		);
+		event.preventDefault();
+	});
+
 	//get initial value on page startup
 	chrome.storage.sync.get(currentUrl, storage => {
 		marked = !isEmpty(storage);
@@ -92,6 +122,9 @@
 	});
 
 	toastr.options = toastrOptions
+
+	const tweet =document.querySelector("#react-root > div > div > div.css-1dbjc4n.r-18u37iz.r-13qz1uu.r-417010 > main > div > div > div > div > div > div.css-1dbjc4n.r-1jgb5lz.r-1ye8kvj.r-13qz1uu > div > div > section > div > div > div:nth-child(1) > div > div > article > div > div > div > div.css-1dbjc4n.r-18u37iz > div.css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci.r-1mi0q7o > div:nth-child(2) > div.css-1dbjc4n.r-18u37iz.r-1wtj0ep.r-156q2ks.r-1mdbhws")
+
 </script>
 
 <button
